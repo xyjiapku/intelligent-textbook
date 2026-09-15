@@ -1,0 +1,196 @@
+/* ============================================================
+   CBS Academy 全站深色主题（2026-09-05）
+   - 与 static/theme.js 配套：<html data-theme="dark"> 时生效
+   - 默认浅色（无 data-theme 时各页面保持原样），用户手动切换后记忆到 localStorage
+   - 覆盖两套变量命名：
+       ① 首页 / LEARNING HUB 子页系：--paper --ink --ink-soft --line --eco --comp --bus --chem --phys
+       ② 题库工作台 style.css 系：--bg --card --text --muted --line --accent --accent-soft --warn --warn-soft --ok
+   - 未使用变量的子页面（如部分实验室/展厅页）走下方「通用补丁」
+   ============================================================ */
+
+/* 原生控件（滚动条、表单、日期选择）跟随深色 */
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- ① 首页 / 资源子页变量 ---------- */
+html[data-theme="dark"] {
+  --paper: #14161b;
+  --ink: #e7e9ee;
+  --ink-soft: #a2a8b4;
+  --line: #2a2e37;
+  --eco: #6aa9e0;    /* 深底上提亮，保证对比度 */
+  --comp: #e0797a;
+  --bus: #4fbfa0;
+  --chem: #b48ada;
+  --phys: #e0a05a;
+  --accent: #6aa9e0;
+}
+
+/* ---------- ② 题库工作台（style.css）变量 ---------- */
+html[data-theme="dark"] {
+  --bg: #12141a;
+  --card: #1b1e25;
+  --text: #e7e9ee;
+  --muted: #a2a8b4;
+  --line: #2a2e37;
+  --accent: #6aa9e0;
+  --accent-soft: #1c2836;
+  --warn: #e0797a;
+  --warn-soft: #2e1f22;
+  --ok: #4fbfa0;
+}
+
+/* ---------- 通用补丁：未变量化的页面 ---------- */
+/* 说明：这批规则带 !important，用于覆盖页面内硬编码的浅色底；
+   若个别页面的品牌色块/图表被误伤，按页面加例外规则即可（在此文件末尾追加）。 */
+html[data-theme="dark"] body {
+  background-color: #14161b !important;
+  color: #e7e9ee !important;
+}
+html[data-theme="dark"] :where(.card, .box, .panel, .container, .wrap, .content,
+                               main, section, article, aside, .main, .content-box, .qcard, .mcard) {
+  background-color: #1b1e25 !important;
+  border-color: #2a2e37 !important;
+  color: #e7e9ee !important;
+}
+html[data-theme="dark"] :where(h1, h2, h3, h4, h5, h6, p, li, dt, dd, label, span, small, strong, em) {
+  color: inherit;
+}
+html[data-theme="dark"] :where(table, th, td) { border-color: #2a2e37 !important; }
+html[data-theme="dark"] :where(table) { background: #1b1e25 !important; }
+html[data-theme="dark"] :where(th, thead td) { background: #1f232b !important; color: #e7e9ee !important; }
+html[data-theme="dark"] :where(tbody tr:nth-child(even)) { background: rgba(255, 255, 255, .03) !important; }
+html[data-theme="dark"] :where(tr:hover td) { background: #242832 !important; }
+html[data-theme="dark"] :where(pre, code, kbd, .code) {
+  background: #1b1e25 !important;
+  color: #d7dae0 !important;
+  border-color: #2a2e37 !important;
+}
+html[data-theme="dark"] :where(input, textarea, select) {
+  background: #1b1e25 !important;
+  color: #e7e9ee !important;
+  border-color: #39404c !important;
+}
+html[data-theme="dark"] :where(input::placeholder, textarea::placeholder) { color: #7d848f !important; }
+html[data-theme="dark"] a { color: #8ab8e8; }
+html[data-theme="dark"] a:visited { color: #b79ae0; }
+html[data-theme="dark"] :where(hr) { border-color: #2a2e37 !important; }
+html[data-theme="dark"] :where(.muted, .sub, .desc, .note, .tip, .hint) { color: #a2a8b4 !important; }
+
+/* 数学公式（KaTeX 默认黑字，深底不可读） */
+html[data-theme="dark"] .katex { color: #e7e9ee; }
+html[data-theme="dark"] .katex .mord,
+html[data-theme="dark"] .katex .mbin,
+html[data-theme="dark"] .katex .mrel,
+html[data-theme="dark"] .katex .mopen,
+html[data-theme="dark"] .katex .mclose,
+html[data-theme="dark"] .katex .mpunct { color: #e7e9ee; }
+
+/* 滚动条 */
+html[data-theme="dark"] ::-webkit-scrollbar { width: 10px; height: 10px; }
+html[data-theme="dark"] ::-webkit-scrollbar-track { background: #14161b; }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #3a414d; border-radius: 5px; }
+
+/* ---------- LEARNING HUB 子页（同模板：card.big 渐变卡 / chips / back / tag-btn） ----------
+   .card.big 的浅色渐变是 background-image，会盖住通用补丁的 background-color，需整卡重写 */
+html[data-theme="dark"] .card.big {
+  background: linear-gradient(135deg, #1b1e25 55%, #223042) !important;
+}
+html[data-theme="dark"] .card .tags span {
+  background: #23303f !important;
+  color: #cfe2f6 !important;
+  border-color: #31435a !important;
+}
+html[data-theme="dark"] .back,
+html[data-theme="dark"] .tag-btn {
+  background: #1b1e25 !important;
+  color: #a2a8b4 !important;
+}
+html[data-theme="dark"] .tag-btn.on {
+  background: var(--eco) !important;
+  border-color: var(--eco) !important;
+  color: #fff !important;
+}
+
+/* ---------- 题库工作台 / 通用：教师验证弹窗 ---------- */
+html[data-theme="dark"] .lock-box { background: #1b1e25 !important; }
+
+/* ---------- 成绩页（results.html）专属变量 ----------
+   --acc / --no 为 results.html 私有命名，全站仅此页定义 */
+html[data-theme="dark"] {
+  --acc: #6aa9e0;
+  --no: #e0797a;
+}
+
+/* ---------- 首页（index.html 学术编辑风）专属覆盖 ----------
+   index.html 大量卡片为硬编码米白底（#fffdf8/#faf8f2/#fff），
+   类名不在通用补丁 :where 列表内，需逐类覆盖；深色下统一暗面板。 */
+html[data-theme="dark"] .ecard,
+html[data-theme="dark"] .modebtn,
+html[data-theme="dark"] .bankrow,
+html[data-theme="dark"] .sd-box {
+  background: #1b1e25 !important;
+  border-color: #2a2e37 !important;
+  color: #e7e9ee !important;
+}
+html[data-theme="dark"] .ecard.soon { background: #17191f !important; }
+html[data-theme="dark"] .ecard h3,
+html[data-theme="dark"] .ecard .desc,
+html[data-theme="dark"] .modebtn b,
+html[data-theme="dark"] .modebtn .desc { color: #e7e9ee !important; }
+html[data-theme="dark"] .ecard .chips span {
+  background: #23303f !important;
+  border-color: #31435a !important;
+  color: #cfe2f6 !important;
+}
+/* 暖色标签（tag / notice）：深底换暗暖底 */
+html[data-theme="dark"] .tagline .tag {
+  color: #d9b98a !important;
+  background: #2b241a !important;
+  border-color: #4a3d28 !important;
+}
+html[data-theme="dark"] .tagline .tag.author {
+  color: #e0a08a !important;
+  background: #2e211c !important;
+  border-color: #4f362c !important;
+}
+html[data-theme="dark"] .notice {
+  background: #2b241a !important;
+  color: #d9b98a !important;
+  border-color: #4a3d28 !important;
+}
+/* 系统面板（sd-box）与内部按钮 */
+html[data-theme="dark"] .sd-box .actions button {
+  background: #242832 !important;
+  color: #e7e9ee !important;
+  border-color: #39404c !important;
+}
+html[data-theme="dark"] .sd-box .actions button:hover { background: #2d3340 !important; }
+/* 内联 code 底（742 行 style 块） */
+html[data-theme="dark"] code { background: #242832 !important; }
+
+/* ---------- 浮动切换按钮（theme.js 自动注入，主页面可自设按钮并关闭自动注入） ---------- */
+.cbs-theme-btn {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(140, 150, 165, .35);
+  background: rgba(30, 34, 42, .82);
+  color: #e7e9ee;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .28);
+  transition: transform .15s ease, background .15s ease;
+}
+.cbs-theme-btn:hover { transform: scale(1.06); background: rgba(45, 51, 62, .92); }
+html:not([data-theme="dark"]) .cbs-theme-btn {
+  background: rgba(255, 255, 255, .88);
+  color: #2b2f36;
+  border-color: rgba(31, 35, 43, .16);
+}
+@media print { .cbs-theme-btn { display: none !important; } }

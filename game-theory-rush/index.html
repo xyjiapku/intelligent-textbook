@@ -1,0 +1,2476 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="f88Oj9E7xumkua8rdbdC9D">
+<head data-page-node-id="TAFf9jK8Ac5j1SVR5CZDCf">
+<meta charset="UTF-8" data-page-node-id="CXKlrc9r9mkE7bDAP3YR3l">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="H9I6fAZjmFfC5MitDZi8de">
+<title>Game Theory Rush · 博弈论教学网页</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="O2jBkbnB2UUPuuKvL8OBjO">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" data-page-node-id="3PZJKbyZMGyDl5HdAt7i4N">
+<link rel="stylesheet" href="vendor/katex/katex.min.css" data-page-node-id="f6urmWiLHM7PreAOYPZzaC">
+<script defer src="vendor/katex/katex.min.js"></script>
+<style>
+:root{
+  --indigo-900:#1E1B4B; --indigo-800:#312E81; --indigo-700:#4338CA;
+  --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-300:#A5B4FC; --indigo-100:#E0E7FF; --indigo-50:#EEF2FF;
+  --gold-600:#B45309; --gold-500:#D97706; --gold-100:#FEF3C7;
+  --paper:#F8F7F4; --ink-900:#1F2937; --ink-700:#374151; --ink-500:#6B7280; --ink-400:#94A3B8;
+  --board-line:#E2E8F0; --coop-green:#16A34A; --defect-red:#DC2626; --info-blue:#2563EB;
+  --r-sm:8px; --r-md:12px; --r-lg:16px;
+  --font-serif:'Noto Serif SC','Songti SC','SimSun',serif;
+  --font-sans:'Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-mono:'JetBrains Mono','STIX Two Math','Consolas',monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{font-family:var(--font-sans);color:var(--ink-900);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--indigo-900);color:#fff;height:56px;display:flex;align-items:center;padding:0 16px;gap:12px}
+.topbar .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-weight:700;font-size:17px;letter-spacing:.5px}
+.logo-mark{width:28px;height:28px;border-radius:6px;background:var(--gold-500);display:flex;align-items:center;justify-content:center;color:var(--indigo-900);font-weight:700;font-size:15px}
+.burger{display:none;background:none;border:0;color:#fff;font-size:22px;cursor:pointer;width:44px;height:44px;border-radius:8px;align-items:center;justify-content:center}
+.burger:hover{background:rgba(255,255,255,.12)}
+.topbar .ch-label{font-size:13px;color:rgba(255,255,255,.72);margin-left:auto;display:flex;align-items:center;gap:6px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:var(--gold-500)}
+
+.layout{display:grid;grid-template-columns:1fr;max-width:1200px;margin:0 auto;padding:0 16px}
+main{padding:24px 0 96px;min-width:0}
+
+.sidebar{display:none}
+@media(min-width:992px){
+  .layout{grid-template-columns:240px minmax(0,1fr);gap:32px;padding:0 24px}
+  .sidebar{display:block;padding-top:32px}
+  .side-nav{position:sticky;top:80px;max-height:calc(100vh - 96px);overflow-y:auto;padding-right:4px}
+  .side-nav h4{font-size:12px;color:var(--ink-400);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .side-nav a{display:block;padding:6px 12px;border-radius:8px;color:var(--ink-700);text-decoration:none;font-size:13px;margin-bottom:1px;border-left:3px solid transparent;transition:background .2s,color .2s}
+  .side-nav a:hover{background:var(--indigo-50);color:var(--indigo-800)}
+  .side-nav a.active{background:var(--indigo-100);color:var(--indigo-800);border-left-color:var(--gold-500);font-weight:500}
+  .side-nav a.sub{padding-left:24px;font-size:12px}
+  .side-nav a.ex{color:var(--gold-600)}
+  .side-nav a.ex.active{background:var(--gold-100);color:var(--gold-600);border-left-color:var(--gold-500)}
+}
+@media(min-width:768px) and (max-width:991px){.layout{padding:0 24px}}
+
+.hero{background:var(--indigo-900);border-radius:var(--r-lg);color:#fff;padding:32px 24px;margin-bottom:32px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(99,102,241,.35),transparent 70%);pointer-events:none}
+.hero .tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:4px 12px;border-radius:100px;font-size:12px;margin-bottom:16px}
+.hero h1{font-family:var(--font-serif);font-size:26px;line-height:1.3;margin-bottom:8px}
+.hero p{color:rgba(255,255,255,.8);font-size:14px;max-width:560px}
+.hero .meta{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+.hero .meta span{font-size:12px;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:6px;color:rgba(255,255,255,.85)}
+@media(min-width:768px){.hero{padding:44px 40px}.hero h1{font-size:32px}}
+
+.sec-title{display:flex;align-items:center;gap:10px;margin:36px 0 16px;font-family:var(--font-serif);font-size:20px;color:var(--indigo-900);scroll-margin-top:72px}
+.sec-title::before{content:"";width:4px;height:22px;background:var(--gold-500);border-radius:2px}
+.sec-sub{font-size:13px;color:var(--ink-500);margin:-8px 0 16px}
+.chapter-head{background:var(--indigo-900);border-radius:var(--r-lg);color:#fff;padding:20px 24px;margin:40px 0 20px;display:flex;align-items:center;gap:16px;scroll-margin-top:72px}
+.chapter-head .ch-num{font-family:var(--font-mono);font-size:14px;color:var(--gold-500);font-weight:700;letter-spacing:1px;background:rgba(255,255,255,.1);padding:6px 12px;border-radius:8px;white-space:nowrap}
+.chapter-head h2{font-family:var(--font-serif);font-size:18px;line-height:1.4}
+.chapter-head .en{display:block;font-family:var(--font-sans);font-size:12px;color:rgba(255,255,255,.6);font-weight:400;margin-top:2px}
+@media(min-width:768px){.chapter-head{padding:26px 32px}.chapter-head h2{font-size:22px}}
+
+.chapter-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:768px){.chapter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1200px){.chapter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ch-card{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-lg);padding:20px;text-decoration:none;color:inherit;transition:transform .24s var(--ease),box-shadow .24s var(--ease);display:flex;flex-direction:column;gap:10px}
+.ch-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,27,75,.08)}
+.ch-card .num{font-family:var(--font-mono);font-size:12px;color:var(--gold-600);font-weight:700;letter-spacing:1px}
+.ch-card h3{font-family:var(--font-serif);font-size:17px;color:var(--indigo-900)}
+.ch-card p{font-size:13px;color:var(--ink-500);flex:1}
+.ch-card .topics{display:flex;flex-wrap:wrap;gap:6px}
+.ch-card .topic{font-size:11px;background:var(--indigo-50);color:var(--indigo-800);padding:3px 8px;border-radius:100px}
+.ch-card .progress{margin-top:4px}
+.ch-card .bar{height:6px;background:var(--indigo-100);border-radius:3px;overflow:hidden}
+.ch-card .fill{height:100%;background:var(--gold-500);border-radius:3px}
+.ch-card .pct{font-size:11px;color:var(--ink-400);margin-top:6px}
+
+.concept{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:16px 16px 16px 20px;margin-bottom:14px;position:relative;overflow:hidden}
+.concept::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.concept.def::before{background:var(--indigo-600)}
+.concept.intuition::before{background:var(--gold-500)}
+.concept.example::before{background:var(--coop-green)}
+.concept.caution::before{background:var(--defect-red)}
+.concept .kind{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.concept.def .kind{color:var(--indigo-600)}
+.concept.intuition .kind{color:var(--gold-600)}
+.concept.example .kind{color:var(--coop-green)}
+.concept.caution .kind{color:var(--defect-red)}
+.concept h4{font-size:15px;color:var(--ink-900);margin-bottom:4px}
+.concept p{font-size:14px;color:var(--ink-700)}
+.concept .en{font-size:12px;color:var(--ink-400);font-style:italic;margin-top:4px}
+.concept ul,.concept ol{margin:8px 0 0 20px;font-size:14px;color:var(--ink-700)}
+.concept li{margin-bottom:4px}
+
+.matrix-wrap{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:20px;margin:16px 0}
+.matrix-title{font-family:var(--font-serif);font-size:15px;color:var(--indigo-900);margin-bottom:4px}
+.matrix-sub{font-size:12px;color:var(--ink-400);margin-bottom:16px}
+.matrix{display:inline-block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table.payoff{border-collapse:collapse;font-family:var(--font-mono)}
+table.payoff td,table.payoff th{border:1px solid var(--board-line);padding:10px 14px;text-align:center;font-size:13px;min-width:60px}
+table.payoff th{background:var(--indigo-50);color:var(--indigo-800);font-weight:500;font-family:var(--font-sans)}
+table.payoff th.corner{background:var(--indigo-900);color:#fff}
+table.payoff td{padding:0;height:56px}
+.pcell{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:6px 14px;cursor:pointer;transition:background .2s var(--ease);position:relative}
+.pcell:hover{background:var(--indigo-50)}
+.pcell .pay{font-size:14px;font-weight:500}
+.pcell .pay.p1{color:var(--defect-red)}
+.pcell .pay.p2{color:var(--info-blue)}
+.pcell .pay.best{color:var(--gold-600);font-weight:700}
+.pcell .pay.best::after{content:" ★";font-size:12px}
+.pcell.eq{background:var(--gold-100)}
+.pcell.eq::after{content:"★";position:absolute;top:4px;right:6px;color:var(--gold-600);font-size:11px}
+.matrix-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:var(--r-md);font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--indigo-300);background:#fff;color:var(--indigo-800);transition:transform .2s var(--ease),background .2s var(--ease)}
+.btn:hover{transform:scale(1.05);background:var(--indigo-50)}
+.btn:active{transform:scale(.95)}
+.btn.primary{background:var(--indigo-800);border-color:var(--indigo-800);color:#fff}
+.btn.primary:hover{background:var(--indigo-700)}
+.btn.gold{background:var(--gold-500);border-color:var(--gold-500);color:#fff}
+.btn.gold:hover{background:var(--gold-600)}
+.btn:focus-visible{outline:2px solid var(--gold-500);outline-offset:2px}
+.matrix-note{font-size:12px;color:var(--ink-400);margin-top:12px;min-height:18px}
+
+/* ═══ 分步找均衡 · Best-Response Walkthrough ═══ */
+.br-panel{margin-top:14px;border:1px solid var(--indigo-100);border-radius:var(--r-md);background:var(--indigo-50);padding:12px 14px}
+.br-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.br-label{font-size:12px;font-weight:700;color:var(--indigo-800);letter-spacing:.5px}
+.br-count{font-size:12px;color:var(--ink-400)}
+.br-bar{height:4px;border-radius:2px;background:var(--indigo-100);overflow:hidden;margin-bottom:10px}
+.br-bar span{display:block;height:100%;background:var(--gold-500);transition:width .3s var(--ease)}
+.br-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.br-chip{font-size:11px;padding:4px 9px;border-radius:999px;background:#fff;border:1px solid var(--indigo-100);color:var(--ink-400);cursor:pointer;font-family:var(--font-sans);transition:all .2s var(--ease)}
+.br-chip:hover{border-color:var(--indigo-300);color:var(--indigo-800)}
+.br-chip.done{color:var(--indigo-800);border-color:var(--indigo-300)}
+.br-chip.cur{background:var(--gold-500);border-color:var(--gold-500);color:#fff;font-weight:700}
+.br-step{background:#fff;border:1px solid var(--board-line);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--ink-700);line-height:1.8}
+.br-step .lead{font-size:12px;font-weight:700;color:var(--gold-600);display:block;margin-bottom:4px;letter-spacing:.5px}
+.br-step b{color:var(--indigo-800)}
+.br-step .cmp{font-family:var(--font-mono);font-size:13px;background:var(--indigo-50);padding:1px 6px;border-radius:6px;margin:0 2px;font-weight:600}
+.br-step .cmp.r{color:var(--defect-red)}
+.br-step .cmp.b{color:var(--info-blue)}
+.br-step .hit{color:var(--gold-600);font-weight:700}
+.br-step .why{display:block;margin-top:6px;font-size:12.5px;color:var(--ink-400);border-left:3px solid var(--indigo-100);padding-left:10px}
+.br-ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.br-ctrl .btn{padding:8px 14px;font-size:13px}
+.br-ctrl .btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+table.payoff th.scan{background:var(--gold-500) !important;color:#fff !important}
+table.payoff td.scan{background:var(--gold-100)}
+.pcell.scanning{box-shadow:inset 0 0 0 2px var(--gold-500);background:var(--gold-100)}
+.pcell.rejected{opacity:.4}
+.pcell.confirmed{background:var(--gold-100)}
+
+/* 方法切换 Tab */
+.br-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.br-tab{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--indigo-100);background:#fff;color:var(--ink-400);cursor:pointer;font-family:var(--font-sans);transition:all .2s var(--ease)}
+.br-tab:hover{border-color:var(--indigo-300);color:var(--indigo-800)}
+.br-tab.on{background:var(--indigo-800);border-color:var(--indigo-800);color:#fff;font-weight:700}
+
+/* 方法 B · IDSDS 剔除 */
+table.payoff th.elim,table.payoff td.elim{opacity:.25;text-decoration:line-through;background:repeating-linear-gradient(45deg,#F1F5F9,#F1F5F9 5px,var(--board-line) 5px,var(--board-line) 10px)}
+.pcell.dom-cmp{box-shadow:inset 0 0 0 2px var(--info-blue)}
+.pcell.ids-pick{background:var(--gold-100);box-shadow:inset 0 0 0 2px var(--gold-500)}
+.br-step .submtx{margin-top:8px;font-size:12px;color:var(--ink-400)}
+table.payoff.mini{margin:6px 0 2px;font-size:12px}
+table.payoff.mini td,table.payoff.mini th{padding:6px 12px;min-width:52px;height:42px}
+
+/* 矩阵补全 Fill-in */
+.fill-wrap{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:16px 18px;margin:14px 0}
+.fill-cond{font-size:14px;color:var(--ink-700);line-height:1.85;margin-bottom:6px}
+.fill-cond b{color:var(--indigo-800)}
+.fill-cond .li{display:block;padding-left:18px;position:relative}
+.fill-cond .li::before{content:"▸";position:absolute;left:0;color:var(--gold-600)}
+table.payoff td .pcell.tbd .pay{color:#CBD5E1}
+.pcell.filled .pay{animation:pop .35s var(--ease)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.br-step .calc{display:inline-block;font-family:var(--font-mono);font-size:13px;background:var(--indigo-50);border-radius:6px;padding:2px 8px;margin:2px 0}
+
+.hintbox{border-radius:var(--r-md);padding:16px;margin:14px 0;border:1px solid}
+.hintbox.think{background:var(--indigo-50);border-color:var(--indigo-100)}
+.hintbox.homework{background:var(--gold-100);border-color:#FDE68A}
+.hintbox .h-title{font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.hintbox.think .h-title{color:var(--indigo-800)}
+.hintbox.homework .h-title{color:var(--gold-600)}
+.hintbox p{font-size:14px;color:var(--ink-700)}
+
+details.ansbox{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);margin:10px 0;overflow:hidden}
+details.ansbox>summary{cursor:pointer;padding:12px 16px;font-size:14px;font-weight:500;color:var(--indigo-800);list-style:none;display:flex;align-items:center;gap:8px}
+details.ansbox>summary::before{content:"▸";transition:transform .24s var(--ease);color:var(--gold-500);font-size:13px}
+details.ansbox[open]>summary::before{transform:rotate(90deg)}
+details.ansbox .ans{margin:0;padding:12px 16px 16px;font-size:13px;color:var(--ink-700);border-top:1px dashed var(--board-line)}
+details.ansbox .ans .key{color:var(--gold-600);font-weight:700}
+details.ansbox .ans p{margin-bottom:8px}
+details.ansbox .ans ol,details.ansbox .ans ul{margin:6px 0 6px 20px}
+
+.exercise{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:18px;margin:12px 0;scroll-margin-top:72px}
+.exercise .q-title{font-size:14px;font-weight:700;color:var(--indigo-900);margin-bottom:6px;display:flex;gap:8px;align-items:baseline}
+.exercise .q-title .qn{font-family:var(--font-mono);color:var(--gold-600);font-size:13px}
+.exercise .q-body{font-size:14px;color:var(--ink-700)}
+.exercise .q-body ol,.exercise .q-body ul{margin:6px 0 6px 20px}
+.exercise .q-body li{margin-bottom:4px}
+
+/* ═══ 讲解器 Tutor (逐步讲解模式) ═══ */
+.tutor{background:#fff;border:1px solid var(--indigo-300);border-radius:var(--r-md);margin:12px 0;overflow:hidden}
+.tutor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:var(--indigo-50);border-bottom:1px solid var(--indigo-100)}
+.tutor-title{font-size:14px;font-weight:700;color:var(--indigo-800);display:flex;align-items:center;gap:8px}
+.tutor-title .ico{flex-shrink:0;width:22px;height:22px;border-radius:6px;background:var(--indigo-800);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.tutor-count{font-family:var(--font-mono);font-size:12px;color:var(--gold-600);font-weight:700;white-space:nowrap}
+.tutor-steps{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:1px dashed var(--board-line);background:var(--paper)}
+.tutor-step{font-size:12px;padding:5px 10px;border-radius:100px;border:1px solid var(--board-line);background:#fff;color:var(--ink-500);cursor:pointer;transition:all .2s var(--ease);font-family:var(--font-sans)}
+.tutor-step:hover{border-color:var(--indigo-300);color:var(--indigo-800)}
+.tutor-step.done{background:var(--indigo-50);color:var(--indigo-800);border-color:var(--indigo-100)}
+.tutor-step.active{background:var(--indigo-800);color:#fff;border-color:var(--indigo-800)}
+.tutor-body{padding:14px 16px}
+.tutor-sol{display:none}
+.tutor-sol.show{display:block}
+.tutor-sol .sol-step{display:flex;gap:10px;margin-bottom:0;padding:12px;border-radius:var(--r-md);background:var(--indigo-50);margin-bottom:8px}
+.tutor-sol .sol-step:last-child{margin-bottom:0}
+.tutor-sol .sn{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--indigo-800);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono)}
+.tutor-sol .sc{flex:1;font-size:14px;color:var(--ink-700)}
+.tutor-sol .sc b.step-t{display:block;color:var(--indigo-900);margin-bottom:4px;font-size:14px}
+.tutor-sol .sc p{margin:4px 0}
+.tutor-sol .sc .res{color:var(--gold-600);font-weight:700}
+.tutor-actions{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px 14px;border-top:1px dashed var(--board-line);align-items:center}
+.tutor-actions .btn{padding:8px 14px;font-size:13px}
+.tutor-progress{flex:1;font-size:12px;color:var(--ink-400);font-family:var(--font-mono)}
+/* 公式 */
+.m-row{margin:8px 0;overflow-x:auto;text-align:center}
+.m-row .katex-display{margin:6px 0}
+.raw-math{font-family:var(--font-mono);background:#fff;border:1px solid var(--indigo-100);border-radius:6px;padding:4px 10px;display:inline-block;font-size:13px;color:var(--indigo-800)}
+.raw-math-block{font-family:var(--font-mono);background:#fff;border:1px solid var(--indigo-100);border-radius:8px;padding:8px 14px;display:block;text-align:center;font-size:14px;color:var(--indigo-800);margin:8px 0}
+.katex{font-size:1.06em}
+
+.bottom-nav{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--board-line)}
+.bottom-nav a{flex:1;background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:14px 16px;text-decoration:none;color:var(--ink-700);font-size:13px;transition:transform .2s var(--ease),border-color .2s}
+.bottom-nav a:hover{transform:translateY(-2px);border-color:var(--indigo-300)}
+.bottom-nav .dir{font-size:11px;color:var(--ink-400);display:block;margin-bottom:2px}
+.bottom-nav .nm{font-weight:500;color:var(--indigo-800)}
+
+.drawer{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--indigo-900);z-index:100;padding:24px 16px;transform:translateX(-100%);transition:transform .3s var(--ease);overflow-y:auto}
+.drawer.open{transform:translateX(0)}
+.drawer a{display:block;color:rgba(255,255,255,.85);padding:9px 12px;border-radius:8px;text-decoration:none;font-size:13px;border-left:3px solid transparent;transition:background .2s}
+.drawer a:hover,.drawer a.active{background:rgba(255,255,255,.12);border-left-color:var(--gold-500)}
+.drawer a.ex{color:var(--gold-500)}
+.drawer a.ex.active{background:rgba(217,119,6,.18);border-left-color:var(--gold-500)}
+.drawer .sec{color:rgba(255,255,255,.45);font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:14px 12px 4px}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.show{opacity:1;pointer-events:auto}
+@media(min-width:992px){.burger{display:none}.drawer{display:none}}
+@media(min-width:768px){.burger{display:flex}}
+
+.mobile-float{position:fixed;bottom:0;left:0;right:0;background:var(--indigo-900);display:flex;z-index:60;box-shadow:0 -4px 16px rgba(30,27,75,.2)}
+.mobile-float a{flex:1;text-align:center;padding:12px 8px;color:rgba(255,255,255,.8);text-decoration:none;font-size:12px;transition:background .2s}
+.mobile-float a:hover{background:rgba(255,255,255,.1)}
+.mobile-float .dir{display:block;font-size:10px;color:var(--gold-500);letter-spacing:1px}
+@media(min-width:768px){.mobile-float{display:none}}
+
+.game{background:var(--indigo-900);border-radius:var(--r-lg);color:#fff;padding:24px;margin:16px 0}
+.game h4{font-family:var(--font-serif);font-size:16px;margin-bottom:8px}
+.game p{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px}
+.game .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.game input[type=number]{width:84px;padding:10px 12px;border-radius:var(--r-md);border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-family:var(--font-mono);font-size:14px}
+.game input:focus{outline:2px solid var(--gold-500)}
+.game label{font-size:13px;color:rgba(255,255,255,.7)}
+.game .result{margin-top:16px;font-size:13px;background:rgba(255,255,255,.08);border-radius:var(--r-md);padding:12px;min-height:40px;line-height:1.8}
+.game .result b{color:var(--gold-500)}
+
+.tree-box{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-md);padding:20px;margin:16px 0}
+.tree-box .tree-title{font-family:var(--font-serif);font-size:15px;color:var(--indigo-900);margin-bottom:4px}
+.tree-box .tree-sub{font-size:12px;color:var(--ink-400);margin-bottom:12px}
+.tree-svg{width:100%;max-width:640px;margin:0 auto;display:block}
+.tree-svg .node-a{fill:var(--indigo-800)}
+.tree-svg .node-b{fill:var(--indigo-500)}
+.tree-svg .terminal{fill:#fff;stroke:var(--board-line)}
+.tree-svg text{font-family:var(--font-sans);font-size:12px;fill:var(--ink-900)}
+.tree-svg .lbl{fill:var(--ink-500);font-size:11px}
+.tree-svg .tnum{font-family:var(--font-mono);font-size:11px}
+.tree-svg path.link{stroke:var(--ink-400);stroke-width:1.2;fill:none}
+.tree-svg path.link.sel{stroke:var(--gold-500);stroke-width:2.5}
+.tree-svg rect.terminal.sel{stroke:var(--gold-500);stroke-width:2}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.step-btn{font-size:12px;padding:6px 12px;border-radius:100px;border:1px solid var(--board-line);background:#fff;color:var(--ink-500);cursor:pointer;transition:all .2s}
+.step-btn.active{background:var(--indigo-800);color:#fff;border-color:var(--indigo-800)}
+.tree-note{font-size:12px;color:var(--ink-400);margin-top:12px;min-height:18px}
+
+.pirate-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12px;margin-top:8px}
+.pirate-table th,.pirate-table td{border:1px solid var(--board-line);padding:6px 8px;text-align:center}
+.pirate-table th{background:var(--indigo-50);color:var(--indigo-800);font-family:var(--font-sans);font-weight:500}
+.pirate-table td.supp{background:var(--gold-100);font-weight:700;color:var(--gold-600)}
+.pirate-table td.dead{color:var(--ink-400)}
+.pirate-table td.l{text-align:left;font-family:var(--font-sans);line-height:1.6}
+.pirate-table td.big{font-weight:700;color:var(--gold-600)}
+.race-tbl{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+.race-tbl th,.race-tbl td{border:1px solid var(--board-line);padding:8px 10px;text-align:center;vertical-align:top}
+.race-tbl th{background:var(--indigo-50);color:var(--indigo-800);font-weight:600;font-size:12px}
+.race-tbl td.d{font-family:var(--font-mono);font-weight:700;color:var(--indigo-800)}
+.race-tbl td.n{font-family:var(--font-mono)}
+.race-tbl td.hint{text-align:left;color:var(--ink-500);font-size:12px}
+.race-tbl tr.ex td{background:var(--gold-50,#FFFBEB)}
+
+/* ═══ 图解模式 · 交互小程序嵌入 ═══ */
+.lab-embed{background:linear-gradient(180deg,var(--indigo-50) 0%,#fff 60%);border:1px solid var(--indigo-100);border-radius:var(--r-lg,14px);padding:16px;margin:16px 0}
+.lab-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px}
+.lab-badge{font-size:11px;font-weight:700;letter-spacing:.5px;padding:3px 9px;border-radius:100px;background:var(--indigo-800);color:#fff}
+.lab-title{font-size:14px;font-weight:700;color:var(--indigo-800)}
+.lab-src{font-size:11px;color:var(--ink-400);margin-left:auto}
+.lab-desc{font-size:13px;color:var(--ink-700);line-height:1.85;margin-bottom:12px}
+.lab-stage{position:relative;border:1px dashed var(--indigo-300);border-radius:var(--r-md);background:#fff;padding:18px;text-align:center}
+.lab-stage.loaded{padding:0;border-style:solid;overflow:hidden}
+.lab-launch{font-family:var(--font-sans);font-size:14px;font-weight:700;padding:11px 22px;border-radius:var(--r-md);border:0;background:var(--indigo-800);color:#fff;cursor:pointer;transition:transform .2s var(--ease)}
+.lab-launch:hover{transform:translateY(-2px)}
+.lab-open{display:inline-block;margin-left:12px;font-size:12px;color:var(--gold-600);font-weight:600;text-decoration:none}
+.lab-open:hover{text-decoration:underline}
+.lab-note{font-size:11.5px;color:var(--ink-400);margin-top:10px}
+.lab-frame{display:block;width:100%;height:800px;border:0;background:#fff}
+.lab-stage.loading::after{content:'正在载入小程序…';position:absolute;right:14px;bottom:12px;font-size:12px;color:var(--ink-400)}
+.lab-stage.failed::after{content:attr(data-fail);position:static;display:block;margin-top:10px;font-size:12px;color:var(--danger,#B91C1C)}
+@media (max-width:768px){.lab-frame{height:700px}}
+@media (max-width:520px){.lab-frame{height:640px}}
+
+/* ═══ 推荐网站卡片 ═══ */
+.site-card{display:flex;gap:14px;align-items:flex-start;text-decoration:none;background:#fff;border:1px solid var(--indigo-300);border-left:4px solid var(--gold-500);border-radius:var(--r-md);padding:14px 16px;margin-top:12px;transition:transform .2s var(--ease),box-shadow .2s}
+.site-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(49,46,129,.10)}
+.site-card .sc-ico{flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--indigo-800);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.site-card .sc-main{flex:1;min-width:0}
+.site-card .sc-title{display:block;font-size:14px;font-weight:700;color:var(--indigo-800);margin-bottom:2px}
+.site-card .sc-url{display:block;font-family:var(--font-mono);font-size:11.5px;color:var(--gold-600);margin-bottom:6px}
+.site-card .sc-desc{display:block;font-size:12.5px;color:var(--ink-500);line-height:1.7}
+.site-card .sc-go{flex-shrink:0;align-self:center;font-size:12px;font-weight:700;color:var(--indigo-800);white-space:nowrap}
+@media (max-width:520px){.site-card .sc-go{display:none}}
+
+/* ═══ 课后习题：答案默认隐藏 ═══ */
+.exercise .tutor{display:none}
+.exercise.revealed .tutor{display:block}
+.ans-gate{margin-top:12px}
+.ans-body{display:none}
+.ans-body.open{display:block}
+.ans-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:var(--font-sans);background:var(--gold-50,#FFFBEB);border:1px dashed var(--gold-500);border-radius:var(--r-md);padding:13px 16px;cursor:pointer;transition:background .2s,border-color .2s}
+.ans-btn:hover{background:var(--gold-100)}
+.ans-btn .ans-ico{font-size:14px;line-height:1}
+.ans-btn .ans-txt{font-size:14px;font-weight:700;color:var(--gold-600)}
+.ans-btn .ans-hint{margin-left:auto;font-size:11.5px;color:var(--ink-400)}
+@media (max-width:600px){.ans-btn{flex-wrap:wrap}.ans-btn .ans-hint{margin-left:0;width:100%}}
+
+.footer{text-align:center;font-size:12px;color:var(--ink-400);padding:24px 16px 90px}
+@media(min-width:768px){.footer{padding-bottom:24px}}
+@media(min-width:992px){main{padding:32px 0 80px}}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+/* ═══ 双语术语卡 Glossary ═══ */
+.glossary{background:#fff;border:1px solid var(--board-line);border-radius:var(--r-lg);padding:24px 20px;margin:24px 0;scroll-margin-top:72px}
+.glossary .g-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.glossary .g-title{font-family:var(--font-serif);font-size:20px;color:var(--indigo-900)}
+.glossary .g-sub{font-size:13px;color:var(--ink-500);margin-bottom:16px}
+.g-search{width:100%;max-width:420px;padding:10px 14px;border:1px solid var(--indigo-300);border-radius:var(--r-md);font-size:14px;font-family:var(--font-sans);background:#fff;color:var(--ink-900);margin-bottom:16px}
+.g-search:focus{outline:2px solid var(--gold-500);outline-offset:2px}
+.g-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:768px){.g-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1200px){.g-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.g-card{border:1px solid var(--board-line);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;background:#fff;transition:border-color .2s,box-shadow .2s var(--ease);user-select:none}
+.g-card:hover{border-color:var(--indigo-300);box-shadow:0 4px 12px rgba(30,27,75,.06)}
+.g-card.open{border-color:var(--gold-500);background:var(--gold-100)}
+.g-card .g-en{font-size:15px;font-weight:700;color:var(--indigo-900);font-family:var(--font-serif)}
+.g-card .g-zh{font-size:13px;color:var(--gold-600);font-weight:700;margin-left:8px}
+.g-card .g-one{font-size:13px;color:var(--ink-500);margin-top:6px;line-height:1.6}
+.g-card .g-more{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--board-line);font-size:13px;color:var(--ink-700);line-height:1.8}
+.g-card.open .g-more{display:block}
+.g-card .g-more b{color:var(--indigo-800)}
+.g-card .g-more .g-ex{background:var(--indigo-50);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:12px;color:var(--ink-700)}
+.g-card .g-hint{font-size:11px;color:var(--ink-400);margin-top:8px;display:block}
+
+/* ═══ 思考-揭示 Think-Reveal ═══ */
+.reveal{background:var(--indigo-50);border:1px solid var(--indigo-100);border-radius:var(--r-md);margin:14px 0;overflow:hidden}
+.reveal .rv-head{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--indigo-100);font-size:13px;font-weight:700;color:var(--indigo-800)}
+.reveal .rv-head .rv-ico{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.reveal .rv-q{padding:14px 16px 10px;font-size:14px;color:var(--ink-900);line-height:1.8}
+.reveal .rv-q .q-mark{color:var(--gold-600);font-weight:700;font-family:var(--font-serif);font-size:15px}
+.reveal .rv-btn{display:inline-flex;align-items:center;gap:6px;margin:0 16px 14px;padding:8px 16px;border-radius:100px;border:1px solid var(--indigo-300);background:#fff;color:var(--indigo-800);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s var(--ease)}
+.reveal .rv-btn:hover{background:var(--indigo-800);color:#fff;border-color:var(--indigo-800);transform:scale(1.03)}
+.reveal .rv-ans{display:none;padding:14px 16px 16px;border-top:1px dashed var(--indigo-200,#C7D2FE);background:#fff;font-size:14px;color:var(--ink-700);line-height:1.9}
+.reveal.open .rv-ans{display:block}
+.reveal .rv-ans p{margin-bottom:8px}
+.reveal .rv-ans .rv-key{color:var(--gold-600);font-weight:700}
+.reveal .rv-ans .rv-step{display:flex;gap:8px;margin:10px 0}
+.reveal .rv-ans .rv-step .n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--indigo-800);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono)}
+.reveal .rv-ans .rv-step p{margin:0;font-size:13px}
+</style>
+</head>
+<body data-page-node-id="Ry3LsHDxBteo3uoB4SqSac">
+
+<div class="overlay" id="overlay" onclick="toggleDrawer(false)" data-page-node-id="G7UShfxm13LkEC75zPyML4"></div>
+<nav class="drawer" id="drawer" aria-label="章节导航" data-page-node-id="pwk5SoA6HdaIrPLcEb0WMB">
+  <div class="sec" data-page-node-id="pRt0J1QyQJ3AKA0MG6XftV">学习路径</div>
+  <a href="#top" data-page-node-id="CNuE68zkDGwZhi4l49L1E0">首页 · 学习地图</a>
+  <div class="sec" data-page-node-id="eZEO8fjzwjF50t4jHZojKW">第一章 · 矩阵博弈</div>
+  <a href="#ch1" data-page-node-id="pUWFitf93x9TdUPlR69KF6">1. 矩阵博弈与纳什均衡</a>
+  <a href="#s11" class="sub" data-page-node-id="AMzk8EitOpXXDjToRaHe2w">1.1 囚徒困境</a>
+  <a href="#s12" class="sub" data-page-node-id="Lvn70hI8lPza4tyg6J32vQ">1.2 寡头模型</a>
+  <a href="#s13" class="sub" data-page-node-id="aEkAaPlVK1XsnSpciqwCdQ">1.3 占优均衡与纳什均衡</a>
+  <a href="#s14" class="sub" data-page-node-id="xj6so4TpBr7NDsF5zgItdm">1.4 纯与混合策略</a>
+  <a href="#s15" class="sub ex" data-page-node-id="7xemU9t7DwcURq2DOWpY9H">✎ 1.5 课后习题</a>
+  <a href="#gloss1" class="sub ex" data-page-node-id="BgE7fY4aul1VVOJUETSBjt">≡ 本章术语</a>
+  <div class="sec" data-page-node-id="VOfVS47zQPeSENnX1Smo68">第二章 · 序贯与重复</div>
+  <a href="#ch2" data-page-node-id="o4nlxMzbHONvW1v7AkqFCl">2. 序贯博弈与重复博弈</a>
+  <a href="#s21" class="sub" data-page-node-id="qwsayeoq4acKpYUESnjrAA">2.1 序贯博弈与博弈树</a>
+  <a href="#s22" class="sub" data-page-node-id="qJYE30OU34qo0IcXAQ8lQm">2.2 最后通牒与海盗分金</a>
+  <a href="#s23" class="sub" data-page-node-id="HQH2RwfjroIn7vFQOxKEFd">2.3 重复博弈</a>
+  <a href="#s24" class="sub ex" data-page-node-id="ch7NgZmMfWAgVFn2A9l236">✎ 2.4 课后习题</a>
+  <a href="#gloss2" class="sub ex" data-page-node-id="OE6PSqrYnQeaknJm5WpZKS">≡ 本章术语</a>
+  <div class="sec" data-page-node-id="MlQ4N0yuhSz9wQwC6OnUh5">第三章 · 演化博弈</div>
+  <a href="#ch3" data-page-node-id="Tn3MvTguHqxWBhsCXcqlIX">3. 演化博弈论</a>
+  <a href="#s31" class="sub" data-page-node-id="BNcvHLNC5YUhPInFxAcwxM">3.1 ESS 基础</a>
+  <a href="#s32" class="sub" data-page-node-id="6JAiBUOHU7C1JMNoAaTnek">3.2 鹰鸽博弈分析</a>
+  <a href="#s33" class="sub" data-page-node-id="SDnI6DWzsJ6IGQXtHZlwj8">3.3 汉密尔顿法则</a>
+  <a href="#s34" class="sub" data-page-node-id="HZuc0QbJa9EmN9dMjRLlwO">3.4 行为经济学</a>
+  <a href="#s35" class="sub" data-page-node-id="6h3rG3ndT728Xu2PUReBkD">3.5 制度经济学</a>
+  <a href="#s36" class="sub ex" data-page-node-id="fvsqZCXwgPewf7Kl8cQOb0">✎ 3.6 课后习题</a>
+  <a href="#gloss3" class="sub ex" data-page-node-id="4V7LXudvePaUSyj3kyQdb5">≡ 本章术语</a>
+</nav>
+
+<header class="topbar" data-page-node-id="dHVXVGPMj9nmWI2ZkJFKnb">
+  <button class="burger" id="burgerBtn" onclick="toggleDrawer(true)" aria-label="打开菜单" aria-expanded="false" data-page-node-id="f2OpLq08qdiOBUALvVQpn8">☰</button>
+  <div class="logo" data-page-node-id="WySU4vUCdKPdLHaCp2tXtt"><div class="logo-mark" data-page-node-id="zwLJMMRnUeZqX5rJ1KpfT9">G</div>Game Theory Rush</div>
+  <div class="ch-label" data-page-node-id="Cdpj0pcFORsd5hRlkviXFA"><span class="progress-dot" data-page-node-id="zOttfmuc6lZcMKbBkpxQ9w"></span> 三章 · 完整教学</div>
+</header>
+
+<div class="layout" id="top" data-page-node-id="X2QN3IPRNrgvLMLlMC0lNF">
+  <aside class="sidebar" aria-label="章节侧栏" data-page-node-id="HmnTdibgW2yL3MAsuqvU6h">
+    <nav class="side-nav" id="sideNav" data-page-node-id="ByBTPoOzuLT1rxIABFEJQG">
+      <h4 data-page-node-id="yZgb6c4JBTTwfxGGywySul">学习路径</h4>
+      <a href="#top" data-page-node-id="o1zNHBrBk88ASrIOZQ8lv6">首页 · 学习地图</a>
+      <h4 style="margin-top:14px" data-page-node-id="Idne13qhio6qMHFDWIdCqv">第一章</h4>
+      <a href="#ch1" data-page-node-id="IVnbZBeZj8W7TtVOOsSLg9">1. 矩阵博弈与纳什均衡</a>
+      <a href="#s11" class="sub" data-page-node-id="sH8DChraHmsjFpqubwSjA1">1.1 囚徒困境</a>
+      <a href="#s12" class="sub" data-page-node-id="Hv6TDh1DgW69m0lWeGkW56">1.2 寡头模型</a>
+      <a href="#s13" class="sub" data-page-node-id="oU2bQGr2D7dFUoGHESx5Nc">1.3 占优与纳什均衡</a>
+      <a href="#s14" class="sub" data-page-node-id="R2zY8pPxZqVwLCLhUVYHqn">1.4 纯与混合策略</a>
+      <a href="#s15" class="sub ex" data-page-node-id="uUJsSucddbwXuFusLhEd0U">✎ 1.5 课后习题</a>
+      <a href="#gloss1" class="sub ex" data-page-node-id="syR3QT1hGHqY5HfpNdSXok">≡ 本章术语</a>
+      <h4 style="margin-top:14px" data-page-node-id="jd0Ac7u5W9Clq8vX1ueAwx">第二章</h4>
+      <a href="#ch2" data-page-node-id="L12pqvR4sH8ctqgDFUNiFo">2. 序贯与重复博弈</a>
+      <a href="#s21" class="sub" data-page-node-id="g1hXLz4HMLfIxU7bA6wYAf">2.1 序贯博弈与博弈树</a>
+      <a href="#s22" class="sub" data-page-node-id="EKiFmHvxf9iHzLybuAU1hY">2.2 最后通牒与海盗分金</a>
+      <a href="#s23" class="sub" data-page-node-id="E6GjObNC9hk33ewh6FpFEq">2.3 重复博弈</a>
+      <a href="#s24" class="sub ex" data-page-node-id="YCW16ssVZqKVSSdd3JfnY4">✎ 2.4 课后习题</a>
+      <a href="#gloss2" class="sub ex" data-page-node-id="gy5JwEPpAvjaUajcyO5u1p">≡ 本章术语</a>
+      <h4 style="margin-top:14px" data-page-node-id="r6QxwqJOmWWZt30lMStO0K">第三章</h4>
+      <a href="#ch3" data-page-node-id="L8sxWPPRwtdfozoCHxG6Dr">3. 演化博弈论</a>
+      <a href="#s31" class="sub" data-page-node-id="drqD8GrSCF4pda5Sd9G05F">3.1 ESS 基础</a>
+      <a href="#s32" class="sub" data-page-node-id="xLaO2plefQfzDtr1kPVf8u">3.2 鹰鸽分析</a>
+      <a href="#s33" class="sub" data-page-node-id="VdG6BHCZqHFv9NonRxpYr5">3.3 汉密尔顿法则</a>
+      <a href="#s34" class="sub" data-page-node-id="AWTEPE8GLAqkN8wuxulGUZ">3.4 行为经济学</a>
+      <a href="#s35" class="sub" data-page-node-id="Tzto134Jd6vsSMf2poPRgi">3.5 制度经济学</a>
+      <a href="#s36" class="sub ex" data-page-node-id="vdOxuBEqXQNTjuzSlAaA09">✎ 3.6 课后习题</a>
+      <a href="#gloss3" class="sub ex" data-page-node-id="eKsU0T9Amt6dpqLW1BRlAh">≡ 本章术语</a>
+    </nav>
+  </aside>
+
+  <main data-page-node-id="KXb06Rfk5GHyoksyA7G7LG">
+    <section class="hero" data-page-node-id="1cHuJ1GiWMeTQYOrHfHPQs">
+      <div class="tag" data-page-node-id="h8GWn9AtnOJXvpWCuHtw14">博弈论 · 完整教学讲义</div>
+      <h1 data-page-node-id="7KSTb9t772EFy1zCggaXe8">Game Theory Rush 博弈论教学</h1>
+      <p data-page-node-id="G78gzjWwsMOYEHWSpdNxBZ">基于《Game Theory Rush (Lecture Notes)》讲义构建的完整教学网页：三章内容、数据驱动博弈矩阵、交互博弈树、课后习题全收录——每个例题与习题都有可逐步点击的讲解模式。</p>
+      <div class="meta" data-page-node-id="f7Pch6FNYwFc6eeGIEGZtN"><span data-page-node-id="82UfLODhc2nJKKKylRg8Nm">三章 15 节</span><span data-page-node-id="vStF53kQcI9dmE5HoHOVE0">8 个交互矩阵</span><span data-page-node-id="PWK6hs1V875u2CE7yESs9b">博弈树演示</span><span data-page-node-id="MmVZr5GsXxIBLOhqBjNWcO">20 个讲解器</span></div>
+    </section>
+
+    <h2 class="sec-title" data-page-node-id="yw4CYtdIB5z2dxnxCDhvrV">学习地图</h2>
+    <div class="chapter-grid" data-page-node-id="JRGFfAE0Db9LtEeqLacYye">
+      <a class="ch-card" href="#ch1" data-page-node-id="8XB6JxRu7ywNIOpCd4p59I">
+        <span class="num" data-page-node-id="e5LqwgFiGISZr1wlCP6mkh">CHAPTER 01</span>
+        <h3 data-page-node-id="ZvE6J1w9F8JuGJt0iALNox">矩阵博弈与纳什均衡</h3>
+        <p data-page-node-id="FBi7NVvs6Hq240KG2acHOW">囚徒困境、寡头竞争模型、占优策略均衡、纯策略与混合策略纳什均衡。</p>
+        <div class="topics" data-page-node-id="uwWM5HyqigBdQOW5OjtHSL"><span class="topic" data-page-node-id="QLDs0gxboSSBXsSVKpeXb1">囚徒困境</span><span class="topic" data-page-node-id="3r2TX1JhfC5g7YpJGsiYPI">古诺模型</span><span class="topic" data-page-node-id="jf54Tasr9s87vRd7tRXabt">混合策略</span></div>
+        <div class="progress" data-page-node-id="vjCggdx7zj4D1sNm6Hhsqo"><div class="bar" data-page-node-id="7PswddAxAw7cEs8nEO8IKo"><div class="fill" style="width:100%" data-page-node-id="fXDRsnMziZ2iwmYUfKmO2A"></div></div><div class="pct" data-page-node-id="JUqsai8dyp9g1goBTmCQQB">5 节 · 8 矩阵 + 5 习题</div></div>
+      </a>
+      <a class="ch-card" href="#ch2" data-page-node-id="TI8KD0OAjFAgGPNLMHVPBh">
+        <span class="num" data-page-node-id="7lqhHu6W15uH7EDl3bFwaf">CHAPTER 02</span>
+        <h3 data-page-node-id="Fd1JTZR8EDIDDYlQwd6YOS">序贯博弈与重复博弈</h3>
+        <p data-page-node-id="Ao2kU6sTzuZtjsHkwM3Hku">博弈树与逆向归纳、最后通牒与海盗分金、重复博弈与无名氏定理。</p>
+        <div class="topics" data-page-node-id="0t9VB91MhDbmuz2hsWkpqi"><span class="topic" data-page-node-id="BoN08GF5oWlyXlmFv1bfgy">博弈树</span><span class="topic" data-page-node-id="FiQENHxUh12EKPBkqfb8Le">逆向归纳</span><span class="topic" data-page-node-id="Ib4T76uwTB1yKqq8erVNWW">以牙还牙</span></div>
+        <div class="progress" data-page-node-id="18sd7cCLZOfSnp2QPr2wky"><div class="bar" data-page-node-id="FprzC3U83WR5DCsuhdxr0F"><div class="fill" style="width:100%" data-page-node-id="9pOFi1E4GlDJSHPG6OEUkz"></div></div><div class="pct" data-page-node-id="ZbGzlw4cYeuaR7OzpSEyJ3">4 节 · 交互演示 + 2 习题</div></div>
+      </a>
+      <a class="ch-card" href="#ch3" data-page-node-id="AXBIyz0NW71BO4YSxLORgq">
+        <span class="num" data-page-node-id="vGlH01UMbTyGTpNxWHF0sH">CHAPTER 03</span>
+        <h3 data-page-node-id="kS2KStgoaumnA5nG8hXMAu">演化博弈论</h3>
+        <p data-page-node-id="2Ilch8FlRGkeBLtMClnHIG">进化稳定策略 ESS、鹰鸽博弈、汉密尔顿法则、行为经济学与制度经济学。</p>
+        <div class="topics" data-page-node-id="ZrPFGP6Ao24pq8MmF240gi"><span class="topic" data-page-node-id="IPH5kQKVoBCKfJ5yPGrJqC">ESS</span><span class="topic" data-page-node-id="axqBsaylHmszyBX6ClDEjo">鹰鸽博弈</span><span class="topic" data-page-node-id="QFPzKYxhOy9g3uP558V618">汉密尔顿法则</span></div>
+        <div class="progress" data-page-node-id="3P1RPRbpnB9Rzx903j42mK"><div class="bar" data-page-node-id="kVfOVJFbRCftqhtpusSfAn"><div class="fill" style="width:100%" data-page-node-id="AfDoQzFPR31LXqslwF4AKk"></div></div><div class="pct" data-page-node-id="lBC7yl04uOU96HRAG7ubog">6 节 · 完整覆盖 + 1 习题</div></div>
+      </a>
+    </div>
+
+    <!-- ═══════════ CH1 ═══════════ -->
+    <div class="chapter-head" id="ch1" data-page-node-id="fKj6yTVOz1sJrxF48rQmJN">
+      <span class="ch-num" data-page-node-id="isWui162BvnZE0JXqiSNDD">CH 01</span>
+      <h2 data-page-node-id="Z2PFW7uBilzcF35CKM8Pxu">矩阵博弈与纳什均衡<span class="en" data-page-node-id="jHc42dAG53doMy5bBHMfsF">Matrix Games and Nash Equilibrium</span></h2>
+    </div>
+
+    <h3 class="sec-title" id="s11" style="font-size:18px" data-page-node-id="egzDnsTKEeua4Z5Qh5X5om">1.1 博弈论导论 · 囚徒困境</h3>
+
+    <div class="concept def" data-page-node-id="WLPlR2aSSVrFDl4gfU8npl">
+      <div class="kind" data-page-node-id="nvqPCsJsppJCCbmxfLB7x7">定义 · Definition</div>
+      <h4 data-page-node-id="3eusvF9RVF58vaRJLa7GEc">博弈论 Game Theory</h4>
+      <p data-page-node-id="9yViEPXTRZ7AsrMBbD2pfF">研究多个决策者(玩家)在互动环境中如何做出理性选择的学科——the study of mathematical models of strategic interactions。</p>
+      <div class="en" data-page-node-id="RXcFYO9tzr0MqM2xAVGs6X">四大要素:玩家 Players · 策略集 Strategy Set · 支付 Payoffs · 信息 Information(完全信息假设)</div>
+    </div>
+
+    <div class="concept example" data-page-node-id="pdstory">
+      <div class="kind">案例 · The Prisoner's Dilemma</div>
+      <h4>囚徒困境的情境</h4>
+      <p>两个嫌疑犯被<b>隔离审讯</b>,彼此不能通消息。每个人只有两种选择:<b>合作 (Cooperate)</b>——这里指与同伙合作,即对警察保持沉默;或<b>背叛 (Defect)</b>——供出同伙。于是共有 $2\times2=4$ 种局面,每格写成 $(X, Y)$:<b>X 是玩家 1 的收益,Y 是玩家 2 的收益</b>。</p>
+      <ul>
+        <li><b>(10, 10)</b> 两人都保持沉默,警方拿不到证据 → 双双免罪,各得 10。</li>
+        <li><b>(0, 12)</b> 玩家 1 沉默、玩家 2 供出对方当了污点证人 → 玩家 2 得 12,玩家 1 被「抗拒从严」处理,只得 0。</li>
+        <li><b>(2, 2)</b> 两人都招了,对警方都没有统战价值 → 各得 2。</li>
+      </ul>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="f9mzG6XwhzZUHCRDccmfap">
+      <div class="matrix-title" data-page-node-id="CTqC0WQXJL6Fbc3ESi586D">表 1 · 囚徒困境支付矩阵</div>
+      <div class="matrix-sub" data-page-node-id="YHUZ2nDAAtsiMDRGUaS6i6">Prisoner's Dilemma — 红数字 = 玩家1(行)收益,蓝数字 = 玩家2(列)收益 · 点「下一步 ▶」一步步圈出最佳回应</div>
+      <div class="matrix" id="m-pd" data-page-node-id="R5CUoknmEKAHpCvNS8kjfa"></div>
+      <div class="matrix-note" id="n-pd" data-page-node-id="q8HFlyysFX9uxiOK4yrF5D">先自己判断,再用「下一步 ▶」逐步拆解验证。</div>
+      <div class="tutor" data-tutor="pd" data-page-node-id="hBTv4zEQByXjZqL8D7Nhfz"></div>
+    </div>
+
+    <div class="concept def" data-page-node-id="domstr">
+      <div class="kind">定义 · Definition</div>
+      <h4>占优策略 Dominant Strategy</h4>
+      <p>一个人的最优选择<b>不依赖于他人的选择</b>——不管你选什么,我都这么做。这样的策略称为<b>占优策略</b>。若某个策略在任何情况下都<b>严格</b>优于其他所有策略,则称<b>严格占优策略 (Strictly Dominant Strategy)</b>。</p>
+      <p>在本例中:对玩家 1 来说,若玩家 2 合作,背叛得 $12 > 10$;若玩家 2 背叛,背叛得 $2 > 0$。所以无论对方怎么选,背叛都更好 → <span class="key">背叛是玩家 1 的严格占优策略</span>,玩家 2 同理。</p>
+    </div>
+
+    <div class="concept def" data-page-node-id="domseq">
+      <div class="kind">定义 · Definition</div>
+      <h4>占优策略均衡 Dominant-Strategy Equilibrium</h4>
+      <p>由<b>所有参与人的占优策略</b>构成的策略组合,称为占优均衡。它的推理门槛最低:<span class="key">只要求每个人是理性的,而不要求每个人知道其他人是否理性</span>——因为「不管别人怎么做我都这样选」。</p>
+      <p>囚徒困境正是如此,所以其结果非常好预测:唯一均衡是<b>(背叛, 背叛),支付 (2, 2)</b>,这是一个占优策略均衡。但如果双方合作可得 <b>(10, 10)</b>,那是 (2, 2) 的<b>帕累托改进 (Pareto Improvement)</b>——它明明存在,却因为个体理性而无法实现。</p>
+    </div>
+
+    <div class="concept caution" data-page-node-id="invhand">
+      <div class="kind">对照 · Invisible Hand</div>
+      <h4>「看不见的手」与它的边界</h4>
+      <p><b>看不见的手 (Invisible Hand)</b>:在某些制度与结构条件下,自私的行为反而可能带来高效的社会结果——Adam Smith 提出,后由 Léon Walras 的一般均衡理论 (General Equilibrium) 数学化。</p>
+      <p>但囚徒困境说明:<span class="key">个体理性也可能导致整体糟糕结果</span>。它构成对「看不见的手」神话的一种反驳,也正说明了社会当中<b>沟通与协调</b>的重要性。</p>
+    </div>
+
+    <div class="hintbox think" data-page-node-id="HklRuvS1FdE3YxgXg7LSUm">
+      <div class="h-title" data-page-node-id="xN255dYMBy5RQQDalh3i7B">思考题</div>
+      <p data-page-node-id="iE4ldwAA22Hu42MVqrYxFE">为什么卡特尔(Cartels)不稳定?公共品供给、军备竞赛、公地悲剧与囚徒困境有何共性?</p>
+      <details class="ansbox" data-page-node-id="toRtbWEJAN8qbbGOGA7mJ7"><summary data-page-node-id="4BN4MAvhdlc7MMEH0eoDMi">展开参考答案</summary><div class="ans" data-page-node-id="LrzVhez3pMDtrcZ0lQMUXD">
+        <p data-page-node-id="22lahrXtm9256GS250ce3q">寡头串谋提价后,单方降价可获更大份额 → 双方背叛 → 价格战。<span class="key" data-page-node-id="LPDKSCeU3sGSB4Swt6PzUg">个体理性导致整体糟糕结果</span>。</p>
+        <p data-page-node-id="I0tqRVlAjnHOpZs8b9gYQG">公共品供给(搭便车)、军备竞赛、公地悲剧均属「囚徒困境式」结构:帕累托改进存在却难以实现,需要制度协调。</p>
+      </div></details>
+    </div>
+
+    <h3 class="sec-title" id="s12" style="font-size:18px" data-page-node-id="c3l161p9HIyta4pfCeMZP8">1.2 博弈论与寡头</h3>
+    <p class="sec-sub" data-page-node-id="9QKxlSIyObf3nSB5B1HhRu">寡头市场涉及竞争、串谋和背叛。三个以提出者命名的经典模型:</p>
+
+    <div class="concept example" data-page-node-id="eVelYcGGaBXdwC3lLzKnSD">
+      <div class="kind" data-page-node-id="ahruED2FOFuafo8PGAgato">模型 · Cournot</div>
+      <h4 data-page-node-id="jON1IcAMtbBP7XuEUjhlbJ">古诺数量竞争 Cournot Quantity Competition</h4>
+      <p data-page-node-id="Cncy8roNqToeZ6pao2Ev11">两厂商同时决定产量,价格由总产量决定。每家根据对对手产量的预测选择利润最大化的产量——得到反应函数 (Best Response)。对称均衡中双方猜测一致,互为最优回应,即纳什均衡。</p>
+      <div class="tutor" data-tutor="cournot" data-page-node-id="kt0tM7IEzNNAN8EvMwS3zW"></div>
+
+      <div class="lab-embed" data-page-node-id="lab-cournot">
+        <div class="lab-head">
+          <span class="lab-badge">图解模式</span>
+          <span class="lab-title">古诺双寡头 · 交互模拟</span>
+          <span class="lab-src">经济学互动实验室 · CBS Academy</span>
+        </div>
+        <p class="lab-desc">上面是<b>数学推导</b>,这里是<b>动手图解</b>:拖动滑杆改变两家厂商的产量,实时看<b>反应函数</b>怎么移动、<b>纳什均衡点</b>落在哪、<b>卡特尔</b>为什么守不住。推导里那句「双方猜测一致、互为最优回应」,拖动一遍就懂了。</p>
+        <div class="lab-stage"
+             data-src="mini-lab/Nash-Eq%20Quantity%20Game.html"
+             data-title="古诺双寡头交互模拟"
+             data-fail="小程序未能载入(浏览器可能拦截了本地内嵌页面),请点「在新窗口打开」直接查看。">
+          <button class="lab-launch" type="button">▶ 启动交互小程序</button>
+          <a class="lab-open" href="mini-lab/Nash-Eq%20Quantity%20Game.html" target="_blank" rel="noopener">在新窗口打开 ↗</a>
+          <p class="lab-note">含反应函数、收敛过程、剔除劣策略、数据表多标签页;点按钮后才载入,不影响页面打开速度。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept example" data-page-node-id="Aw00sTCMZXechgamyI1l3t">
+      <div class="kind" data-page-node-id="MH1NDyv1tePut1NiiSOh3N">模型 · Bertrand</div>
+      <h4 data-page-node-id="qPZVr0O3E6WkFj2iBxZDrM">贝特兰价格竞争 Bertrand Price Competition</h4>
+      <p data-page-node-id="vFk7wbfOwGpMnmgZnb54n4">厂商竞争价格而非产量。产品同质、边际成本 c,消费者总买低价者,价格相同则平分市场。价格稍高即被抢走市场,于是不断压价直至 P = c——价格竞争比数量竞争更激烈,少数寡头也可能导致接近完全竞争的结果。</p>
+      <div class="tutor" data-tutor="bertrand" data-page-node-id="cQtH9zjIclrwcXmknfgjOi"></div>
+    </div>
+
+    <div class="concept example" data-page-node-id="8HBAGw8BJoQ5GVLg4bgvbx">
+      <div class="kind" data-page-node-id="vSQTVTmCqHhUzualzwmofb">模型 · Hotelling</div>
+      <h4 data-page-node-id="dR6H40DIM4Djb8JvFBCl0r">霍特林位置竞争 Hotelling Location Competition</h4>
+      <p data-page-node-id="kjt92BDKUBU7Fauv0XswkB">厂商选择地理位置争夺顾客。固定价格下,顾客买最近的店,两家店有强烈激励向中点聚集,唯一纳什均衡是都选在街道中点——解释为何加油站、快餐店总开在对手隔壁。环形街道与价格战情形见 1.5 习题 1 的逐步求解。</p>
+
+      <div class="lab-embed" data-page-node-id="lab-hotelling">
+        <div class="lab-head">
+          <span class="lab-badge">图解模式</span>
+          <span class="lab-title">霍特林选址博弈 · 交互模拟</span>
+          <span class="lab-src">经济学互动实验室 · CBS Academy</span>
+        </div>
+        <p class="lab-desc">这条「长街」可以亲手推演:移动两家奶茶摊的位置,看<b>顾客怎么被分割</b>、各自<b>市场份额</b>变成多少。你会亲眼看到两家店一步步向中点<b>挤过去</b>——这就是「最小差异化」的纳什均衡,也是 1.5 习题 1 的图形版答案。</p>
+        <div class="lab-stage"
+             data-src="mini-lab/Nash-Eq%20Location%20game.html"
+             data-title="霍特林选址博弈交互模拟"
+             data-fail="小程序未能载入(浏览器可能拦截了本地内嵌页面),请点「在新窗口打开」直接查看。">
+          <button class="lab-launch" type="button">▶ 启动交互小程序</button>
+          <a class="lab-open" href="mini-lab/Nash-Eq%20Location%20game.html" target="_blank" rel="noopener">在新窗口打开 ↗</a>
+          <p class="lab-note">含规则说明、位置与市场份额实时统计、环形街/价格战变体;点按钮后才载入。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept def" data-page-node-id="necard">
+      <div class="kind">定义 · Definition</div>
+      <h4>纳什均衡 Nash Equilibrium</h4>
+      <p>每个玩家的策略都是对对手策略的<b>最佳反应 (Best Response)</b>,即<b>没有玩家有动机单方面改变策略</b> (No Incentive to Deviate Unilaterally)。一句话:「<b>你不变,我就不变。</b>」</p>
+      <p>在囚徒困境中,(背叛, 背叛) 也是纳什均衡:因为双方都背叛时,任意一方改为合作只会让自己从 2 掉到 0。古诺均衡是另一个典型例子——两家各自猜测对手产量,均衡时猜测一致、互为最优回应。</p>
+    </div>
+
+    <h3 class="sec-title" id="s13" style="font-size:18px" data-page-node-id="2iZ8rCAVKjVHfxFmN0umdc">1.3 占优策略均衡与纳什均衡</h3>
+
+    <p class="sec-sub" data-page-node-id="s13lead">小结:由所有参与人的占优策略构成的组合叫<b>占优均衡</b>(囚徒困境即是),它只要求「人人理性」,不要求「人人知道别人理性」。但现实里更常见的是——<b>没有人拥有占优策略</b>。下面的例子就把我们从「占优」带向「剔除」。</p>
+
+    <div class="concept def" data-page-node-id="idsds1">
+      <div class="kind">定义 · Definition</div>
+      <h4>被支配策略与 IDSDS</h4>
+      <p><b>被支配策略 (Dominated Strategy)</b>:无论对手如何行动,都不比另一策略更好的选择。<b>严格劣策略 (Strictly Dominated)</b> 处处都更差;<b>弱劣策略 (Weakly Dominated)</b> 则有时更差、有时打平。</p>
+      <p>找出并剔除劣策略能简化博弈、预测结果——因为理性玩家永远不会选一个处处更差的策略。反复多轮地删除,就叫 <b>重复剔除严格劣策略 (Iterated Deletion of Strictly Dominated Strategies, IDSDS)</b>;能这样解出来的博弈称为「重复剔除占优可解的 (iterated dominance solvable)」。</p>
+      <p><b>前提是理性的共同知识 (Common Knowledge of Rationality)</b>:不仅要求每个人理性,还要求每个人知道别人理性、每个人知道每个人知道别人理性……如此递推。</p>
+      <p style="font-size:13px;margin-top:8px"><b>两种求均衡的方法并列</b>(下方「表 2」「表 3」的求解面板可切换):<b>方法 A · 最佳回应标记法</b>——在完整矩阵里圈出双方的最佳回应,双圈相交处即均衡;<b>方法 B · 剔除严格劣策略</b>——把严格劣的整行/整列灰掉划除,矩阵缩小后在剩下的新矩阵里继续分析。思路完全不同,但常常指向同一个答案。<span class="key">注意:方法 B 只有在存在「严格」劣策略时才能启动</span>——只要有某处打平,就不能这样划掉。</p>
+    </div>
+
+    <div class="fill-wrap">
+      <div class="matrix-title">第一步 · 先把矩阵补全(智猪博弈的条件)</div>
+      <div class="fill-cond">
+        <span class="li">猪圈的一头装着 <b>踏板</b>,另一头是 <b>食槽</b>。踩一次踏板,食槽会流出 <b>10 份</b>食物。</span>
+        <span class="li">踩踏板要付出 <b>2 份</b>的代价(来回跑动的体力),而且踩完还要跑过去 —— <b>晚到一步</b>。</span>
+        <span class="li">两头猪一大一小:<b>大猪吃得快、抢得多</b>;小猪抢不过大猪。</span>
+        <span class="li">每头猪都可以选 <b>踩踏板</b> 或 <b>在食槽边等待</b>。收益 = 实际吃到的份数 − 踩踏板的代价 2。</span>
+      </div>
+      <div class="matrix" id="fill-pigs"></div>
+      <div class="br-panel">
+        <div class="br-top"><span class="br-label">🔍 逐步补全矩阵 · Fill in the Payoffs</span><span class="br-count" id="fpc"></span></div>
+        <div class="br-bar"><span id="fpb" style="width:0%"></span></div>
+        <div class="br-chips" id="fpch"></div>
+        <div class="br-step" id="fps"></div>
+        <div class="br-ctrl">
+          <button class="btn primary" id="fpn" onclick="fillNext()">下一步 ▶</button>
+          <button class="btn" id="fpp" onclick="fillPrev()">← 上一步</button>
+          <button class="btn gold" onclick="fillAll()">直接填满</button>
+          <button class="btn" onclick="fillReset()">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="IVfzgCFS0KWcsmsj5KQJFQ">
+      <div class="matrix-title" data-page-node-id="eMeOBvnGLbQxxrB77bINwS">表 2 · 智猪博弈支付矩阵</div>
+      <div class="matrix-sub" data-page-node-id="U4jOWH5I55GpH7A4cYTVNk">Boxed Pigs — 矩阵已在上一步补全 · 下面用「方法 A 标记法」或「方法 B 剔除法」求均衡</div>
+      <div class="matrix" id="m-pigs" data-page-node-id="2qhyzfcZM10QgrjxdF99HA"></div>
+      <div class="matrix-note" id="n-pigs" data-page-node-id="KCJ6JKhgEJKY4Yv6qHje5T">先读懂矩阵,再用「下一步 ▶」逐步圈出双方的最佳回应。</div>
+      <div class="tutor" data-tutor="pigs" data-page-node-id="08uPLY9gpTQeWAe7jfene2"></div>
+    </div>
+
+    <p class="sec-sub" data-page-node-id="s13mid">智猪博弈靠「方法 B」一击解决。下面换一个<b>谁都没有占优策略、也没有严格劣策略</b>的矩阵——这时「剔除」启动不了,只能靠「圈最佳回应」。</p>
+
+    <div class="matrix-wrap" data-page-node-id="DEADMYABlc6UWrrbCvGAUZ">
+      <div class="matrix-title" data-page-node-id="NJdpj0R34qvrUeFqP5EhmG">表 3 · 3×3 纳什均衡练习矩阵</div>
+      <div class="matrix-sub" data-page-node-id="dpAX9X5T4nEWcVFAPP2bqJ">找法:先逐列圈 P1 的最佳回应 → 再逐行圈 P2 的最佳回应 → 双圈相交处即均衡。点「下一步 ▶」逐格拆解</div>
+      <div class="matrix" id="m-3x3" data-page-node-id="rMuWkg2YQyyIFcTYfVTC7K"></div>
+      <div class="matrix-note" id="n-3x3" data-page-node-id="B8KkCMll0MGeaZjzK24ox0">先自己找一遍,再用「下一步 ▶」逐格对照(共 17 步)。</div>
+      <div class="tutor" data-tutor="g3x3" data-page-node-id="D7XLJTMISByQ0DC5s9exCv"></div>
+    </div>
+
+    <div class="concept caution" data-page-node-id="XDAn1Pj52FoiOdJhMvFuRQ">
+      <div class="kind" data-page-node-id="dypmGysQimphIbaVCBP9OH">延伸 · Coordination</div>
+      <h4 data-page-node-id="aV70GXlL6RMJkDlwl7rGK4">多个均衡与协调问题</h4>
+      <p data-page-node-id="r10bbrS7jQ1tkh6pel3hAh">若将 R3C1 从 (0,300) 改为 (0,150),则 (R1,C1)=(100,100) 与 (R3,C3)=(200,200) 都是纳什均衡。显然一个均衡比另一个好得多,但纳什均衡具有稳定性:一旦达成较差均衡,需要双方协调同时改变才能转向更好均衡——这是主张政府干预市场的一种理由:提供信息、协调与担保。</p>
+    </div>
+
+    <h3 class="sec-title" id="s14" style="font-size:18px" data-page-node-id="EFNom57rp2Du8m56ocOlBN">1.4 纯策略与混合策略纳什均衡</h3>
+
+    <div class="concept def" data-page-node-id="58trDNTED5Ij4FQlaAeZ1m">
+      <div class="kind" data-page-node-id="IycxEq2HpzfRUVrhv07J4F">定义 · Definition</div>
+      <h4 data-page-node-id="g8nzUEAfRD3myOfxmBbmHb">纯策略 vs 混合策略</h4>
+      <p data-page-node-id="lRRsNkQKDKbSRrWrQQ8RKv">纯策略 (Pure Strategy) 以概率 1 选择某一特定行动;混合策略 (Mixed Strategy) 则随机化选择。混合策略纳什均衡中,双方按特定概率分布随机行动,任何一方单方面改变概率都无法提高期望收益——让对手在任何选择下期望收益无差异 (Make Opponent Indifferent)。</p>
+    </div>
+
+    <div class="concept example" data-page-node-id="mixedhow">
+      <div class="kind">方法 · How to Solve</div>
+      <h4>混合策略怎么求?——无差异法三步</h4>
+      <p><b>核心逻辑:</b>在混合均衡里,如果我手上的两个纯策略期望收益<b>不相等</b>,我就会把概率全压到更好的那个上去——那就不叫「混合」了。所以均衡处<b>必然是相等的</b>。反过来,我用来求「对手」的概率,而对手的概率用来求「我」的。</p>
+      <ol>
+        <li><b>设概率:</b>设行玩家以 $p$ 选上、$1-p$ 选下;列玩家以 $q$ 选左、$1-q$ 选右。</li>
+        <li><b>令对方无差异:</b>写出<b>行玩家</b>两个纯策略的期望收益(只含 $q$),<b>令其相等</b> → 解出 $q$;再写出<b>列玩家</b>两个纯策略的期望收益(只含 $p$),令其相等 → 解出 $p$。<span class="key">小心交叉:解出的是对方的概率。</span></li>
+        <li><b>验算:</b>把求得的概率代回,确认两边的期望收益确实相等,且都在 $[0,1]$ 内。</li>
+      </ol>
+      <p style="font-size:13px"><b>为什么要随机化?</b>随机化可以避免被对手预测——足球点球、石头剪刀布都是如此。这也正是「让对手无差异」的意义:对手怎么选都一样赚,你就无法被针对。</p>
+      <p style="font-size:13px"><b>适用提示:</b>一个博弈若存在纯策略均衡,也可能同时存在混合均衡(如性别之战);若完全不存在纯策略均衡(如匹配硬币),则混合均衡就是它的解。</p>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="lhgAK63KWlQlKD5Jf7Kbpj">
+      <div class="matrix-title" data-page-node-id="25FrukerbXIYM0IbEcLcXW">表 4 · 性别之战 Battle of the Sexes</div>
+      <div class="matrix-sub" data-page-node-id="xOqgSfbmHV4RdJwc6HdKER">协调问题:两个纯策略均衡 + 一个混合策略均衡</div>
+      <div class="matrix" id="m-sexes" data-page-node-id="Wu3F3pVaINI9CbdHd5Ue0T"></div>
+      <div class="matrix-note" id="n-sexes" data-page-node-id="mt7ARdJ4iiYxpGeyIXRrJv">两个纯策略均衡:都选歌剧或都选足球。混合策略呢?</div>
+      <div class="tutor" data-tutor="sexes" data-page-node-id="sW5j0cKqGwKHoDkfWwd2LG"></div>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="ixr14G1XuGrKFCDOcV2Zca">
+      <div class="matrix-title" data-page-node-id="fJPAVHaG2R6WGaup34NXXL">表 5 · 匹配硬币 Matching Pennies</div>
+      <div class="matrix-sub" data-page-node-id="DIbtcRFYZNxKgLo03ohGr2">零和博弈:无纯策略均衡,混合均衡 p=q=1/2</div>
+      <div class="matrix" id="m-pennies" data-page-node-id="eAuQxcvoO5IUeJDv5S3wS8"></div>
+      <div class="matrix-note" id="n-pennies" data-page-node-id="5aO8YLk0kgOsc4Lccs8LOL">若一方偏离 1/2,对手将如何反击?</div>
+      <div class="tutor" data-tutor="pennies" data-page-node-id="OZnqpRjPulAkibxyYNmEmE"></div>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="gghpRF3BtpciPDo1VkifWW">
+      <div class="matrix-title" data-page-node-id="ZgX3sqhYo93jkR5scgg8Ak">表 6 · 税务稽查 Tax Authority Audit</div>
+      <div class="matrix-sub" data-page-node-id="3IERSczC1ossApYZDlduf1">企业逃税(红收益) vs 税务局查税(蓝收益)</div>
+      <div class="matrix" id="m-tax" data-page-node-id="GgxtSILYA1Xcn64HaRcpSH"></div>
+      <div class="matrix-note" id="n-tax" data-page-node-id="mXNqo4rQfRbJwmFAPfX4IR">无纯策略均衡。混合均衡:企业逃税概率 p,税局查税概率 q。</div>
+      <div class="tutor" data-tutor="tax" data-page-node-id="IIYTGC8bqWlUPuMeKQeFIN"></div>
+    </div>
+
+    <div class="matrix-wrap" data-page-node-id="K0SVJhv4SFUyoDiBedSXXo">
+      <div class="matrix-title" data-page-node-id="xkfP5BCvpQuTut3dsuxNCZ">表 7 · 鹰鸽博弈 Hawk-Dove (V=100, C=150)</div>
+      <div class="matrix-sub" data-page-node-id="McD1ew1BfyTltHTY7IyNeQ">两玩家争夺资源 V,双鹰需付打架成本 C</div>
+      <div class="matrix" id="m-hawk" data-page-node-id="Sb7DxftkEnLbANu9t1LqwA"></div>
+      <div class="matrix-note" id="n-hawk" data-page-node-id="6IjariBcuotMBDMAmwzO7M">双鹰同遇时收益 (V−C)/2 = −25。</div>
+      <div class="tutor" data-tutor="hawk" data-page-node-id="BDaRwEXDJXBYEycf2P7PJ2"></div>
+    </div>
+
+    <h3 class="sec-title" id="s15" style="font-size:18px" data-page-node-id="dBNwLscZuV00zw64cuarxB">1.5 课后习题</h3>
+    <p class="sec-sub" data-page-node-id="nqC9sHoRtlDjpdprrpLwZf">每道题都给出分步求解,建议先独立尝试再对照。</p>
+
+    <div class="exercise" data-page-node-id="yw8MAT8VrtwaXQ3GiflKJU">
+      <div class="q-title" data-page-node-id="kQKlPdGDCMDbcQ7JP6QleR"><span class="qn" data-page-node-id="BymtgzvHR5Q7Gv33NdMCxM">1.</span>Hotelling 位置竞争</div>
+      <div class="q-body" data-page-node-id="vtE8tjyRrL9KPBJNeIhFz3">
+        <p data-page-node-id="MOwCUAVdnK5fNlhTb2XqFA">奶茶MM 与奶茶GG 在长度 1 的长街摆摊,成本 c,顾客效用 10 − P − t·距离。价格固定时:(1) 直线街的位置博弈均衡?(2) 环形街?(3) 在(1)位置展开价格战?(4) 政府国有化后如何规划位置最小化交通成本?(5) 交通成本很高、顾客不可能到 0.25 距离以上时?</p>
+      </div>
+      <div class="tutor" data-tutor="hotelling" data-page-node-id="QuIPhIkTvFrAPiFynbZacn"></div>
+    </div>
+
+    <div class="exercise" data-page-node-id="ACC4hjap8mz6ZvyazyRJw7">
+      <div class="q-title" data-page-node-id="IDZSl9BK12NqsLxIY4KYFl"><span class="qn" data-page-node-id="eBckN59Y8Ripl2uV496DkV">2.</span>寻找 Dominant Strategy Equilibrium</div>
+      <div class="q-body" data-page-node-id="bDnYf1ihEFZDvQxy9El9lD">
+        <p data-page-node-id="rIhKX2qvnkFzbrZtU3VGtw">行玩家 <b>R</b> 有 4 个策略 <b>R1–R4</b>,列玩家 <b>C</b> 有 4 个策略 <b>C1–C4</b>,支付矩阵如下(红数字 = R 的收益,蓝数字 = C 的收益)。双方理性,且「双方理性」是共同知识。</p>
+        <p data-page-node-id="dom4q2"><b>(1)</b> 任何一方是否存在占优策略?<b>(2)</b> 用重复剔除严格劣策略(IDSDS)求出均衡。<b>(3)</b> 求出的结果属于哪一种均衡?</p>
+
+        <div class="matrix-wrap" data-page-node-id="dom4wrap">
+          <div class="matrix-title" data-page-node-id="dom4t">表 8 · 4×4 支付矩阵(习题 2)</div>
+          <div class="matrix-sub" data-page-node-id="dom4s">4×4 Iterated Deletion — 红数字 = 行玩家 R 收益,蓝数字 = 列玩家 C 收益 · 用「下一步 ▶」逐轮剔除</div>
+          <div class="matrix" id="m-dom4" data-page-node-id="dom4m"></div>
+          <div class="matrix-note" id="n-dom4" data-page-node-id="dom4n">提示:剔除时只比较<b>同一方</b>的数字 —— R 的行与行比红数字,C 的列与列比蓝数字。</div>
+        </div>
+        <p class="hint-line" data-page-node-id="dom4hint">⚠️ 两处「大数字陷阱」,先自己判断再对照:<b>① R3 行 C4 挂着 50、R4 行 C4 挂着 100</b>——但 C4 恰恰是第一轮就被剔除的列,策略一旦出局,它的收益再高也不会实现;<b>② R4 行给 C 的收益是 93、92、91、90</b>,数字很大,可那是<b>列玩家 C</b> 的收益,救不了行玩家 R。</p>
+      </div>
+      <div class="tutor" data-tutor="dom4" data-page-node-id="JTAcJk2zqN1f5yWHT01Kdx"></div>
+    </div>
+
+    <div class="exercise" data-page-node-id="le3MMa8xIN3KeTsgpGMuX0">
+      <div class="q-title" data-page-node-id="xRplFwjgLvCqH6M4D3VUht"><span class="qn" data-page-node-id="cnpIAYZOE2vcGIKMNwOWBy">3.</span>Tax Authority Audit</div>
+      <div class="q-body" data-page-node-id="Id9pFFOuyh6pF9wbzVHn6s">
+        <p data-page-node-id="FFKDDzXc26yEaXyrATAXzm">如下矩阵体现了<b>税务局查税</b>和<b>企业逃税</b>之间的博弈(红数字 = 企业收益,蓝数字 = 税务局收益):</p>
+        <table class="race-tbl" style="max-width:460px;margin:10px 0">
+          <tr><th>企业 ＼ 税务局</th><th>查 (Audit)</th><th>不查 (No Audit)</th></tr>
+          <tr><td class="d">逃税 (Evade)</td><td class="n">(−1, <b>1</b>)</td><td class="n">(3, −2)</td></tr>
+          <tr><td class="d">不逃 (Comply)</td><td class="n">(2, −1)</td><td class="n">(2, <b>2</b>)</td></tr>
+        </table>
+        <p data-page-node-id="FFKDDzXc26yEaXyrATAXzm2"><b>(1)</b> 本博弈有纯策略均衡吗?<b>(2)</b> 混合策略纳什均衡是什么——即企业应以多大的概率逃税、税务局应以多大的概率查税?<b>(3)</b> 本模型的经济意义是什么?</p>
+        <p style="font-size:13px;color:var(--ink-400)">(同一博弈的可交互版本见 1.4 的 <a href="#s14" style="color:var(--gold-600)">表 6</a>)</p>
+      </div>
+      <div class="tutor" data-tutor="tax2" data-page-node-id="Lad75bO2hyFeNkj0FuWc9B"></div>
+    </div>
+
+    <div class="exercise" data-page-node-id="xx72pfmElYjMbAiLT25gKm">
+      <div class="q-title" data-page-node-id="pv9OGaAcfWiRPCnqaJmImN"><span class="qn" data-page-node-id="XqdpicHutMAVfL4v2iDp37">4.</span>Hawk-Dove Game</div>
+      <div class="q-body" data-page-node-id="14MPsKTlBG4RSag1tTPpCA">
+        <p data-page-node-id="XRVGEuiJEvcu27PfOEAKjg">如下矩阵体现了两玩家争夺资源 <b>V (Value)</b>。他们同时选择鹰策略时,需要各自付出打架成本 <b>C (Cost)</b>,通常 <b>C &gt; V</b>:</p>
+        <table class="race-tbl" style="max-width:460px;margin:10px 0">
+          <tr><th>玩家1 ＼ 玩家2</th><th>鹰 (Hawk)</th><th>鸽 (Dove)</th></tr>
+          <tr><td class="d">鹰 (Hawk)</td><td class="n">(V−C)/2, (V−C)/2</td><td class="n">(V, 0)</td></tr>
+          <tr><td class="d">鸽 (Dove)</td><td class="n">(0, V)</td><td class="n">(V/2, V/2)</td></tr>
+        </table>
+        <p data-page-node-id="XRVGEuiJEvcu27PfOEAKjg2"><b>(1)</b> 本博弈有纯策略均衡吗?<b>(2)</b> 假设 V = 100、C = 150,本博弈的混合策略纳什均衡是什么——即双方应以多大概率采取鹰策略?<b>(3)</b> 对一般化的 V 和 C(C &gt; V),混合策略纳什均衡是什么?</p>
+        <p style="font-size:13px;color:var(--ink-400)">(同一博弈的可交互版本见 1.4 的 <a href="#s14" style="color:var(--gold-600)">表 7</a>;3.2 还会从演化视角再分析一次)</p>
+      </div>
+      <div class="tutor" data-tutor="hawk2" data-page-node-id="nQUNkwOwkBgigMu9n4wE1k"></div>
+    </div>
+
+    <div class="exercise" data-page-node-id="WiejdHsxJeAwAGpmelqLBA">
+      <div class="q-title" data-page-node-id="A2KrQW7RiPfBax8Hx4nGNX"><span class="qn" data-page-node-id="Q0KVTa6dMBHuRrl6YT3E05">5.</span>38 个目击者</div>
+      <div class="q-body" data-page-node-id="zalfFKDQ2jbTvMeLz9UV8o">
+        <p data-page-node-id="MqmRCCOagHaAcPcu89ORBw">朱诺比遇刺,n 个目击者可选报警(成本 c)或漠视;一人报警即得救,全体获效用 v (v&gt;c)。(1) 有纯策略均衡吗?(2) 有混合均衡吗?(3) 至少一人报警的概率如何随 n 变化?</p>
+      </div>
+      <div class="tutor" data-tutor="witness" data-page-node-id="u3UEybfG7OArN1a8x7eBM2"></div>
+    </div>
+
+    <!-- ═══════════ 第一章 · 本章术语 ═══════════ -->
+    <section class="glossary" id="gloss1" aria-label="第一章双语术语" data-page-node-id="qy5Lv2bzZMmxYuyZYqlbss">
+      <div class="g-head" data-page-node-id="Apu4FJGniZVSeR92xYRJBg">
+        <h2 class="g-title" style="margin:0" data-page-node-id="1SUOgME5Hdw9ZdTfjY8j0T">本章术语 · 双语 Glossary</h2>
+        <span class="topic" style="background:var(--gold-100);color:var(--gold-600);font-weight:700" data-page-node-id="RYwa4JJbtSXj8jFpBF0rv7">第 1 章 · 矩阵博弈</span>
+      </div>
+      <p class="g-sub" data-page-node-id="HWQAc5AtrxxjkynbVKAmnT">点击卡片展开详细释义与例句。输入关键词可筛选(支持中/英文)。</p>
+      <input class="g-search" id="gSearch-1" type="search" placeholder="🔍  搜索本章术语,如 Nash / 均衡" aria-label="搜索第一章术语" data-page-node-id="lkt0YuimTmgmitQZLrIN4T">
+      <div class="g-grid" id="gGrid-1" data-page-node-id="79Gzc9O6ARTsvFysCjOFMm"></div>
+    </section>
+
+    <!-- ═══════════ CH2 ═══════════ -->
+    <div class="chapter-head" id="ch2" data-page-node-id="qFXODmNSCSAI3APiQNQnRt">
+      <span class="ch-num" data-page-node-id="w1IpXkpixnp3DbyOvHEAkN">CH 02</span>
+      <h2 data-page-node-id="kLiQzO5iqmTEM9qumQ3x6V">序贯博弈与重复博弈<span class="en" data-page-node-id="I4olzCnTbBqpiiCmcF4k1R">Sequential Games and Repeated Games</span></h2>
+    </div>
+
+    <h3 class="sec-title" id="s21" style="font-size:18px" data-page-node-id="6rq4AyDGHFAElePlcvjyx1">2.1 序贯博弈与博弈树</h3>
+
+    <div class="concept def" data-page-node-id="CsuopKJ3foe7G3Zdkf3ipF">
+      <div class="kind" data-page-node-id="LCLRctetkr7xcdaJvqifTg">定义 · Definition</div>
+      <h4 data-page-node-id="PJiZMzRL3uJcznoKTkrDH1">序贯博弈与博弈树 Game Tree</h4>
+      <p data-page-node-id="wz0JO25BObi65CWZEs5Kgv">序贯博弈中玩家依次行动,可观察前人选择,引入时间维度与可信性问题。博弈树要素:决策节点(标记玩家)、分支(行动)、子博弈、终端节点(支付对)、信息集(完全信息假设下玩家知道全部历史)。</p>
+    </div>
+
+    <div class="tree-box" data-page-node-id="wg1xBf1sG74kGVaWNhympS">
+      <div class="tree-title" data-page-node-id="aoLdiwjRJ6iqoCPNNkNkVI">图 1 · 市场进入博弈(交互)</div>
+      <div class="tree-sub" data-page-node-id="HcBh5jddLWjDLq2ePVwYBX">Entry Deterrence — 点击「步骤 1」高亮后手最优,「步骤 2」看先手如何预判</div>
+      <svg class="tree-svg" id="entryTree" viewBox="0 0 640 340" role="img" aria-label="市场进入博弈树" data-page-node-id="GduZ9YHs1XsQXo8EI9p77l">
+        <defs data-page-node-id="tWHhHDBnCCUTuLRMVczmI3">
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse" data-page-node-id="436Y73ce3J9fAdDGGJ3MIE">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="64lPFqxorwbbHVSaptPxBa"/>
+          </marker>
+        </defs>
+        <path class="link" id="lk-1" d="M320 70 C 320 120, 180 120, 150 150" marker-end="url(#arrow)" data-page-node-id="93nQbHx6uBaaVBfC4mDQo5"/>
+        <path class="link" id="lk-2" d="M320 70 C 320 120, 470 120, 500 150" marker-end="url(#arrow)" data-page-node-id="bjeCYZyDqHGXeZqVBwGAVt"/>
+        <path class="link" id="lk-3" d="M500 190 C 500 240, 400 260, 320 280" marker-end="url(#arrow)" data-page-node-id="4QcrOlkVeolvm5TP1GtITI"/>
+        <path class="link" id="lk-4" d="M500 190 C 500 240, 580 260, 600 280" marker-end="url(#arrow)" data-page-node-id="c2a3enOEZ1G81G93KAfUxA"/>
+        <g data-page-node-id="FWkXDfl9WreViNCVnLbVzg"><rect class="node-a" id="nodeA" x="290" y="40" width="60" height="36" rx="8" data-page-node-id="I8NnuPJFsOd38wc1BUWOtR"/><text x="320" y="63" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="13" font-weight="500" data-page-node-id="pKgAYyNcKuDhlUrY8ADpCf">A</text><text class="lbl" x="320" y="92" text-anchor="middle" data-page-node-id="cGa4hmVkFDM0jglLiQUk3H">新厂商 A</text></g>
+        <g data-page-node-id="Nk8nfWbfAbz0jRLc01Iy87"><rect class="node-b" id="nodeB" x="470" y="160" width="60" height="36" rx="8" data-page-node-id="2sLcDgiPpus8AowsbKGF4d"/><text x="500" y="183" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="13" font-weight="500" data-page-node-id="5leeaLXqNS3dsjmYeLizOU">B</text><text class="lbl" x="500" y="212" text-anchor="middle" data-page-node-id="XVFz2gCqPF1IUXxSgVDujc">在位厂商 B</text></g>
+        <g data-page-node-id="XHrGIKmW6eDXLggEHB7Rp1"><rect class="terminal" x="100" y="150" width="100" height="40" rx="8" data-page-node-id="hMEdcXFAEOyxUpw5211csx"/><text x="150" y="170" text-anchor="middle" font-size="12" data-page-node-id="fSMxDtTZvJjkhno9fsGm5y">不进入</text><text class="tnum" x="150" y="186" text-anchor="middle" data-page-node-id="TEYCf9wCbuf9SlfJ4Uul3N">(0, 3)</text></g>
+        <g data-page-node-id="2DkfxNJMIMQ6d58MuoYGUL"><rect class="terminal" id="t-acc" x="255" y="280" width="130" height="40" rx="8" data-page-node-id="E6N6iNDzE209oYgNBroQbD"/><text x="320" y="300" text-anchor="middle" font-size="12" data-page-node-id="sc5jx2MNDcJu5q70QC6jlE">容纳</text><text class="tnum" x="320" y="316" text-anchor="middle" data-page-node-id="Q8Y1DfMVZTfufzwpnV20Cj">(1, 1)</text></g>
+        <g data-page-node-id="eYxXfoDS9aMfAWK4SfzDsR"><rect class="terminal" id="t-fight" x="540" y="280" width="120" height="40" rx="8" data-page-node-id="6QGZzPsoVNnsZn4EeCMPh7"/><text x="600" y="300" text-anchor="middle" font-size="12" data-page-node-id="YrsGO1dJMExHbcQlHYxNGg">反击</text><text class="tnum" x="600" y="316" text-anchor="middle" data-page-node-id="IlNScG2ZdyKJDSuvSBWOpb">(−4, −3)</text></g>
+        <text class="lbl" x="225" y="118" text-anchor="middle" data-page-node-id="CD0W4stGjZhoJKJHeXT4U3">不进入</text>
+        <text class="lbl" x="415" y="118" text-anchor="middle" data-page-node-id="Tdto1Tl58oR3cocQIrpw5I">进入</text>
+        <text class="lbl" x="410" y="238" text-anchor="middle" data-page-node-id="ICcHivyZO13w17IbPfI4zN">容纳(1)</text>
+        <text class="lbl" x="552" y="238" text-anchor="middle" data-page-node-id="ETQEM45kov8yXAHPVKOVyY">反击(−3)</text>
+      </svg>
+      <div class="steps" role="group" aria-label="逆向归纳步骤" data-page-node-id="LKKUwoOBrKbs9WBHFT11TR">
+        <button class="step-btn" onclick="treeStep(0)" id="st-0" data-page-node-id="Zve4FTgjRE7bRshlsNnFdL">重置</button>
+        <button class="step-btn" onclick="treeStep(1)" id="st-1" data-page-node-id="t8bl1FXiQPhEzRRGkTWLba">步骤 1 · B 的选择</button>
+        <button class="step-btn" onclick="treeStep(2)" id="st-2" data-page-node-id="YyD3RPiwycBJHde8QCFwik">步骤 2 · A 的选择</button>
+      </div>
+      <div class="tree-note" id="treeNote" data-page-node-id="O2jBQypscMYCvklgsVo9FV">逆向归纳:从博弈树末端倒推,逐层确定最佳选择,剔除不可置信的威胁。</div>
+      <div class="tutor" data-tutor="entry" data-page-node-id="635AZnDZg4RbZvCawgbwCP"></div>
+    </div>
+
+    <div class="concept def" data-page-node-id="bidcard">
+      <div class="kind">定义 · Definition</div>
+      <h4>逆向归纳 Backward Induction</h4>
+      <p>求解序贯博弈的<b>标准方法</b>:<b>从博弈树末端倒推,逐层确定最佳选择</b>。因为越靠后的决策越简单——那时已经没有后续顾虑,只需在眼前几个结果里挑最好的。算完最后一层,就把那一层换成它的结果,再往前一层重复。上面的市场进入博弈演示的就是这个过程。</p>
+    </div>
+
+    <div class="concept def" data-page-node-id="spnecard">
+      <div class="kind">定义 · Definition</div>
+      <h4>子博弈完美纳什均衡 SPNE</h4>
+      <p><b>子博弈完美纳什均衡 (Subgame Perfect Nash Equilibrium)</b>,也叫子博弈精炼纳什均衡:<b>不包含不可置信行动的战略所组成的纳什均衡</b>。也就是说,<span class="key">不论过去发生了什么,构成该均衡的战略,其所规定的行动在每一个决策点上都最优</span>。</p>
+      <p>求法:通过<b>逆向归纳</b>剔除不可置信的威胁,这是求解的基本方法。市场进入博弈的 SPNE 是 <b>(进入, 容纳) = (1, 1)</b>。</p>
+    </div>
+
+    <div class="concept caution" data-page-node-id="credthreat">
+      <div class="kind">延伸 · Credibility</div>
+      <h4>不可置信威胁的根源与它的四个现实投影</h4>
+      <p><b>根源:</b>事前最优与事后最优不同——放狠话时对我有利,真要执行时就变成对我有害了。人们能预见到这一点,于是威胁失效,<b>许多帕累托效率因此无法实现</b>。</p>
+      <p>想想这四个问题,都源于同一结构:</p>
+      <ul>
+        <li><b>劫机事件为什么会发生?</b>(扬言「同归于尽」听起来不可信,可一旦对方真信了,它就有威慑力)</li>
+        <li><b>管教孩子为什么困难?</b>(「再闹就不要你了」事前省钱,事后再舍不得)</li>
+        <li><b>家族企业为什么难以实行制度化管理?</b>(对亲属「按规矩办」的承诺事后难以执行)</li>
+        <li><b>大企业为什么效率低?</b>(总部「严惩失职」的威胁,到了分部既难查证也难下手)</li>
+      </ul>
+      <p><b>破解思路:</b>当人们的行为受情绪支配时,以理性判断为「不可置信」的威胁反而可能是可信的。所以<span class="key">建立一个「感情用事」的名声,本身可能是一个理性的选择</span>。</p>
+    </div>
+
+    <div class="hintbox think" data-page-node-id="PaeGtFfboe1diZw5NvV7IY">
+      <div class="h-title" data-page-node-id="odeEUBUMgdihWYmRhWFgy9">类似游戏 · 报数字</div>
+      <p data-page-node-id="Vk0Hkd6hIiiDqpwkeT34ss">两人从 0 开始交替报数,一次报 1 或 2 个数,谁报到 30 谁赢。怎么玩?先手有优势还是后手?若每次可选 1–3 个数呢?</p>
+      <details class="ansbox" data-page-node-id="CG0TEcGDGtjZjEG6EzeVwi"><summary data-page-node-id="mcT6RR4dEIXFT97CLDExIk">展开参考答案</summary><div class="ans" data-page-node-id="N2OjNjxfQKRyBPgAZ2kCDH">
+        <p data-page-node-id="95YRFrEmTFa2UoWpp8l7JL">用倒推法:想报到 30,必须抢到 27(对方只能报到 28/29,你补足 30);要抢 27,必须抢 24……即 <span class="key" data-page-node-id="v2C3Xy5kleaErUZEr2kYpf">抢占 3 的倍数:3, 6, 9, …, 27</span>。先手先报 3 个数中的策略:若每次 1–2 个,先手先报「1,2,3」抢占 3,之后对方报 k 个你补 (3−k) 个,<span class="key" data-page-node-id="JGNAUSjWWZR7FIYXk01ev3">先手必胜</span>。若每次 1–3 个:必胜位置是 4 的倍数加 2(即 2, 6, …, 30),先手先报 2 个数即可保持,仍先手必胜。</p>
+      </div></details>
+    </div>
+
+    <div class="tree-box" data-page-node-id="racebox">
+      <div class="tree-title" data-page-node-id="racet">游戏 3 · 回合制竞速棋 Race Game</div>
+      <div class="tree-sub" data-page-node-id="races">逆向归纳的第四个应用 —— 也是 <b>2.4 习题 1</b> 要分析的对象。规则先在这里讲清楚</div>
+
+      <div class="fill-cond">
+        <span class="li">Player 1 与 Player 2 从各自位置向「终点」前进。<b>第一到达者得 benefit = 5.5</b>,第二到达者得 0。</span>
+        <span class="li">这是<b>回合制</b>游戏:每轮由 <b>Player 1 先行动 → 再由 Player 2 行动</b>。</span>
+        <span class="li">每次行动可选择步数:<b>0 步 → cost = 0;1 步 → cost = 1;2 步 → cost = 3</b>。</span>
+        <span class="li">每个玩家的总效用 = benefit(若先到达) − 累计步行代价。一旦有人到达,本局即结束。</span>
+      </div>
+
+      <p style="font-size:13px;color:var(--ink-500);margin:10px 0 4px">求下列各组起始距离 $(d_1, d_2)$ 的<b>子博弈精炼均衡策略</b>与最终收益。<b>先自己在纸上推一推</b>(至少推 (1,1)、(2,1)、(3,1) 三组),再点开对照:</p>
+      <div class="ans-gate" data-gate="race-ans" data-page-node-id="racegate">
+        <button class="ans-btn" type="button">
+          <span class="ans-ico">🔒</span><span class="ans-txt">显示参考答案</span>
+          <span class="ans-hint">6 组起始距离的均衡行为、得分与理由</span>
+        </button>
+      </div>
+      <div class="ans-body" id="race-ans">
+      <table class="race-tbl">
+        <tr><th>起始距离 $(d_1,d_2)$</th><th>均衡行为</th><th>得分 (P1, P2)</th><th>为什么</th></tr>
+        <tr><td class="d">(1, 0)</td><td>P1 走 0;P2 走 0</td><td class="n">(0, 5.5)</td><td class="hint">P2 已在终点,先手也追不上 → P1 干脆不动,否则白付代价</td></tr>
+        <tr><td class="d">(1, 1)</td><td>P1 第一轮走 1 步</td><td class="n">(4.5, 0)</td><td class="hint">先手优势:一轮到达,得 $5.5-1=4.5$;P2 来不及</td></tr>
+        <tr><td class="d">(2, 1)</td><td>P1 第一轮走 2 步</td><td class="n">(2.5, 0)</td><td class="hint">必须抢在 P2 之前,代价 3 也值得:$5.5-3=2.5$</td></tr>
+        <tr><td class="d">(3, 1)</td><td>P1 走 0;P2 走 1 步</td><td class="n">(0, 4.5)</td><td class="hint">P1 距离太远、无法一轮到达,而 P2 下一轮就能到 → P1 输定了,不动</td></tr>
+        <tr><td class="d">(3, 3)</td><td>P1 每轮走 1,第 3 轮先到</td><td class="n">(2.5, 0)</td><td class="hint">距离相等,先手者赢;P1 走出第一步后 P2 已输定,不移动</td></tr>
+        <tr class="ex"><td class="d">(4, 4)</td><td>P1 每轮走 1,第 4 轮先到</td><td class="n">(1.5, 0)</td><td class="hint">← <b>2.4 习题 1 要分析的情形</b>:$5.5-4=1.5$</td></tr>
+      </table>
+
+      <div class="tree-note">逆向归纳的关键:P1 每轮先动,所以 P1 要预判「我这样走后,P2 会怎么走、我还能不能抢到」。结论的模式是——<b>先手且距离不劣 → 抢先到达;先手但已经输定 → 一步都不动</b>。经济含义:在「赢家通吃」的分配规则下,输在起跑线的人会理性地选择「躺平」。</div>
+      </div>
+    </div>
+
+    <h3 class="sec-title" id="s22" style="font-size:18px" data-page-node-id="QoCXvgkw5Yh7BCu9Sw38Ud">2.2 最后通牒博弈与海盗分金</h3>
+
+    <div class="concept example" data-page-node-id="ncN0dCZ3yaaWEIJBDr8rEn">
+      <div class="kind" data-page-node-id="kxM5yWh1aHymt8Wpv8Uvoo">实验 · Ultimatum Game</div>
+      <h4 data-page-node-id="AcnVVzgVI4qRLqTlOX6Hgq">最后通牒博弈</h4>
+      <p data-page-node-id="ttmsHLQwibjo7Bso6qrJl6">提议者分 100 美元,回应者接受则按方案分配,拒绝则双方为零。「理性」预测:无论多少有总比没有好,所以回应者接受任何正数。但实验结果完全相反——<span class="key" data-page-node-id="AKWNr9AEOperM5jaeNS973">低于 30 美元的「不公平」出价经常被拒绝</span>。</p>
+      <div class="en" data-page-node-id="ryNEBflOfBpAt7FIeMnSuL">你会接受 0.01 美元吗?先思考,再点开看。</div>
+    </div>
+
+    <div class="reveal" id="rv-ultimatum" data-page-node-id="MfF42nplf1QbPBoRHgtxx1">
+      <div class="rv-head" data-page-node-id="RVazvVQzDRhcuPF8EennwV"><span class="rv-ico" data-page-node-id="fpTMfR7ADDaAm9buwbodZj">?</span>思考 · 对方分给你 100 元中的 0.01 元,你接受吗?</div>
+      <div class="rv-q" data-page-node-id="6C61RmAQPWh9HGOqPFdmAg"><span class="q-mark" data-page-node-id="BEEkmtXBVdDspxyXldUI3L">🤔 先想一想:</span>按照「纯理性」——接受 0.01 &gt; 拒绝得 0,你应该接受。但如果换作是你,你真的会接受吗?大多数人的直觉是什么?这种直觉在博弈论里是「非理性」吗?</div>
+      <button class="rv-btn" onclick="revealToggle('rv-ultimatum')" data-page-node-id="0cbEFaGxm18LZL8VXc10Cn">点开看解释 ▸</button>
+      <div class="rv-ans" data-page-node-id="vXJjC5co0pYwXOmepKn92q">
+        <p data-page-node-id="vXMJUqSJ6fYqh1H80SIFbT"><b data-page-node-id="SH98rLdfvX2GWvkcnfCXY5">实验事实:</b>大多数人会拒绝远低于 30 美元的分成——哪怕这意味着双方都一无所获。</p>
+        <div class="rv-step" data-page-node-id="cdUMMy3T9P3oLSQaXJzOi3"><span class="n" data-page-node-id="Ri3SpyDpwMJnphBfhbtcxp">1</span><p data-page-node-id="FLow8QTHJgYOkl3eMOr4AV"><b data-page-node-id="pOPQVWwrtCOMsyz0GNGjMZ">纯理性的预测失败了:</b>若每个人只最大化当期金钱,回应者应接受一切正数,提议者会分给对方 0.01 元——但这几乎从不在现实中出现。</p></div>
+        <div class="rv-step" data-page-node-id="9x0oic6DHxAtKTqhZiiY8a"><span class="n" data-page-node-id="U2PcFKlD7BvBl84WkFt07l">2</span><p data-page-node-id="mdQcKWCGTCkF9JAJPBLqjn"><b data-page-node-id="U4YYXK9aQZW0bd8x2gYvvz">拒绝是一种「信号」:</b>拒绝 0.01 元看似损失了 0.01,实际是在传递「<span class="rv-key" data-page-node-id="u3J4CNZEBxwI2coDHPwNv7">我不好欺负</span>」的信号——在重复社会互动中,这个名声能提高你未来的谈判地位。</p></div>
+        <div class="rv-step" data-page-node-id="LLreLM64s6BDmjRG23h4fI"><span class="n" data-page-node-id="EkL5LV3YQ4eVEU9u0JrIG5">3</span><p data-page-node-id="4EjZCZqHr7xKRvEnecd2bQ"><b data-page-node-id="LOf5Ad9Eup93uMzGxs6u3k">演化视角:</b>演化博弈把拒绝行为看作 ESS:在重复博弈中,「不好欺负」的人获得的长期收益,超过了当期损失 0.01 元的机会成本。<span class="rv-key" data-page-node-id="4jRA00RABDZCvRoSwhGkRJ">公平感不是非理性,而是演化塑造的长远理性</span>。</p></div>
+        <p data-page-node-id="GD3tD36RABId1g4j16BLMF">这解释了为什么「感情用事」的名声可能是理性选择——<span class="rv-key" data-page-node-id="VzlsvaJnCFOUh9RBr2amul">建立强硬名声本身就是一种策略</span>。</p>
+      </div>
+    </div>
+
+    <div class="tree-box" data-page-node-id="HxGjWQBKwWZmwEPabZMDfw">
+      <div class="tree-title" data-page-node-id="xoixzuLan58FiYZqp0egfR">海盗分金 · 回溯推演</div>
+      <div class="tree-sub" data-page-node-id="KhWhZjT0WxsJFWBOfVS0U1">最后通牒博弈的多人版:五名海盗按资历从高到低为 A、B、C、D、E,分 100 枚金币。绿色格 = 投赞成票</div>
+
+      <div class="fill-cond" style="margin-bottom:12px">
+        <span class="li"><b>规则:</b>资历最高的海盗先提方案,全体(含提议者)投票。<b>多数通过</b>即执行并结束;平票时提议者投出决定性一票。若被否决,提议者被扔下海,由下一位资历最高者重新提议,如此重复。</span>
+        <span class="li"><b>偏好序(求解的关键前提):</b>① 每个海盗首先要<b>活命</b>;② 活命的前提下,尽量<b>多拿金币</b>;③ 若前两项都一样,则<b>宁愿把别人扔下海</b>。</span>
+        <span class="li"><b>互不信任:</b>海盗之间既不做承诺也不守承诺,只认可方案里写明的、给每个人<b>整数</b>金币的分配。</span>
+      </div>
+      <div id="pirateStep" style="font-size:13px;color:var(--ink-700);min-height:40px" data-page-node-id="pF6Tjh1VnPbgEFRn0L7mhm"></div>
+      <div class="steps" role="group" aria-label="回溯步骤" data-page-node-id="EMhcffYH9YLZEr0TuYHO03">
+        <button class="step-btn" onclick="pirateStep(0)" id="pst-0" data-page-node-id="ADqk8zhiuxBoWn6GyZnlBR">剩 D,E</button>
+        <button class="step-btn" onclick="pirateStep(1)" id="pst-1" data-page-node-id="Sv4jYaO0MrHxA9T6Gs3NzS">剩 C,D,E</button>
+        <button class="step-btn" onclick="pirateStep(2)" id="pst-2" data-page-node-id="pxuSWnsw86uEZHBjEMuPnd">剩 B,C,D,E</button>
+        <button class="step-btn" onclick="pirateStep(3)" id="pst-3" data-page-node-id="BTSFWrA6FsQAtpEj8nVabV">A 的提议</button>
+      </div>
+      <div class="tree-note" id="pirateNote" data-page-node-id="TbxpdhlSispzurhTKQaCEU">为什么答案如此反直觉?</div>
+      <div class="tutor" data-tutor="pirate" data-page-node-id="lFClzbkBDx6s62gZ6XtYqx"></div>
+    </div>
+
+    <h3 class="sec-title" id="s23" style="font-size:18px" data-page-node-id="XMrrB7fOhV6sfm35QyG0V5">2.3 重复博弈</h3>
+
+    <div class="concept def" data-page-node-id="OELQy0JnTnb2HWABdVsjXI">
+      <div class="kind" data-page-node-id="SrXV78tBDMagosjrFC4BGM">定义 · Definition</div>
+      <h4 data-page-node-id="6onIRYy5kMrH2rNvQJt4gt">序贯博弈 vs 重复博弈</h4>
+      <p data-page-node-id="9XaVAcHrMBLO7MLCAjXXiX">序贯博弈中,前一决策点的选择改变后续子博弈结构,同样结构的子博弈只出现一次;重复博弈中,同样结构的阶段博弈重复多次,前一轮不改变后一轮的结构。重复引入时间动态,允许基于历史惩罚或奖励,改变一次性博弈的结果——如囚徒困境中的合作。</p>
+    </div>
+
+    <div class="concept def" data-page-node-id="discount">
+      <div class="kind">定义 · Definition</div>
+      <h4>无限次重复与贴现因子 δ</h4>
+      <p><b>无限次重复博弈 (Infinitely Repeated Games):</b>博弈无限期进行,或玩家无法预料何时结束。因为收益分散在未来,通常要把未来的收益<b>贴现 (Discount Future)</b>。</p>
+      <p><b>贴现因子 $\\delta$ (Discount Factor):</b>取值 $0 < \\delta < 1$。对玩家而言,<span class="key">第 $1+t$ 期的支付 1 相当于第 1 期的 $\\delta^{t}$</span>。$\\delta$ 越大表示越有<b>耐心</b>(越看重未来)。</p>
+      <p><b>等比数列求和:</b>若每期支付都是 1,无限期的总支付为
+      $$1 + \\delta + \\delta^{2} + \\cdots = \\frac{1}{1-\\delta}$$
+      这是后面算合作条件的基本工具。<b>2.4 习题 2</b> 求的就是「$\\delta$ 要多大为合作的条件」。</p>
+      <p><b>回到一次性博弈:</b>一次博弈的唯一均衡是不合作(坦白)。但<b>如果博弈无限重复,合作就可能出现</b>——这是重复带来的全新可能。</p>
+    </div>
+
+    <div class="concept caution" data-page-node-id="endgame">
+      <div class="kind">对照 · Finite vs Infinite</div>
+      <h4>为什么必须是「无限」次?——末期效应</h4>
+      <p>有限次重复博弈<b>无法支撑合作</b>,原因是<b>末期效应 (Endgame Effect)</b>:假设囚徒困境重复 2 次,用倒推法看,<b>最后一次</b>等同于一次性博弈,双方必定背叛;倒推到前一次,既然知道下一轮会背叛,这一次也会背叛……结果<span class="key">每一轮都背叛</span>。</p>
+      <p>所以「关系会一直持续下去」这个信念本身,就是合作的重要条件。<b>2.4 习题 1</b> 的竞速棋里,「输定就不动」也是同一类倒推逻辑。</p>
+    </div>
+
+    <div class="concept def" data-page-node-id="X0QocR9zMmBVnQDjM8XEKv">
+      <div class="kind" data-page-node-id="fGEmJIDghuwJUTtf3tosT5">定义 · Definition</div>
+      <h4 data-page-node-id="oExkQYCEb0qqwgHi9O0bKb">无名氏定理 Folk Theorem</h4>
+      <p data-page-node-id="5eRjyxPO61DhiMtiCWQuPj">在无限次重复博弈中,若参与人对未来足够重视(贴现因子 δ 足够大),<span class="key" data-page-node-id="4VLXo5mr6I1EBiql84duGY">任何程度的合作都可以通过某个子博弈完美纳什均衡得到</span>。计算:每期支付 1、贴现因子 δ 时,无限期总支付为等比数列和 1/(1−δ)。</p>
+    </div>
+
+    <div class="concept example" data-page-node-id="F3qht6LszAtuKEuytkCScn">
+      <div class="kind" data-page-node-id="WuaTBBQe36BD77mOGT80e4">策略 · Strategies</div>
+      <h4 data-page-node-id="uCrMpJFXlb5TGJaB9kGddx">触发策略与以牙还牙</h4>
+      <p data-page-node-id="U7nGXTh7f2WSVU6b6fo1Po"><b data-page-node-id="lBEckcKH6sJsk8zpdTwAsh">Trigger (Grim) Strategy</b>:从合作开始,一旦对方背叛则永远背叛。<b data-page-node-id="YrQ90ckObaHgR8JbKVTI0r">Tit-for-Tat (以牙还牙)</b>:从合作开始,之后每次复制对方上一期行动——汉谟拉比法典即有记载,Robert Axelrod 的重复囚徒困境锦标赛显示 TFT 最成功。有限次重复博弈无法支撑合作:末期效应使最后一轮必背叛,倒推后每一轮都背叛。</p>
+    </div>
+
+    <h3 class="sec-title" id="s24" style="font-size:18px" data-page-node-id="AcEpuXv8Z9wf4nzHfAixRU">2.4 课后习题</h3>
+
+    <div class="exercise" data-page-node-id="AdFBV7yGK1iFtEPwn3dO9r">
+      <div class="q-title" data-page-node-id="TrCX3qzIYhfxY7FuPSGEH1"><span class="qn" data-page-node-id="qfnNlE2ETHXGwmDHstbqwU">1.</span>继续回合制竞速棋</div>
+      <div class="q-body" data-page-node-id="SdPqHyE4AwGNHUugHLgrCJ">
+        <p data-page-node-id="J9AR4lcWkmGoTogWBqRaLq"><b>规则回顾(见 2.1 末尾「游戏 3」):</b>P1、P2 各自从距离 $d$ 的位置走向终点,先到者得 benefit = 5.5、后到者得 0;每轮 P1 先动再 P2;每次可走 0/1/2 步,代价 0/1/3;总效用 = benefit(若有) − 累计代价。</p>
+        <p data-page-node-id="J9AR4lb"><b>(1)</b> 分析起始距离为 <b>(4, 4)</b> 的情况,写出子博弈精炼均衡策略与双方最终收益。<b>(2)</b> 回顾 (1,0)、(1,1)、(2,1)、(3,1)、(3,3) 这几组,找出均衡行为的规律。<b>(3)</b> 这个游戏对你有什么现实启示?</p>
+      </div>
+      <div class="tutor" data-tutor="race44" data-page-node-id="WgJWUbV8PnUu0t9LvP1avc"></div>
+    </div>
+
+    <div class="game" data-page-node-id="KCYmfXcn90lFNxVEeVGddZ">
+      <h4 data-page-node-id="buwgCpj9aSLx9HFwGs0Djo">交互 · 回合制竞速棋</h4>
+      <p data-page-node-id="czYjsF0av2WsL03erCrSL5">P1 与 P2 各自走向终点,先到者得 benefit=5.5。每轮 P1 先动再 P2;步数 0/1/2 代价 0/1/3。输入起始距离,查看逆向归纳结论。</p>
+      <div class="row" data-page-node-id="wvkw3O2rAK7RBQhRMfP5bW">
+        <label data-page-node-id="ecuypADSc1IamXYZPsbQuq">起始 P1</label><input type="number" id="d1" value="4" min="0" max="10" aria-label="玩家1起始距离" data-page-node-id="Iytdle8BNVUEgSu3BoNkNy">
+        <label data-page-node-id="1P2F3x3SyC5XN9RgsDykiW">起始 P2</label><input type="number" id="d2" value="4" min="0" max="10" aria-label="玩家2起始距离" data-page-node-id="Xj3MlUd4CcUelYkDp3EXN5">
+        <button class="btn gold" onclick="solveRace()" data-page-node-id="LtN6DoB2wvTCEqqUE4alhu">求解均衡</button>
+      </div>
+      <div class="result" id="raceResult" data-page-node-id="mtR0u0rpg7W3j7PQ59YPHJ">等待求解…(试试 (4,4)、(3,3) 或 (1,1))</div>
+    </div>
+
+    <div class="exercise" data-page-node-id="U20sL7l0lA2LnFCLlQAQfZ">
+      <div class="q-title" data-page-node-id="MEwRRhkcmAKnxllCcmC3MM"><span class="qn" data-page-node-id="yeWeBMLVhPkSeyeRxsodsR">2.</span>Repeated Prisoner's Dilemma</div>
+      <div class="q-body" data-page-node-id="toFJoiVhTrNHTvVydiOEDR">
+        <p data-page-node-id="GLCo1CpirGGsTif9ZEdpIE">无限次重复囚徒困境(合作 3,3 / 背叛诱惑 5,0 / 惩罚 1,1),双方采用 Trigger 策略,贴现因子 δ。(1) δ 满足什么条件可达成合作?(2) 一般化 R&gt;T&gt;P&gt;S 时,δ 的临界条件?如何调整变量促进合作?</p>
+      </div>
+      <div class="tutor" data-tutor="rpd" data-page-node-id="sjE2P8NzsIF7aGpjGJHLDh"></div>
+    </div>
+
+    <!-- ═══════════ 第二章 · 本章术语 ═══════════ -->
+    <section class="glossary" id="gloss2" aria-label="第二章双语术语" data-page-node-id="gvFt8Uckr43QoIFD6e4JnL">
+      <div class="g-head" data-page-node-id="tufvLVhoSrovzFxfWzwOBO">
+        <h2 class="g-title" style="margin:0" data-page-node-id="lThiVLDNpUo4L6mnsP3XfM">本章术语 · 双语 Glossary</h2>
+        <span class="topic" style="background:var(--gold-100);color:var(--gold-600);font-weight:700" data-page-node-id="rD3qc4BsDrhXaJAoB8XRea">第 2 章 · 序贯与重复</span>
+      </div>
+      <p class="g-sub" data-page-node-id="8moS9ddB9itdZyRQoZdO2l">点击卡片展开详细释义与例句。输入关键词可筛选(支持中/英文)。</p>
+      <input class="g-search" id="gSearch-2" type="search" placeholder="🔍  搜索本章术语,如 Backward / 贴现" aria-label="搜索第二章术语" data-page-node-id="e3t9dtBaPPfHfiQLFuTRle">
+      <div class="g-grid" id="gGrid-2" data-page-node-id="OwHxQtCkx5BD5zo8M9T0bb"></div>
+    </section>
+
+    <!-- ═══════════ CH3 ═══════════ -->
+    <div class="chapter-head" id="ch3" data-page-node-id="iiN5MHSlSIq4nOUCVirJXX">
+      <span class="ch-num" data-page-node-id="tePqS8aIl0edjjGp7LX24Y">CH 03</span>
+      <h2 data-page-node-id="oXRZEcVNNw0PYmoVUfOamm">演化博弈论<span class="en" data-page-node-id="i5OE7zFXxyijEjoH6unVbN">Evolutionary Game Theory</span></h2>
+    </div>
+
+    <h3 class="sec-title" id="s31" style="font-size:18px" data-page-node-id="OQeLGBBFSGrQo54n3VKmTU">3.1 演化博弈基础与 ESS</h3>
+
+    <div class="concept def" data-page-node-id="4k6ZJhqoAX0EQ7ggP2AVSO">
+      <div class="kind" data-page-node-id="yRQTEzkB8tvfkhMMtrfHV6">定义 · Definition</div>
+      <h4 data-page-node-id="wUfBnEJH4JUVxmNmDk8VSy">演化博弈 Evolutionary Game Theory</h4>
+      <p data-page-node-id="5aaevbXDr8r951tRFxhAmg">由 John Maynard Smith 提出,将达尔文演化引入决策分析:有限理性 + 动态调整,选择单位从个体转向种群或基因。收益高于种群平均的策略在竞争中占优,其比例随时间上升——模拟自然选择过程。</p>
+      <div class="en" data-page-node-id="uw8Hs6F2gNJoEAUOM0M46g">推荐读物:Richard Dawkins《The Selfish Gene 自私的基因》</div>
+    </div>
+
+    <div class="concept def" data-page-node-id="lTPVLNSk6TDTSNeR5KYFWb">
+      <div class="kind" data-page-node-id="RaOdcT2HZZQlrAiRWEjaAs">定义 · Definition</div>
+      <h4 data-page-node-id="5hl8s1EDuzRQGD0siuPG67">进化稳定策略 ESS</h4>
+      <p data-page-node-id="Ss70fyvpUYdjYGsNMaZ204">静态角度:其种群不能被变异成功侵入;动态角度:从多样初始状态出发,该策略逐步主导整个种群。<span class="key" data-page-node-id="VoxxBYLs6HCCtAD8Am0zvL">ESS 必是纳什均衡,但纳什均衡不一定是 ESS</span>——ESS 能抵抗入侵,具有动态稳定性。</p>
+      <div class="en" data-page-node-id="tL9bwsfb14jsrbj0jCP5Pf">想两个生活中的 ESS?先思考,再点开看演化逻辑。</div>
+    </div>
+
+    <div class="reveal" id="rv-snail" data-page-node-id="FNCQyQ58Lmx3z2Oj1YifeJ">
+      <div class="rv-head" data-page-node-id="HpWqeGyvl4P6JsqOSzDwnL"><span class="rv-ico" data-page-node-id="qB2AsjDBbh8WxeKcaMr2R5">?</span>思考一 · 为什么蜗牛几乎都是右旋的?</div>
+      <div class="rv-q" data-page-node-id="mtcMJVsXhqTTJURtdJUXUh"><span class="q-mark" data-page-node-id="81Bv8QSrAgWR92TLCW66zG">🤔 先想一想:</span>假设某天自然界同时存在左旋壳和右旋壳的蜗牛,数量差不多。请问:左旋的蜗牛会慢慢变多、右旋的会慢慢变多,还是维持一半一半?为什么?</div>
+      <button class="rv-btn" onclick="revealToggle('rv-snail')" data-page-node-id="NoFC7kOq0ZM7WUfQi4Muh6">点开看解释 ▸</button>
+      <div class="rv-ans" data-page-node-id="3NAsXoW2gdWXl9YKFChBkS">
+        <p data-page-node-id="HNCH2wrN9jxaUjhesKo9UV"><b data-page-node-id="9ztLPYyoUhLAgVCRQ2Q2CI">关键规则:</b>两只蜗牛<b data-page-node-id="VhpTqECDqiglloz893JN00">只有壳旋转方向相同才能交配</b>——左旋只能和左旋配,右旋只能和右旋配。</p>
+        <div class="rv-step" data-page-node-id="f2M0BEn0YK63eegZV1dLRC"><span class="n" data-page-node-id="7swJOuhnZ82NPaqJLPluBI">1</span><p data-page-node-id="hgNTCFoaqz5Sw3PM9G64dF"><b data-page-node-id="OXj5vCmZAMQecyGHQsHb6v">偶然扰动:</b>某次火山爆发等偶然因素掩埋了更多左旋蜗牛,右旋蜗牛稍占多数(比如 55% 对 45%)。</p></div>
+        <div class="rv-step" data-page-node-id="B03mBI3Mq88xgfpaW1BazX"><span class="n" data-page-node-id="g6UvRqhZFUqkshaDKljuEH">2</span><p data-page-node-id="HqLqqmKCfrATbw0qh4upHd"><b data-page-node-id="R05vkp1QemcPgXrsZbZlTU">正反馈循环:</b>右旋蜗牛因为数量多,更容易找到配偶、留下更多后代;左旋蜗牛则相反。右旋优势被不断放大。</p></div>
+        <div class="rv-step" data-page-node-id="JI2GvHEFX9EE1gB59iz2LU"><span class="n" data-page-node-id="SnLOTmiB0rf3ButdVq7Jhq">3</span><p data-page-node-id="ZnSxylIBaxzNE7YqsGMXfM"><b data-page-node-id="OzC3vhYFCPJtOI9PexpDX1">锁定:</b>最终右旋主导整个种群。这时即使出现一只左旋变异蜗牛,它也几乎找不到配偶——<span class="rv-key" data-page-node-id="9kR1KQ9oLgGHNvNR5fuq2J">左旋无法侵入右旋种群,右旋就是 ESS</span>。</p></div>
+        <p data-page-node-id="m4589fkHHk9MbLdpooEVsB">这就是「路径依赖 + 网络效应」在生物界的样子:一旦某个方向占据优势,优势会自我强化,直到成为无法撼动的稳定状态。</p>
+      </div>
+    </div>
+
+    <div class="reveal" id="rv-qwerty" data-page-node-id="gBBiA4rKPzpAhGSkg7RDiK">
+      <div class="rv-head" data-page-node-id="AdNJTBLqzc9VArlsANsdZ4"><span class="rv-ico" data-page-node-id="ef3ixUW99fjn6G67qidzLw">?</span>思考二 · QWERTY 键盘效率不高,为何沿用至今?</div>
+      <div class="rv-q" data-page-node-id="XW6WJl996eXNB0fn6UW2Vx"><span class="q-mark" data-page-node-id="HMmdSg0eq1xeianJYK1Bs9">🤔 先想一想:</span>打字机发明时,QWERTY 布局其实是为了让常用字母隔开、防止机械卡键,并非为效率设计。后来有了更高效的 Dvorak 键盘。为什么大家都还在用 QWERTY?</div>
+      <button class="rv-btn" onclick="revealToggle('rv-qwerty')" data-page-node-id="tMh8miHCevnPZpqtGmIQbN">点开看解释 ▸</button>
+      <div class="rv-ans" data-page-node-id="dQF8DwkE2ewEWH7z700QEb">
+        <p data-page-node-id="9fm7F58ZxlUS3n4rTJYSQE"><b data-page-node-id="RUHTFA5RoAdXEpUmosbl9L">核心机制:网络效应 (Network Effects) + 转换成本。</b></p>
+        <div class="rv-step" data-page-node-id="1IZsPDUsAwoptIcQTDGYkV"><span class="n" data-page-node-id="eHTfUW4uYQ3VD0wJtsOnfq">1</span><p data-page-node-id="dnLTHqVM5UkTSUYyO6n1Nh"><b data-page-node-id="HyFEgnENgWIFcDzFdlgbUD">互补品与惯性:</b>全世界键盘、输入法、教程、肌肉记忆都以 QWERTY 为标准,换键盘意味着所有互补品都要重来。</p></div>
+        <div class="rv-step" data-page-node-id="ZpIyhJwAdgNX3uINoTQ4HH"><span class="n" data-page-node-id="BmVf9pYCDb2j1JTO2LiCGy">2</span><p data-page-node-id="zyLQD8kA0zLhSdx5zx6Yq5"><b data-page-node-id="RDx8Bxkm98WZ1BBivQQTSw">个体理性选择:</b>你一个人换 Dvorak,别人还是用 QWERTY,你反而无法与别人共用电脑、共享习惯——<span class="rv-key" data-page-node-id="vbHywxhBIMAftmhXiTuGEL">单方面偏离对自己不利</span>。</p></div>
+        <div class="rv-step" data-page-node-id="MoO205rNbQ9cogwOCGXFaJ"><span class="n" data-page-node-id="5yBAJITCRswfTw6rBYPNwq">3</span><p data-page-node-id="Jdg6HUisBFCzKLbaIqotZ7"><b data-page-node-id="DcPV4oW1SQoUhKEwfdztes">群体锁定:</b>没有足够多的人同时切换,Dvorak 无法形成正反馈,始终无法「侵入」QWERTY 种群。</p></div>
+        <p data-page-node-id="HEjLYnKVpCPHidKw3mm8IJ">经济含义:市场标准可能持久地停留在<span class="rv-key" data-page-node-id="MkmJqkgXCukDqJOEewrWOM">非效率</span>状态——标准是协调博弈的均衡,而协调最难打破。这正是「纳什均衡不一定是帕累托最优」的现实注脚。</p>
+      </div>
+    </div>
+
+    <h3 class="sec-title" id="s32" style="font-size:18px" data-page-node-id="FBBE2OEXvPgquEZ1P71Wer">3.2 鹰鸽博弈的演化分析</h3>
+
+    <p class="sec-sub" data-page-node-id="s32lead">回顾 1.4 的 <a href="#s14" style="color:var(--gold-600)">表 7 · 鹰鸽博弈</a>:两玩家争夺资源 $V$,双鹰相遇各付打架成本 $C$。已知它有混合纳什均衡——双方以 $p^* = \\dfrac{V}{C}$ 的概率选择「鹰」(V=100、C=150 时 $p^* = \\dfrac{2}{3}$)。现在换一个视角:不再问「某一个人怎么选」,而是问「<b>种群里的鹰和鸽各占多少比例</b>」。设鹰的比例为 $x$,鸽为 $1-x$。</p>
+
+    <div class="concept caution" data-page-node-id="s32q">
+      <div class="kind">自问自答 · 先想再看</div>
+      <h4>从「个体选择」转向「种群比例」</h4>
+      <ol style="margin:8px 0 0 20px;font-size:14px;line-height:1.9">
+        <li>对「鹰人」和「鸽人」来说,他们的支付分别是什么?什么比例下两者相等?</li>
+        <li>如果 $x$ 增加,鹰人的收益如何变化?如果 $x$ 减少,鸽人的收益如何变化?</li>
+        <li>审视 $x^*$ 表达式中各个变量的关系,尝试解读其经济含义。</li>
+      </ol>
+      <p style="font-size:13px;margin-top:8px">想好之后,用下面讲解器的「下一步 ▶」逐步对照。</p>
+    </div>
+
+    <div class="concept example" data-page-node-id="ogW7ZyjZkNQk7StORPHKey">
+      <div class="kind" data-page-node-id="dHN8uB2B86TA1t1Z1ZziEM">分析 · Analysis</div>
+      <h4 data-page-node-id="BRTeLsxejLLdp2iw4iT8y2">种群中的鹰与鸽</h4>
+      <p data-page-node-id="yFQHmfYBHieD6Wo8Kg6mAx">群体中鹰比例 x、鸽比例 1−x。鹰的支付 = x·(V−C)/2 + (1−x)·V;鸽的支付 = (1−x)·V/2。令两者相等得 x* = V/C。若 x &gt; V/C,鹰收益低,x 下降;若 x &lt; V/C,x 上升——<span class="key" data-page-node-id="fSKTOYCkPAaFqn4odKT4RM">稳定点 x* = V/C 是 ESS</span>。</p>
+      <div class="tutor" data-tutor="hevo" data-page-node-id="IlHf3gt3ucroR76K6ypNbK"></div>
+    </div>
+
+    <h3 class="sec-title" id="s33" style="font-size:18px" data-page-node-id="HjpWMIBkbNGS1XZU174JWJ">3.3 自我牺牲与汉密尔顿法则</h3>
+
+    <div class="concept def" data-page-node-id="oMaOnjAOFmT9d96EgWVEi0">
+      <div class="kind" data-page-node-id="VnW8p5get5bGJReHB5GVcH">法则 · Rule</div>
+      <h4 data-page-node-id="aB4OXLVZBWXjzS7gkUsBlL">汉密尔顿法则 Hamilton's Rule</h4>
+      <p data-page-node-id="bw98ZqwFdvxYmlelB55DI5">当 r × B &gt; C 时,利他行为是 ESS。r = 亲缘系数(基因共享程度),B = 受益者增益,C = 利他者成本。</p>
+      <p data-page-node-id="KeDxefVgveeBP4k1NTT6AM">理性的单位是<b data-page-node-id="DxRGIHNUvOSwx6RSWdjMAG">基因</b>而非个体——传统经济学视为「非理性」的利他,在演化视角下其实是在帮「另一个自己」传播基因。</p>
+      <div class="en" data-page-node-id="gnigilzBi77U1290MBErFc">工蜂为何甘愿牺牲?先思考,再点开看。</div>
+    </div>
+
+    <div class="reveal" id="rv-bee" data-page-node-id="6EioTcCWRB6fnzmNBRlB3x">
+      <div class="rv-head" data-page-node-id="ISMnIq1BfvUtbk96x7MF81"><span class="rv-ico" data-page-node-id="x3xMrIJGuPGTYnrHAvFqyH">?</span>思考 · 工蜂刺敌后死亡,为何这种「自杀式利他」没有被淘汰?</div>
+      <div class="rv-q" data-page-node-id="zQ7BMYABTIHhws3UESYnI0"><span class="q-mark" data-page-node-id="5dDrHhW2MSIJlznf65R9iP">🤔 先想一想:</span>一只工蜂用毒针蜇入侵者后,毒针脱落、工蜂死亡。从个体角度看这是 100% 的亏损(C = 1 = 死亡),为什么演化还保留了这种行为?</div>
+      <button class="rv-btn" onclick="revealToggle('rv-bee')" data-page-node-id="suJUagbrLXGJLJaLXWzhlI">点开看解释 ▸</button>
+      <div class="rv-ans" data-page-node-id="2t05iQp4LHgiiL0sdjEawV">
+        <p data-page-node-id="Vv69lcwJZGvZHeWUDhhtAE"><b data-page-node-id="AnGIHYFpJsfJ1yTzW8fuZQ">核心:评价利他行为,要看基因,而不是看个体。</b></p>
+        <div class="rv-step" data-page-node-id="b3ekbqM6pozvvpCADjOvRz"><span class="n" data-page-node-id="HAtvs64HQY7v2Vtt5hZveJ">1</span><p data-page-node-id="uz3JuvTWzx1sX5O9SlF7g5"><b data-page-node-id="4QRJnmvlqu6Ui4oqWT9CAI">看清「自己人」:</b>蜜蜂的特殊亲缘结构——工蜂与蜂王女儿(妹妹们)的亲缘系数高达 <b data-page-node-id="BmV3JBmE853XpnS48DyHd2">r = 0.75</b>(蜂王二倍体、雄蜂单倍体,工蜂间共享 75% 基因),远超普通兄弟姐妹的 0.5。</p></div>
+        <div class="rv-step" data-page-node-id="I1FtZDZOogOXTg214VFwOT"><span class="n" data-page-node-id="yK98sOVZqpHOQlhZdrVNO8">2</span><p data-page-node-id="wCmB7ZRZDNDCgOecnHJ8wB"><b data-page-node-id="o3ubCCJh5whtJJqysLIiUW">算一笔基因账:</b>工蜂牺牲自己(C=1),却保护了蜂王,让蜂王多生 <b data-page-node-id="hqBSiwItez2SkzY34njaD9">B = 200</b> 只新蜂——这 200 只里有大量工蜂的妹妹,携带它 75% 的基因。</p></div>
+        <div class="rv-step" data-page-node-id="mdY6Hx45PFVjOFEhRbaonN"><span class="n" data-page-node-id="YZnZmdZq7Gj7TifzP5efBP">3</span><p data-page-node-id="oFbbXvFpLybC6bJF8RdQi8"><b data-page-node-id="aRMXVWLOzQLLXKhmgX515I">代入公式:</b>r × B = 0.75 × 200 = <b data-page-node-id="Dd82yRIN90HJbyhiAbFofN">150</b>,远大于 C = 1。<span class="rv-key" data-page-node-id="orQ4trFz4TfmKEBoEc6b22">150 &gt; 1 → 牺牲是 ESS</span>。</p></div>
+        <p data-page-node-id="klrm2bV6Fw0RZW2Sg7BoHG">换句话说:工蜂「死」了,但它的基因通过妹妹们「活」了下来,而且活得比不牺牲更好。利他不是无私,而是<span class="rv-key" data-page-node-id="NnsQSbTwCjRUW4BrQxVQn2">基因的自私</span>——这是 Richard Dawkins《自私的基因》的核心观点。</p>
+      </div>
+    </div>
+
+    <h3 class="sec-title" id="s34" style="font-size:18px" data-page-node-id="NvWySldEjsy8DDoA6cPIlW">3.4 演化博弈与行为经济学</h3>
+
+    <div class="concept example" data-page-node-id="EKPBWJGAryY3OjDwiGqscG">
+      <div class="kind" data-page-node-id="oN9ATWfAj53jmyCZCKs390">观点 · Perspective</div>
+      <h4 data-page-node-id="Kcdfiesa9ZAriNHC5WbgSV">「偏差」是远古环境的适应性 ESS</h4>
+      <p data-page-node-id="B5UAiefuhmOSTTRr3b28kN">锚定、损失厌恶等偏差在远古环境是适应性的 ESS,现代环境失配 (Mismatch)。双系统理论:快速系统来自遗传与演化适应;实验发现合作意识强的人更相信直觉——<b data-page-node-id="IyVE1t4yjRNZ2QSMNIqgio">合作是基本人类本能</b>。</p>
+      <ul data-page-node-id="rcuWbUUJ8FZksOiFzoZ1AL">
+        <li data-page-node-id="ZbWEGPHsqSAFUI4RDTZJt9"><b data-page-node-id="T1A5nd76Zj5rdu1FGVUdTM">过度自信</b>:自信者敢冒险,获资源/配偶 → 基因传播,ESS。</li>
+        <li data-page-node-id="lbq0lMqOR4bF61gWi2DxBP"><b data-page-node-id="SqgpRPmJkuCTPm8K9dKRG3">最后通牒拒绝</b>:拒绝信号「我不好欺负」,提高未来谈判地位,ESS。</li>
+        <li data-page-node-id="sacrifice1"><b>为理念 / 为陌生人牺牲</b>(环保主义、慈善):基因视角看,远古部落中利他提升群体生存,间接益及同族基因;到了现代,它成为一种<b>文化 ESS</b>。</li>
+      </ul>
+    </div>
+
+    <div class="concept caution" data-page-node-id="timescale">
+      <div class="kind">对照 · Time Scale</div>
+      <h4>「几百万年」与「几百年」的错配</h4>
+      <p>人类作为一种生物的起源可追溯到<b>数百万年前</b>,但人类文明史<b>不足一万年</b>,进入市场化、现代社会更是只有<b>数百年</b>。许多在数百万年演化中刻进 DNA 的行为模式,即使已经不适应现代社会、特别是不适应市场逻辑,也几乎不可能去除。</p>
+      <p>这带来一个发人深省的反转:古典政治哲学与经济学常把人假设为「出于个体理性而行动」,认为合作、社会契约与制度之所以成立,是因为它们能促进每个人的福利。但实际上,人类数百万年来就是<b>群居动物</b>——更可能的情况是:<span class="key">合作与社会才是天生的、不证自明的,而自私自利才是后天的</span>。</p>
+      <p style="margin-top:10px">孟子主张「性善论」,他敏锐地观察到:</p>
+      <blockquote style="border-left:3px solid var(--gold-500);padding:8px 14px;margin:8px 0;background:var(--gold-50,#FFFBEB);font-size:13.5px;line-height:1.9;color:var(--ink-700)">
+        「人皆有不忍人之心。……所以谓人皆有不忍人之心者:今人乍见孺子将入于井,皆有怵惕恻隐之心;非所以内交于孺子之父母也,非所以要誉于乡党朋友也,非恶其声而然也。由是观之,无恻隐之心,非人也;无羞恶之心,非人也;无辞让之心,非人也;无是非之心,非人也。恻隐之心,仁之端也;羞恶之心,义之端也;辞让之心,礼之端也;是非之心,智之端也。人之有是四端也,犹其有四体也。」
+      </blockquote>
+      <p style="font-size:13px;color:var(--ink-500)">孟子认为,人的许多道德观念就如同肢体一样,都是<b>天生的</b>——这与「利他 / 合作是演化塑造的本能」在结论上惊人地一致,只是论证路径不同:一个是性善,一个是基因。</p>
+    </div>
+
+    <div class="reveal" id="rv-homo" data-page-node-id="pjlP8ZrPj0O05mHswLWw3z">
+      <div class="rv-head" data-page-node-id="8MeJKcGq4zWTxGAgTGkqg8"><span class="rv-ico" data-page-node-id="atjtFmGjWViZEmqSbftyDH">?</span>思考 · 同性恋的「达尔文悖论」</div>
+      <div class="rv-q" data-page-node-id="FUhpvE6fhd5UD2mwkiJ0fr"><span class="q-mark" data-page-node-id="GOnF0bcQX57FQn3a7ZJxt7">🤔 先想一想:</span>如果同性恋有遗传基础,且同性恋个体通常后代较少,那这些基因应该被自然选择淘汰才对。为什么它们以稳定低频(约 3–5% 人口)传承至今?</div>
+      <button class="rv-btn" onclick="revealToggle('rv-homo')" data-page-node-id="glVyi3vHT2I1r5tFtQogxF">点开看解释 ▸</button>
+      <div class="rv-ans" data-page-node-id="WmvBoBFNPUuJHd5eCmNwIL">
+        <p data-page-node-id="PJKSU7AQ81sDdrZqtPoVac">两个主流演化假说——核心都是:基因不一定只通过「自己繁殖」来传播。</p>
+        <div class="rv-step" data-page-node-id="0oalACFwygemXnmuEkGFEC"><span class="n" data-page-node-id="E6vRouRKlGNthZsEiLVjtm">1</span><p data-page-node-id="0klUzX81TzSwnkp7UIPRau"><b data-page-node-id="wLh2eeY6GTuDZzTz5QBlo2">亲缘选择假说 (Kin Selection):</b>同性恋个体不繁殖或少繁殖,但会帮助兄弟姐妹抚养后代——把资源投向携带相似基因的侄子侄女,<span class="rv-key" data-page-node-id="KCsCneUeyRthYjghq9P4Fi">间接提高基因平均适应度</span>。</p></div>
+        <div class="rv-step" data-page-node-id="z460P6xU6IbMgmjZICIAva"><span class="n" data-page-node-id="H7uzwtPVKqBQ767SMSpW5E">2</span><p data-page-node-id="w6YG7crR5dVM49yhTlvY30"><b data-page-node-id="ok2Zj3Kn6AiLdgGoB6yR8F">社会亲社会假说 (Sociosexual Hypothesis):</b>同性恋促进了群体社会凝聚,如男性间形成紧密联盟。联盟成员在群体博弈中占优,更容易获得资源与繁殖机会,基因反而更容易传承。</p></div>
+        <div class="rv-step" data-page-node-id="5OC2D00AmZzVwjiQ90EwaY"><span class="n" data-page-node-id="4FOWDZdJEo15D8D3XFg5Ep">3</span><p data-page-node-id="USzzWchu3f1mGN7Enyd3LB"><b data-page-node-id="XZBxypGLDCbfNUDHQJEGaM">群体水平 ESS:</b>演化模拟显示,这种模式作为<span class="rv-key" data-page-node-id="LfQq3DSesW30xeRjaM7g2k">群体水平的 ESS</span>存在,尤其在狩猎采集社会中——少量同性恋(约 3–5%)是最优配置,过多降低整体繁殖,过少失去社会凝聚收益。</p></div>
+        <p data-page-node-id="6ZkGkZVg4B6d939pf59Evf">这与汉密尔顿法则一脉相承:<span class="rv-key" data-page-node-id="mDGiBAIgZnNt4xdy8JDR83">自然选择作用的最小单位是基因,不是个体</span>。</p>
+      </div>
+    </div>
+
+    <h3 class="sec-title" id="s35" style="font-size:18px" data-page-node-id="2E4D4iMCoMeOBGIF78QTkl">3.5 博弈论与制度经济学</h3>
+
+    <div class="concept def" data-page-node-id="J8hwuGHe5uzmJ37PTeRR65">
+      <div class="kind" data-page-node-id="Q1sAVcKJLL2mFMybIQPOHy">观点 · Perspective</div>
+      <h4 data-page-node-id="TsPGKAHM2ODTvLBwBOnhGN">制度是博弈均衡的结果</h4>
+      <p data-page-node-id="Ft9oW5bIzN2iFwWFmF5TFA">制度如合同是触发策略的正式化(惩罚背叛);自发秩序(哈耶克)是 ESS——从随机互动演化而来;制度稳定因其是 ESS——违规收益低,被系统排斥(靠右行走)。某些制度不能给违规带来足够负收益,便沦为表面空谈(贪污腐败、劣币驱逐良币)。</p>
+      <div class="en" data-page-node-id="RRknMWZRGrRuWZmE8EqwX5">强烈推荐亲手玩一遍下面这个互动讲解手册——它把本节和 2.3 重复博弈的内容做成了可以点着玩的模拟。</div>
+
+      <a class="site-card" href="https://dccxi.com/trust/" target="_blank" rel="noopener" data-page-node-id="trustcard">
+        <span class="sc-ico">▶</span>
+        <span class="sc-main">
+          <span class="sc-title">信任的进化 · The Evolution of Trust</span>
+          <span class="sc-url">dccxi.com/trust</span>
+          <span class="sc-desc">一个交互式讲解手册:从一次性囚徒困境出发,通过「重复博弈 → 以牙还牙 → 误解与噪声 → 演化稳定」的动手推演,理解合作、信任与制度的由来。与 2.3 重复博弈、3.1 ESS、3.5 制度经济学直接对应。</span>
+        </span>
+        <span class="sc-go">点击打开 ↗</span>
+      </a>
+    </div>
+
+    <h3 class="sec-title" id="s36" style="font-size:18px" data-page-node-id="zBwaup8Dsh8zRty9yEEVJC">3.6 课后习题 · 爱情博弈</h3>
+
+    <div class="exercise" data-page-node-id="FmfGDBithzXBWRqKvz3aMc">
+      <div class="q-title" data-page-node-id="QfBoIeHyBNCth4moDNpDPi"><span class="qn" data-page-node-id="ciJTGxvykgrftOV5fOdDIE">1.</span>爱情博弈</div>
+      <div class="q-body" data-page-node-id="hv6KKniVzbJOQDshtRiOPR">
+        <p data-page-node-id="q6rHHBDPqjvw2iZZDouqjR">假设一个社会中有不同感情习惯的男女,他们<b>随机相遇</b>,并产生以下结果:</p>
+        <ul style="margin:8px 0 10px 20px;font-size:14px;line-height:1.9">
+          <li>当<b>大胆女</b>遇到<b>忠诚男</b>,二人一拍即合,从此幸福快乐地生活在一起;</li>
+          <li>当<b>谨慎女</b>遇到<b>忠诚男</b>,经过一番麻烦的考验,二人最终幸福快乐地生活在一起;</li>
+          <li>当<b>大胆女</b>遇到<b>薄情男</b>,二人一拍即合,薄情男始乱终弃,大胆女黯然神伤;</li>
+          <li>当<b>谨慎女</b>遇到<b>薄情男</b>,薄情男未能通过考验,二人就当从未遇见过。</li>
+        </ul>
+        <p data-page-node-id="q6rHHBDPqjvw2iZZDouqjR2">由此总结得到的支付矩阵如下(行 = 女,列 = 男):</p>
+        <table class="race-tbl" style="max-width:460px;margin:10px 0">
+          <tr><th>女 ＼ 男</th><th>忠诚</th><th>薄情</th></tr>
+          <tr><td class="d">谨慎</td><td class="n">(2, 2)</td><td class="n">(0, 0)</td></tr>
+          <tr><td class="d">大胆</td><td class="n">(5, 5)</td><td class="n">(−5, 15)</td></tr>
+        </table>
+        <p data-page-node-id="q6rHHBDPqjvw2iZZDouqjR3">最终,社会当中<b>忠诚男</b>和<b>谨慎女</b>的比例会是多少?简要分析这一比例是否具有<b>稳定性 / 抗扰动性</b>(即它是不是一个 ESS)。</p>
+      </div>
+      <div class="tutor" data-tutor="love" data-page-node-id="DnJ4fj9Xo8SEv0i27jfySZ"></div>
+    </div>
+
+    <!-- ═══════════ 第三章 · 本章术语 ═══════════ -->
+    <section class="glossary" id="gloss3" aria-label="第三章双语术语" data-page-node-id="JPkNWFuYsjAvfN2l2DyISH">
+      <div class="g-head" data-page-node-id="xL1huAQDABXLv1tbaTnfPQ">
+        <h2 class="g-title" style="margin:0" data-page-node-id="J0UsSHWe5FXrXfvCcw9Bhg">本章术语 · 双语 Glossary</h2>
+        <span class="topic" style="background:var(--gold-100);color:var(--gold-600);font-weight:700" data-page-node-id="wsweBf82odY633xhVtv9PV">第 3 章 · 演化博弈</span>
+      </div>
+      <p class="g-sub" data-page-node-id="e8CUyo2ga2H5lJI17j6TXf">点击卡片展开详细释义与例句。输入关键词可筛选(支持中/英文)。</p>
+      <input class="g-search" id="gSearch-3" type="search" placeholder="🔍  搜索本章术语,如 ESS / 亲缘" aria-label="搜索第三章术语" data-page-node-id="Gxl5lPrAxsG9DV0ar1nreC">
+      <div class="g-grid" id="gGrid-3" data-page-node-id="GaoelzOFxR1DFpUQbZ4Vg7"></div>
+    </section>
+
+    <nav class="bottom-nav" aria-label="章节切换" data-page-node-id="vXwfMNxElKmaaYuURUSHEN">
+      <a href="#top" data-page-node-id="HUnLxtNWv7hjVC4J2XoZAa"><span class="dir" data-page-node-id="gN2StMAeF3xft5dzhQSZcw">回到顶部</span><span class="nm" data-page-node-id="JIEJ5QavHH9qXPeX2a32ZJ">← 学习地图</span></a>
+      <a href="#ch2" style="text-align:center" data-page-node-id="bnCh2"><span class="dir">重读第二章</span><span class="nm">序贯与重复 ↑</span></a>
+      <a href="#ch3" style="text-align:right" data-page-node-id="o3Ax9kyGF542fblDiECXA9"><span class="dir" data-page-node-id="Gc7dgYRK7tjTSE4U8q0j0c">回到本章开头</span><span class="nm" data-page-node-id="Z6tdlonlgK5gAuFBByTpJp">演化博弈 ↑</span></a>
+    </nav>
+  </main>
+</div>
+
+<nav class="mobile-float" aria-label="移动端章节切换" data-page-node-id="DqdnaGbnSMWFnEUPCxz1zx">
+  <a href="#top" data-page-node-id="TWCceYqbSGEpDbJAet9Pk3"><span class="dir" data-page-node-id="9a3poGAXuEJSTuU1c6Hne0">TOP</span>学习地图</a>
+  <a href="#ch1" data-page-node-id="3YdOtYMwCrcGFEdJI0OHqb"><span class="dir" data-page-node-id="2dIxtHR6O2ABJcqcbBY3Z0">CH1</span>矩阵博弈</a>
+  <a href="#ch2" data-page-node-id="mTNJ7BUrfqg9UXqRd607dD"><span class="dir" data-page-node-id="QgrtOV3e3TuUtqwZIFs7Hk">CH2</span>序贯重复</a>
+  <a href="#ch3" data-page-node-id="GJL3fQHJ3KuVOGP8f5SGPP"><span class="dir" data-page-node-id="C8oXH4G90dvTseN54HgBT9">CH3</span>演化博弈</a>
+</nav>
+
+<div class="footer" data-page-node-id="0UV9d1k1n6DgCx8rA6Ky46">Game Theory Rush · 完整教学网页 · 讲解模式 + KaTeX 公式 · 靛蓝 / 金 / 纸白</div>
+
+<script>
+/* ═══════════ 公式渲染 ═══════════ */
+function renderMath(str){
+  if(!window.katex){
+    return str.replace(/\$\$([\s\S]+?)\$\$/g, '<span class="raw-math-block">$1</span>')
+              .replace(/\$([^$]+?)\$/g, '<span class="raw-math">$1</span>');
+  }
+  return str.replace(/\$\$([\s\S]+?)\$\$/g, function(m,tex){
+    try{ return '<div class="m-row">'+katex.renderToString(tex,{displayMode:true,throwOnError:false})+ '</div>'; }
+    catch(e){ return '<span class="raw-math-block">'+tex+'</span>'; }
+  }).replace(/\$([^$]+?)\$/g, function(m,tex){
+    try{ return katex.renderToString(tex,{displayMode:false,throwOnError:false}); }
+    catch(e){ return '<span class="raw-math">'+tex+'</span>'; }
+  });
+}
+
+/* ═══════════ 讲解器 TUTOR 数据 ═══════════ */
+const TUTORS = {
+  pd: {
+    title:'囚徒困境 · 为什么均衡是 (背叛, 背叛)?',
+    steps:[
+      { t:'写出玩家的策略空间', c:'<p>玩家1(行玩家)要考虑玩家2选择「合作」还是「背叛」;玩家2对称地也要考虑玩家1的选择。博弈共 4 个格子,对应 4 种策略组合。</p>' },
+      { t:'假设玩家2选择「合作」', c:'<p>玩家1若合作得 10,若背叛得 12。因为 $12 > 10$,玩家1的最优回应是<b>背叛</b>。</p>' },
+      { t:'假设玩家2选择「背叛」', c:'<p>玩家1若合作得 0,若背叛得 2。因为 $2 > 0$,玩家1的最优回应仍是<b>背叛</b>。</p>' },
+      { t:'结论:背叛是严格占优策略', c:'<p>无论对方怎么选,背叛都严格更好 → 「背叛」是玩家1的 <span class="res">严格占优策略</span>。对称地,玩家2的严格占优策略也是「背叛」。</p>' },
+      { t:'占优均衡与帕累托改进', c:'<p>均衡 = 双方都选占优策略 → <span class="res">(背叛, 背叛) = (2, 2)</span>,这是 Dominant-Strategy Equilibrium。</p><p>但若双方合作可得 (10,10),两人收益都更高——这就是帕累托改进 (Pareto Improvement):个体理性导致整体次优。</p>' }
+    ]
+  },
+  cournot: {
+    title:'古诺模型 · 反应函数与均衡产量推导',
+    steps:[
+      { t:'设定模型', c:'<p>设反需求函数 $P = a - b(Q_1 + Q_2)$,两家厂商边际成本同为常数 $c$。厂商 1 的利润:</p>$$\\pi_1 = (P - c)Q_1 = \\left[a - b(Q_1+Q_2) - c\\right]Q_1$$' },
+      { t:'对 Q₁ 求一阶条件', c:'<p>把 $Q_2$ 视为给定,对 $Q_1$ 求导并令其为零:</p>$$\\frac{\\partial \\pi_1}{\\partial Q_1} = a - 2bQ_1 - bQ_2 - c = 0$$' },
+      { t:'解出厂商1的反应函数', c:'<p>由一阶条件解出:</p>$$Q_1 = \\frac{a - c - bQ_2}{2b}$$<p>这就是厂商1对 $Q_2$ 的最优回应 (Best Response)。</p>' },
+      { t:'对称地写出厂商2的反应函数', c:'$$Q_2 = \\frac{a - c - bQ_1}{2b}$$' },
+      { t:'联立解对称均衡', c:'<p>对称均衡中 $Q_1^* = Q_2^* = Q^*$,代入:</p>$$Q^* = \\frac{a - c - bQ^*}{2b} \\;\\Rightarrow\\; Q^* = \\frac{a-c}{3b}$$<p><span class="res">均衡产量: $Q_1^* = Q_2^* = \\dfrac{a-c}{3b}$</span>,总产量 $\\dfrac{2(a-c)}{3b}$。</p>' },
+      { t:'与垄断比较', c:'<p>垄断产量 $Q_m = \\dfrac{a-c}{2b} \\approx 0.5\\cdot\\dfrac{a-c}{b}$,而古诺总产量 $\\approx 0.67\\cdot\\dfrac{a-c}{b}$。</p><p><span class="res">古诺总产量更高、价格更低、总利润更少</span>——双寡头面临囚徒困境:合作成卡特尔可得垄断利润,但单方扩产更有利,协议终被破坏。</p>' }
+    ]
+  },
+  bertrand: {
+    title:'贝特兰价格竞争 · 为什么价格跌到边际成本',
+    steps:[
+      { t:'若 P₁ &gt; P₂', c:'<p>消费者全部流向低价厂商,厂商1销量为零。因此<b>任何一家都不敢把价格定得高于对手</b>。</p>' },
+      { t:'若 P₁ = P₂ &gt; c', c:'<p>两家平分市场,但任何一家只要小幅降价(如 $P_1 = P_2 - \\varepsilon$)就能独占全部市场 → <span class="res">都有动机降价抢市场</span>。</p>' },
+      { t:'价格下压至 P = c', c:'<p>价格不断下压,直到 $P = c$:此时利润为零,任何一家涨价会失去全部客户,降价则亏损。</p><p><span class="res">均衡:$P_1 = P_2 = c$</span>,即贝特兰均衡。</p>' },
+      { t:'对比古诺', c:'<p>贝特兰(价格竞争)比古诺(数量竞争)更激烈,逼近完全竞争结果——<b>两个寡头就足以实现</b>。</p>' }
+    ]
+  },
+  pigs: {
+    title:'智猪博弈 · 两种解法对照(矩阵补全见上方「第一步」)',
+    steps:[
+      { t:'方法 B:先划掉小猪的「踩」', c:'<p>大猪踩时:小猪踩得 1、等待得 4 → 等待更好;大猪等待时:小猪踩得 −1、等待得 0 → 等待更好。</p><p><span class="res">无论大猪怎么做,小猪「踩」都严格更差 → 严格劣策略,整列划掉。</span></p>' },
+      { t:'缩小后再看大猪', c:'<p>矩阵只剩「小猪等待」一列:大猪踩得 4、等待得 0 → <span class="res">大猪选择踩</span>。</p><p>于是得到 (大猪踩, 小猪等待) = (4, 4)。</p>' },
+      { t:'方法 A:圈最佳回应(同一答案)', c:'<p>逐列看大猪:小猪踩列 9 &gt; 5 → 圈 9;小猪等待列 4 &gt; 0 → 圈 4。</p><p>逐行看小猪:大猪踩行 4 &gt; 1 → 圈 4;大猪等待行 0 &gt; −1 → 圈 0。</p><p><span class="res">双圈相交的格子只有 (大猪踩, 小猪等待) = (4, 4)</span>,与方法 B 完全一致。</p>' },
+      { t:'结论与含义', c:'<p><span class="res">均衡 = (4,4)</span>:小猪搭便车、大猪跑去踩 —— 「小猪躺着,大猪跑腿」。</p><p>注意:这个结论依赖高智力水平——小猪知道不该踩,大猪知道小猪足够聪明(理性的共同知识)。若小猪真的会去踩,大猪的最优选择就会改变。</p>' }
+    ]
+  },
+  g3x3: {
+    title:'3×3 练习 · 逐步圈出最佳回应',
+    steps:[
+      { t:'行玩家 R 的分析(逐列比较 R 收益)', c:'<p>第 C1 列:$R_1=100, R_2=50, R_3=0$ → 圈 $R_1$ 的 <b>100</b></p><p>第 C2 列:$0, 1, 0$ → 圈 $R_2$ 的 <b>1</b></p><p>第 C3 列:$50, 60, 200$ → 圈 $R_3$ 的 <b>200</b></p>' },
+      { t:'列玩家 C 的分析(逐行比较 C 收益)', c:'<p>第 R1 行:$100, 0, 101$ → 圈 $C_3$ 的 <b>101</b></p><p>第 R2 行:$0, 1, 0$ → 圈 $C_2$ 的 <b>1</b></p><p>第 R3 行:$300, 0, 200$ → 圈 $C_1$ 的 <b>300</b></p>' },
+      { t:'检查双圈相交', c:'<p>(R1,C1)=(100,100):R 的 100 是 C1 列最优 ✓,但 C 的 100 不是 R1 行最优(101) ✗ → 不是均衡</p><p>(R2,C2)=(1,1):<b>双方都是各自最优 ✓</b></p><p>(R3,C3)=(200,200):R 的 200 最优 ✓,但 C 的 200 不是 R3 行最优(300) ✗ → 不是均衡</p>' },
+      { t:'结论', c:'<p><span class="res">唯一纳什均衡 (R2, C2) = (1, 1)</span>。收益更高的 (100,100) 反而<span class="res">不是均衡</span>——圈出的最优必须双向一致才成立。</p>' }
+    ]
+  },
+  sexes: {
+    title:'性别之战 · 纯策略均衡 + 混合策略推导',
+    steps:[
+      { t:'找纯策略均衡', c:'<p>(歌剧,歌剧)=(3,2):妻子偏离选足球得 0 &lt; 3,丈夫偏离得 0 &lt; 2 → <span class="res">均衡 ✓</span></p><p>(足球,足球)=(2,3) 同理:<span class="res">也是均衡 ✓</span></p>' },
+      { t:'设混合策略概率', c:'<p>设妻子以概率 $p$ 选歌剧,丈夫以概率 $q$ 选歌剧。</p><p>妻子选歌剧的期望 = $3q$;选足球的期望 = $2(1-q)$</p>' },
+      { t:'令妻子无差别(决定 q)', c:'$$3q = 2(1-q) \\;\\Rightarrow\\; q = \\frac{2}{5}$$' },
+      { t:'令丈夫无差别(决定 p)', c:'<p>丈夫选歌剧期望 = $2p$;选足球期望 = $3(1-p)$</p>$$2p = 3(1-p) \\;\\Rightarrow\\; p = \\frac{3}{5}$$' },
+      { t:'结论', c:'<p><span class="res">混合均衡:妻子以 $\\dfrac{3}{5}$ 概率选歌剧,丈夫以 $\\dfrac{2}{5}$ 概率选歌剧</span>。</p><p>经济含义:协调问题(如技术标准选择)——双方都想去同一处,但偏好不同。</p>' }
+    ]
+  },
+  pennies: {
+    title:'匹配硬币 · 混合策略推导',
+    steps:[
+      { t:'确认没有纯策略均衡', c:'<p>四格中任意一格,总有一方可通过改变选择提升收益(如 (正,正):玩家2改出「反」得 $1 > -1$) → <span class="res">无纯策略均衡</span>。</p>' },
+      { t:'设概率并写期望', c:'<p>设玩家1以概率 $p$ 出正,玩家2以概率 $q$ 出正。</p><p>玩家1出正期望 $= 2q - 1$;出反期望 $= 1 - 2q$</p>' },
+      { t:'令玩家1无差别', c:'$$2q - 1 = 1 - 2q \\;\\Rightarrow\\; q = \\frac{1}{2}$$<p>对称地 $p = \\dfrac{1}{2}$。</p>' },
+      { t:'结论', c:'<p><span class="res">混合均衡:$p^* = q^* = \\dfrac{1}{2}$</span>。任何一方偏离均衡概率,对手都能占优。</p><p>经济含义:随机化避免被预测——足球点球、石头剪刀布。</p>' }
+    ]
+  },
+  tax: {
+    title:'税务稽查 · 混合策略均衡推导',
+    steps:[
+      { t:'设概率', c:'<p>设企业以概率 $p$ 逃税、以 $1-p$ 守规;税局以概率 $q$ 查税、以 $1-q$ 不查。</p><p>目标是让<b>对方</b>在两个纯策略间无差别。</p>' },
+      { t:'税局让企业无差别(决定 q)', c:'<p>企业逃税期望:</p>$$E(逃) = q\\cdot(-1) + (1-q)\\cdot 3 = 3 - 4q$$<p>企业守规期望 $= 2$</p>$$3 - 4q = 2 \\;\\Rightarrow\\; q = \\frac{1}{4}$$' },
+      { t:'企业让税局无差别(决定 p)', c:'<p>税局查税期望:</p>$$E(查) = p\\cdot 1 + (1-p)\\cdot(-1) = 2p - 1$$<p>税局不查期望:</p>$$E(不查) = p\\cdot(-2) + (1-p)\\cdot 2 = 2 - 4p$$$$2p - 1 = 2 - 4p \\;\\Rightarrow\\; p = \\frac{1}{2}$$' },
+      { t:'结论与政策含义', c:'<p><span class="res">混合均衡:企业 $\\dfrac{1}{2}$ 概率逃税,税局 $\\dfrac{1}{4}$ 概率查税</span>。</p><p>通过随机审计平衡成本与威慑:威慑力不只取决于处罚严厉程度,也取决于被抓住的概率。「低抽查率 + 严厉处罚」可维持较高遵从水平;要提高遵从,可扩大抽查比例或提高处罚力度。</p>' }
+    ]
+  },
+  hawk: {
+    title:'鹰鸽博弈 · 纯策略与混合策略均衡',
+    steps:[
+      { t:'纯策略均衡', c:'<p>(鹰,鸽)=(100,0):鹰对鸽最优 ✓,鸽对鹰最优 ✓ → <span class="res">均衡</span>;(鸽,鹰)=(0,100) 同理。<span class="res">两个不对称纯策略均衡</span>。</p>' },
+      { t:'设对手出鹰概率 p', c:'<p>自己出鹰的期望:</p>$$E(鹰) = p\\cdot\\frac{V-C}{2} + (1-p)\\cdot V$$<p>自己出鸽的期望:</p>$$E(鸽) = (1-p)\\cdot\\frac{V}{2}$$' },
+      { t:'令两者无差别', c:'$$p\\frac{V-C}{2} + (1-p)V = (1-p)\\frac{V}{2}$$<p>展开整理:</p>$$\\frac{pV}{2} - \\frac{pC}{2} + V - pV = \\frac{V}{2} - \\frac{pV}{2} \\;\\Rightarrow\\; p^* = \\frac{V}{C}$$' },
+      { t:'代入数值', c:'<p>$V=100,\\; C=150$:</p>$$p^* = \\frac{V}{C} = \\frac{100}{150} = \\frac{2}{3}$$<p><span class="res">双方各以 $\\dfrac{2}{3}$ 概率出鹰、$\\dfrac{1}{3}$ 概率出鸽</span>。一般化结论:混合均衡概率 = 资源价值 / 打架成本。</p>' }
+    ]
+  },
+  hotelling: {
+    title:'Hotelling 习题 · 五问分步推导',
+    steps:[
+      { t:'(1) 直线街、价格固定', c:'<p>顾客只买最近的店,分界点是两店位置的中点。价格、成本固定时,店主只关心顾客数量 → 都想把分界点往对方那边推 → <span class="res">两店都向中点聚集,唯一纳什均衡:两家都选在 $\\dfrac{1}{2}$ 处</span>。</p><p>解释:加油站/快餐店为何开在对手隔壁;两党政治主张趋同(中间选民定理)。</p>' },
+      { t:'(2) 环形街', c:'<p><span class="res">无纯策略纳什均衡</span>——任意位置都平分顾客,结果无差异,两人可任意选择位置。</p>' },
+      { t:'(3) 固定位置后价格战', c:'<p>博弈退化为贝特兰价格竞争:同质产品、相同位置 → <span class="res">价格持续降至边际成本 $P = c$</span>。</p>' },
+      { t:'(4) 国有化、最小化交通成本', c:'<p>两店各服务半边,应放在 <span class="res">$\\dfrac{1}{4}$ 与 $\\dfrac{3}{4}$ 四分位点</span>,最小化两端与中间区域的交通成本。</p>' },
+      { t:'(5) 高交通成本、服务半径受限', c:'<p>两店分散到 <span class="res">0.25 与 0.75</span>,最大化覆盖未服务市场;每家在自己服务区内有垄断力,价格竞争减弱、利润增加。</p><p>启示:<span class="res">最大差异化</span>能有效缓解价格竞争。</p>' }
+    ]
+  },
+  dom4: {
+    title:'4×4 习题 · 六轮重复剔除',
+    steps:[
+      { t:'第一轮:剔除 C4 列', c:'<p>对列玩家 C,比较 C4 与其他列:在 R1 行 $C_2=11 > C_4=10$,R2 行 $1 > 0$,R3 行 $4 > 1$,R4 行 $92 > 90$ → C2 每行都严格优于 C4 → <span class="res">C4 是严格劣策略,删除</span>。</p>' },
+      { t:'第二轮:剔除 R4 行', c:'<p>比较 R4 与 R2:C1 列 $R_2=4 > R_4=2$,C2 列 $1 > 0$,C3 列 $2 > 0$ → <span class="res">删除 R4 行</span>。</p>' },
+      { t:'第三轮:剔除 C1 列', c:'<p>比较 C1 与 C2:R1 行 $11 > 10$,R2 行 $1 > 0$,R3 行 $4 > 2$ → <span class="res">删除 C1 列</span>。</p>' },
+      { t:'第四轮:剔除 R1 行', c:'<p>比较 R1 与 R2:C2 列 $R_2=1 > R_1=0$,C3 列 $2 > 1$ → <span class="res">删除 R1 行</span>。</p>' },
+      { t:'第五轮:剔除 C3 列', c:'<p>比较 C3 与 C2:R2 行 $C_2=1 > C_3=0$,R3 行 $4 > 3$ → <span class="res">删除 C3 列</span>。</p>' },
+      { t:'第六轮:剔除 R3 行', c:'<p>只剩 R2、R3 与 C2:$R_2$ 得 1 &gt; $R_3$ 得 0 → <span class="res">删除 R3 行</span>。</p>' },
+      { t:'结论', c:'<p><span class="res">最终均衡 (R2, C2),支付 (1, 1)</span>。剔除顺序:C4 → R4 → C1 → R1 → C3 → R3。</p>' }
+    ]
+  },
+  tax2: {
+    title:'习题 3 · 税务稽查混合均衡',
+    steps:[
+      { t:'检查纯策略均衡', c:'<p>逐格检查,任意一格总有一方可通过改变策略提升收益(如 (逃,查):税局改不查得 $2 > 1$) → <span class="res">无纯策略均衡</span>。</p>' },
+      { t:'令企业无差别(决定 q)', c:'<p>企业逃税期望:</p>$$E(逃) = 3 - 4q$$<p>企业守规期望 $= 2$</p>$$3 - 4q = 2 \\;\\Rightarrow\\; q = \\frac{1}{4}$$' },
+      { t:'令税局无差别(决定 p)', c:'<p>税局查税期望 $= 2p - 1$;不查期望 $= 2 - 4p$</p>$$2p - 1 = 2 - 4p \\;\\Rightarrow\\; p = \\frac{1}{2}$$' },
+      { t:'结论', c:'<p><span class="res">企业 $\\dfrac{1}{2}$ 逃税、税局 $\\dfrac{1}{4}$ 查税</span>。随机审计平衡成本与威慑;威慑力取决于被抓住的概率,不单是处罚力度。提高遵从:加大抽查比例或提高处罚。</p>' }
+    ]
+  },
+  hawk2: {
+    title:'习题 4 · 鹰鸽三步推导',
+    steps:[
+      { t:'(1) 纯策略均衡', c:'<p><span class="res">(鹰,鸽) = (V,0) 与 (鸽,鹰) = (0,V)</span> 两个纯策略纳什均衡。</p>' },
+      { t:'(2) V=100, C=150', c:'$$p^* = \\frac{V}{C} = \\frac{100}{150} = \\frac{2}{3}$$<p><span class="res">$\\dfrac{2}{3}$ 出鹰,$\\dfrac{1}{3}$ 出鸽</span>。</p>' },
+      { t:'(3) 一般化推导', c:'<p>设对方出鹰概率 $p$:</p>$$E(鹰) = p\\frac{V-C}{2} + (1-p)V, \\quad E(鸽) = (1-p)\\frac{V}{2}$$<p>令相等:</p>$$p^* = \\frac{V}{C}$$<p>$C > V$ 时 $p^* < 1$,混合均衡有意义。</p>' }
+    ]
+  },
+  witness: {
+    title:'38 个目击者 · 混合均衡与集体行动',
+    steps:[
+      { t:'(1) 纯策略均衡', c:'<p>恰好一人报警、其余 $n-1$ 人漠视构成纳什均衡:报警者偏离则无人报警、损失 $v$;漠视者偏离报警只多花成本 $c$ 而结果不变 → <span class="res">共有 n 个纯策略均衡</span>。</p>' },
+      { t:'(2) 混合均衡:设每人以概率 p 报警', c:'<p>某人报警的期望 $= v - c$(必有人报警,自己得救)</p><p>某人漠视的期望 $= P(至少一人报警)\\cdot v = \\left[1 - (1-p)^{n-1}\\right]v$</p>' },
+      { t:'令两者无差别', c:'$$v - c = \\left[1 - (1-p)^{n-1}\\right]v \\;\\Rightarrow\\; (1-p)^{n-1} = \\frac{c}{v}$$$$p = 1 - \\left(\\frac{c}{v}\\right)^{\\frac{1}{n-1}}$$' },
+      { t:'(3) 至少一人报警的概率', c:'$$P = 1 - (1-p)^n = 1 - \\left(\\frac{c}{v}\\right)^{\\frac{n}{n-1}}$$<p>因为 $\\dfrac{c}{v} < 1$,当 $n$ 增大时指数 $\\dfrac{n}{n-1}$ 递减、$\\left(\\dfrac{c}{v}\\right)^{\\frac{n}{n-1}}$ 增大 → <span class="res">P 随 n 增大而减小</span>。</p><p>启示:<span class="res">「集体行动的逻辑」</span>——参与者越多,每个人越指望别人行动,集体任务反而越难完成。</p>' }
+    ]
+  },
+  entry: {
+    title:'市场进入博弈 · 逆向归纳全过程',
+    steps:[
+      { t:'从末端倒推,先看后手 B', c:'<p>若 A 已进入市场,B 有两个选择:容纳得 1,反击得 −3。<span class="res">B 理性选择容纳($1 > -3$)</span>。因此 B 的「反击」威胁是<span class="res">不可置信威胁</span>。</p>' },
+      { t:'再往前推,看先手 A', c:'<p>A 预判 B 会容纳:进入得 1,不进入得 0。<span class="res">A 选择进入($1 > 0$)</span>。</p>' },
+      { t:'结论:子博弈完美均衡', c:'<p><span class="res">SPNE:(进入, 容纳),支付 (1,1)</span>——剔除了不可置信的威胁,在每一个子博弈上都是最优的。</p>' },
+      { t:'延伸思考', c:'<p>不可置信威胁的根源:事前最优与事后最优不同,导致许多帕累托效率无法实现。但当行为受情绪支配时,「感情用事」的威胁可能可信——建立这样的名声本身可能是理性选择(劫机、管教孩子、家族企业制度化)。</p>' }
+    ]
+  },
+  pirate: {
+    title:'海盗分金 · 五步回溯推理',
+    steps:[
+      { t:'只剩 D、E', c:'<p>D 提议 (D:100, E:0)。投票 1:1 平票,平票时提议者有决定性一票 → <span class="res">通过。E 将一无所获</span>。</p>' },
+      { t:'剩 C、D、E', c:'<p>C 知道:若自己被扔下海,下一轮 D 提议,E 得 0。所以 C 提议 (C:99, D:0, E:1)——给 E 1 枚,E 接受(否则得 0),C 自己赞成 → <span class="res">2:1 通过</span>。</p>' },
+      { t:'剩 B、C、D、E', c:'<p>B 知道:若自己下海,C 会给 D 0 枚。所以 B 提议 (B:99, C:0, D:1, E:0)——给 D 1 枚,D 接受(否则下轮得 0) → <span class="res">2:2 平票,提议者 B 投决定性一票,通过</span>。</p>' },
+      { t:'A 的提议(初始局面)', c:'<p>A 知道:若自己下海,B 会给 C 0 枚、E 0 枚。所以 A 提议 <span class="res">(A:98, B:0, C:1, D:0, E:1)</span>——给 C 1 枚、E 1 枚,C 与 E 接受,加 A 自己 → 3:2 通过。</p>' },
+      { t:'反直觉之处', c:'<p>最资深的 A 拿走 98 枚,而 B 分文不得——B 知道自己在任何后续局面中都拿不到更好的。答案反直觉是因为我们习惯「按资历平均分」,但倒推逻辑只奖励「关键票」。</p>' }
+    ]
+  },
+  race44: {
+    title:'回合制竞速棋 (4,4) · 逆向归纳',
+    steps:[
+      { t:'局面分析', c:'<p>双方距离终点都是 4。P1 先手。每轮 P1 先走,P2 后走;步数 0/1/2 的代价为 0/1/3,先到者得 5.5。</p>' },
+      { t:'关键观察', c:'<p>P1 若每轮走 1 步,4 轮到达终点,总代价 4,净得:</p>$$5.5 - 4 = 1.5$$' },
+      { t:'P2 的反应', c:'<p>只要 P1 保持「每轮走 1 步」,P1 始终领先或持平(先手优势),P2 永远追不上。<span class="res">P2 的任何移动都是白费代价 → P2 选择不移动(0)</span>。</p>' },
+      { t:'结论与启示', c:'<p><span class="res">P1 每轮走 1 步,第 4 轮先到,得分 (1.5, 0)</span>。</p><p>启示:在「赢家通吃」的分配规则下,<span class="res">输在起跑线的人会直接「躺平」</span>——理性地不投入,解释社会躺平思潮的理性基础。</p>' }
+    ]
+  },
+  rpd: {
+    title:'重复囚徒困境 · Trigger 策略合作条件',
+    steps:[
+      { t:'写合作条件', c:'<p>合作可持续:合作的长期收益 ≥ 背叛一次 + 之后永远受惩罚。</p><p>一直合作的总效用(等比数列):</p>$$3 + 3\\delta + 3\\delta^2 + \\cdots = \\frac{3}{1-\\delta}$$<p>现在背叛:本期得 5,之后每期只得 1:</p>$$5 + \\frac{\\delta}{1-\\delta}$$' },
+      { t:'解不等式', c:'$$\\frac{3}{1-\\delta} \\ge 5 + \\frac{\\delta}{1-\\delta}$$<p>两边乘 $(1-\\delta)$:</p>$$3 \\ge 5(1-\\delta) + \\delta \\;\\Rightarrow\\; 3 \\ge 5 - 4\\delta \\;\\Rightarrow\\; \\delta \\ge \\frac{1}{2}$$' },
+      { t:'(2) 一般化符号', c:'<p>一般化矩阵:合作/合作 = (T,T)、合作/背叛 = (S,R)、背叛/合作 = (R,S)、背叛/背叛 = (P,P)。即 <b>R = 单方背叛收益</b>、<b>T = 双方合作收益</b>、<b>P = 双方背叛收益</b>、<b>S = 被背叛收益</b>。囚徒困境要求 <span class="res">R &gt; T &gt; P &gt; S</span>(背叛是占优策略需 $R>T$ 且 $P>S$;互叛劣于互合需 $T>P$),通常还有 $2T > R+S$ 以排除「轮流背叛更划算」的平凡情形。</p>' },
+      { t:'一般化推导', c:'<p>合作持续条件:</p>$$\\frac{T}{1-\\delta} \\ge R + \\frac{\\delta P}{1-\\delta}$$<p>两边乘 $(1-\\delta)$:</p>$$T \\ge R(1-\\delta) + \\delta P \\;\\Rightarrow\\; R - T \\le \\delta(R-P) \\;\\Rightarrow\\; \\delta \\ge \\frac{R-T}{R-P}$$' },
+      { t:'如何促进合作', c:'<p>看临界值 $\\delta \\ge \\dfrac{R-T}{R-P}$ ——<b>想办法把右边压小</b>:</p><p><b>① 压小分子 $(R-T)$:</b><span class="res">降低背叛收益 R</span>(反垄断法惩罚卡特尔成员的背叛)或 <span class="res">提高合作收益 T</span>(补贴合作企业、国际援助、贸易协定)。</p><p><b>② 压大分母 $(R-P)$:</b>注意 $P$ 是「双方都背叛」时能拿到的收益,所以要把 $P$ <span class="res">降得更低</span>而不是提高——$P$ 越小,互叛越惨,惩罚越重(环境协议严厉制裁污染国、劳资谈判中罢工双输更严重)。</p><p><b>③ $S$ 不影响临界值</b>:它只出现在「我合作、对方背叛」这一格里,不影响合作与背叛的比较。</p><p>制度设计:合同罚则、声誉机制,以及延长互动的期限(horizon)以「提高有效 $\\delta$」。</p>' },
+      { t:'验证数值', c:'<p>代入 R=5、T=3、P=1、S=0:</p>$$\\delta \\ge \\frac{R-T}{R-P} = \\frac{5-3}{5-1} = \\frac{2}{4} = \\frac{1}{2}$$<p><span class="res">与 (1) 完全一致 ✓</span></p>' }
+    ]
+  },
+  hevo: {
+    title:'鹰鸽演化 · ESS 推导',
+    steps:[
+      { t:'写出两类个体的期望支付', c:'<p>鹰(以概率 x 遇到鹰、$1-x$ 遇到鸽):</p>$$E(鹰) = x\\cdot\\frac{V-C}{2} + (1-x)\\cdot V$$<p>鸽(只在与鸽相遇时得 $\\frac{V}{2}$):</p>$$E(鸽) = (1-x)\\cdot\\frac{V}{2}$$' },
+      { t:'令两类支付相等求 x*', c:'$$x\\frac{V-C}{2} + (1-x)V = (1-x)\\frac{V}{2}$$<p>展开:</p>$$\\frac{xV}{2} - \\frac{xC}{2} + V - xV = \\frac{V}{2} - \\frac{xV}{2} \\;\\Rightarrow\\; xC = V \\;\\Rightarrow\\; x^* = \\frac{V}{C}$$' },
+      { t:'动态稳定性', c:'<p>若 $x > \\frac{V}{C}$:$E(鹰) < E(鸽)$ → 鹰比例下降,向 $x^*$ 收敛</p><p>若 $x < \\frac{V}{C}$:$E(鹰) > E(鸽)$ → 鹰比例上升,向 $x^*$ 收敛</p><p><span class="res">$x^* = \\dfrac{V}{C}$ 是稳定均衡,即 ESS</span></p>' },
+      { t:'经济含义', c:'<p>为什么人类社会暴力与和平混合?为什么核弹反而促进世界和平(相互确保摧毁 = 打架成本极高,鹰比例趋 0)?<span class="res">暴力与和平的比例由 $\\dfrac{V}{C}$ 内生决定</span>。</p>' }
+    ]
+  },
+  love: {
+    title:'爱情博弈 · ESS 推导',
+    steps:[
+      { t:'设比例', c:'<p>设社会忠诚男比例 $X$、薄情男 $1-X$;谨慎女比例 $Y$、大胆女 $1-Y$。非对称演化博弈,分别求两边无差别条件。</p>' },
+      { t:'女生这边:令谨慎女与大胆女期望相等(决定 X)', c:'<p>谨慎女期望:</p>$$E(慎) = 2X$$<p>大胆女期望:</p>$$E(大) = 5X + (-5)(1-X) = 10X - 5$$$$2X = 10X - 5 \\;\\Rightarrow\\; X = \\frac{5}{8}$$' },
+      { t:'男生这边:令忠诚男与薄情男期望相等(决定 Y)', c:'<p>忠诚男期望:</p>$$E(忠) = 2Y + 5(1-Y) = 5 - 3Y$$<p>薄情男期望:</p>$$E(薄) = 15(1-Y) = 15 - 15Y$$$$5 - 3Y = 15 - 15Y \\;\\Rightarrow\\; Y = \\frac{5}{6}$$' },
+      { t:'稳定性(ESS)检验', c:'<p>若忠诚男比例略高于 $\\frac{5}{8}$:谨慎女期望 &gt; 大胆女期望 → 谨慎女增多 → 忠诚男收益上升…系统回归均衡点;任一方向偏离都会被收益差拉回。</p><p><span class="res">$(X, Y) = \\left(\\dfrac{5}{8}, \\dfrac{5}{6}\\right)$ 是 ESS,具有抗扰动性</span>。</p>' }
+    ]
+  }
+};
+
+/* ═══ 讲解器渲染 ═══ */
+const tutorState = {};
+function renderTutor(id){
+  const t = TUTORS[id];
+  const host = document.querySelector('[data-tutor="'+id+'"]');
+  if(!host) return;
+  tutorState[id] = 0;
+  host.innerHTML = ''
+    + '<div class="tutor-head"><span class="tutor-title"><span class="ico">▶</span>'+t.title+'</span><span class="tutor-count" id="cnt-'+id+'"></span></div>'
+    + '<div class="tutor-steps" id="steps-'+id+'"></div>'
+    + '<div class="tutor-body" id="body-'+id+'"></div>'
+    + '<div class="tutor-actions">'
+    + '<button class="btn" onclick="tutorPrev(\''+id+'\')">← 上一步</button>'
+    + '<button class="btn primary" onclick="tutorNext(\''+id+'\')" id="next-'+id+'">下一步 →</button>'
+    + '<button class="btn" onclick="tutorAll(\''+id+'\')">全部展开</button>'
+    + '<button class="btn" onclick="tutorReset(\''+id+'\')">重置</button>'
+    + '<span class="tutor-progress" id="prog-'+id+'"></span>'
+    + '</div>';
+  const stepsEl = document.getElementById('steps-'+id);
+  t.steps.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.className = 'tutor-step';
+    b.textContent = (i+1)+'. '+s.t;
+    b.onclick = function(){ tutorJump(id,i); };
+    stepsEl.appendChild(b);
+  });
+  tutorPaint(id);
+}
+function tutorPaint(id){
+  const t = TUTORS[id], n = tutorState[id];
+  const body = document.getElementById('body-'+id);
+  let h = '';
+  t.steps.forEach((s,i)=>{
+    h += '<div class="tutor-sol'+(i<=n?' show':'')+'" id="sol-'+id+'-'+i+'">'
+      + '<div class="sol-step"><div class="sn">'+(i+1)+'</div><div class="sc">'
+      + '<b class="step-t">'+s.t+'</b>'+renderMath(s.c)
+      + '</div></div></div>';
+  });
+  body.innerHTML = h;
+  document.querySelectorAll('#steps-'+id+' .tutor-step').forEach((c,i)=>{
+    c.className = 'tutor-step' + (i<n?' done':'') + (i===n?' active':'');
+  });
+  document.getElementById('cnt-'+id).textContent = (n+1)+' / '+t.steps.length;
+  document.getElementById('next-'+id).textContent = (n>=t.steps.length-1)?'完成 ✓':'下一步 →';
+  document.getElementById('prog-'+id).textContent = '当前进度 '+Math.round((n+1)/t.steps.length*100)+'%';
+}
+function tutorNext(id){ if(tutorState[id]<TUTORS[id].steps.length-1){ tutorState[id]++; tutorPaint(id); } }
+function tutorPrev(id){ if(tutorState[id]>0){ tutorState[id]--; tutorPaint(id); } }
+function tutorJump(id,i){ tutorState[id]=i; tutorPaint(id); }
+function tutorAll(id){ tutorState[id]=TUTORS[id].steps.length-1; tutorPaint(id); }
+function tutorReset(id){ tutorState[id]=0; tutorPaint(id); }
+
+/* ═══════════ 数据驱动博弈矩阵 ═══════════ */
+const GAMES = {
+  pd: {
+    title:'表 1 · 囚徒困境 Prisoner\'s Dilemma',
+    rows:['合作','背叛'], cols:['合作','背叛'],
+    cells:[[[10,10],[0,12]],[[12,0],[2,2]]],
+    eq:[[1,1]],
+    note:'均衡:双方背叛 (2,2)。两个数字都是各自最佳回应,无人有动机单方面偏离。',
+    mixed:null
+  },
+  pigs: {
+    title:'表 2 · 智猪博弈 Boxed Pigs',
+    rows:['大猪踩','大猪等待'], cols:['小猪踩','小猪等待'],
+    cells:[[[5,1],[4,4]],[[9,-1],[0,0]]],
+    eq:[[0,1]],
+    note:'均衡:(大猪踩, 小猪等待) = (4,4)。「踩」是小猪的严格劣策略。',
+    mixed:null
+  },
+  '3x3': {
+    title:'表 3 · 3×3 练习(讲义 1.3)',
+    rows:['R1','R2','R3'], cols:['C1','C2','C3'],
+    cells:[[[100,100],[0,0],[50,101]],[[50,0],[1,1],[60,0]],[[0,300],[0,0],[200,200]]],
+    eq:[[1,1]],
+    note:'均衡:(R2,C2) = (1,1)。(R1,C1) 与 (R3,C3) 虽收益更高,但非双向最优。',
+    mixed:null
+  },
+  sexes: {
+    title:'表 4 · 性别之战 Battle of the Sexes',
+    rows:['歌剧','足球'], cols:['歌剧','足球'],
+    cells:[[[3,2],[0,0]],[[0,0],[2,3]]],
+    eq:[[0,0],[1,1]],
+    note:'两个纯策略均衡:(歌剧,歌剧) 与 (足球,足球)。混合均衡:妻子 p=3/5 选歌剧,丈夫 q=2/5 选歌剧。',
+    mixed:'混合策略均衡:妻子以 p=3/5 概率选歌剧,丈夫以 q=2/5 概率选歌剧。'
+  },
+  pennies: {
+    title:'表 5 · 匹配硬币 Matching Pennies',
+    rows:['正','反'], cols:['正','反'],
+    cells:[[[1,-1],[-1,1]],[[-1,1],[1,-1]]],
+    eq:[],
+    note:'无纯策略均衡!混合均衡:双方各以 1/2 概率随机出。',
+    mixed:'混合策略纳什均衡:p* = q* = 1/2。任何一方偏离均衡概率,对手都能占优。'
+  },
+  tax: {
+    title:'表 6 · 税务稽查 Tax Authority Audit',
+    rows:['逃税','不逃'], cols:['查','不查'],
+    cells:[[[-1,1],[3,-2]],[[2,-1],[2,2]]],
+    eq:[],
+    note:'无纯策略均衡。混合均衡:企业 p=1/2 逃税,税务局 q=1/4 查税。',
+    mixed:'混合策略均衡:企业 p=1/2 逃税,税务局 q=1/4 查税。随机审计平衡成本与威慑。'
+  },
+  hawk: {
+    title:'表 7 · 鹰鸽博弈 (V=100, C=150)',
+    rows:['鹰','鸽'], cols:['鹰','鸽'],
+    cells:[[[-25,-25],[100,0]],[[0,100],[50,50]]],
+    eq:[[0,1],[1,0]],
+    note:'纯策略均衡:(鹰,鸽)=(100,0) 与 (鸽,鹰)=(0,100)。混合均衡 p*=V/C=2/3 出鹰。',
+    mixed:'混合策略均衡:p* = V/C = 2/3(出鹰概率)。'
+  },
+  dom4: {
+    title:'表 8 · 4×4 重复剔除练习',
+    rows:['R1','R2','R3','R4'], cols:['C1','C2','C3','C4'],
+    cells:[
+      [[5,10],[0,11],[1,20],[10,10]],
+      [[4,0],[1,1],[2,0],[20,0]],
+      [[3,2],[0,4],[4,3],[50,1]],
+      [[2,93],[0,92],[0,91],[100,90]]
+    ],
+    eq:[[1,1]],
+    note:'均衡:(R2, C2) = (1, 1)。剔除顺序 C4 → R4 → C1 → R1 → C3 → R3;6 轮之后只剩一格,所以它是重复剔除占优均衡,也是本博弈唯一的纳什均衡。',
+    mixed:null
+  }
+};
+
+function renderGame(key){
+  const g = GAMES[key];
+  const host = document.getElementById('m-'+key);
+  if(!host) return;
+  let html = '<table class="payoff" role="grid" aria-label="'+g.title+'"><tr><th class="corner">P1 ＼ P2</th>';
+  g.cols.forEach(c=>{ html += '<th>'+c+'</th>'; });
+  html += '</tr>';
+  g.rows.forEach((r,ri)=>{
+    html += '<tr><th>'+r+'</th>';
+    g.cells[ri].forEach((pay,ci)=>{
+      html += '<td><div class="pcell" data-r="'+ri+'" data-c="'+ci+'">'
+        + '<span class="pay p1">'+pay[0]+'</span>'
+        + '<span class="pay p2">'+pay[1]+'</span></div></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+  host.innerHTML = html;
+
+  /* 逐步拆解面板 */
+  const panel = document.createElement('div');
+  panel.className = 'br-panel';
+  panel.id = 'br-'+key;
+  panel.innerHTML = '<div class="br-top"><span class="br-label">🔍 逐步求解 · 两种方法任选</span>'
+    + '<span class="br-count" id="brc-'+key+'"></span></div>'
+    + '<div class="br-tabs">'
+    + '<button class="br-tab on" id="brtab-mark-'+key+'" onclick="brMode(\''+key+'\',\'mark\')">方法 A · 最佳回应标记法</button>'
+    + '<button class="br-tab" id="brtab-ids-'+key+'" onclick="brMode(\''+key+'\',\'ids\')">方法 B · 剔除严格劣策略 IDSDS</button>'
+    + '</div>'
+    + '<div class="br-bar"><span id="brb-'+key+'" style="width:0%"></span></div>'
+    + '<div class="br-chips" id="brch-'+key+'"></div>'
+    + '<div class="br-step" id="brs-'+key+'"></div>'
+    + '<div class="br-ctrl">'
+    + '<button class="btn primary" id="brn-'+key+'" onclick="brNext(\''+key+'\')">下一步 ▶</button>'
+    + '<button class="btn" id="brp-'+key+'" onclick="brPrev(\''+key+'\')">← 上一步</button>'
+    + '<button class="btn gold" id="brf-'+key+'" onclick="brFinal(\''+key+'\')">跳到结论</button>'
+    + '<button class="btn" onclick="brReset(\''+key+'\')">重置</button>'
+    + '</div>';
+  host.parentNode.insertBefore(panel, document.getElementById('n-'+key));
+  brInit(key);
+}
+
+/* ═══════════ 逐步找均衡引擎 ═══════════ */
+const BRMETA = {
+  pd:{p1:'囚犯 A（行）', p2:'囚犯 B（列）'},
+  pigs:{p1:'大猪（行）', p2:'小猪（列）'},
+  '3x3':{p1:'玩家 1（行 R）', p2:'玩家 2（列 C）'},
+  sexes:{p1:'玩家 1（行）', p2:'玩家 2（列）'},
+  pennies:{p1:'玩家 1（行）', p2:'玩家 2（列）'},
+  tax:{p1:'企业（行）', p2:'税务局（列）'},
+  hawk:{p1:'玩家 1（行）', p2:'玩家 2（列）'},
+  dom4:{p1:'行玩家 R（红）', p2:'列玩家 C（蓝）'}
+};
+const BR = {};
+function cellsOf(key){ return document.querySelectorAll('#m-'+key+' .pcell'); }
+
+function brBuild(key){
+  const g = GAMES[key];
+  const meta = BRMETA[key] || {};
+  const n1 = meta.p1 || 'P1（行玩家）', n2 = meta.p2 || 'P2（列玩家）';
+  const steps = [];
+
+  /* 预备:最优索引表 */
+  const bestP1 = [], bestP2 = [];
+  for(let r=0;r<g.rows.length;r++){ bestP1.push([]); bestP2.push([]); }
+  for(let c=0;c<g.cols.length;c++){
+    let mx = -Infinity;
+    for(let r=0;r<g.rows.length;r++){ mx = Math.max(mx, g.cells[r][c][0]); }
+    for(let r=0;r<g.rows.length;r++){ bestP1[r][c] = (g.cells[r][c][0]===mx); }
+  }
+  for(let r=0;r<g.rows.length;r++){
+    let mx = -Infinity;
+    for(let c=0;c<g.cols.length;c++){ mx = Math.max(mx, g.cells[r][c][1]); }
+    for(let c=0;c<g.cols.length;c++){ bestP2[r][c] = (g.cells[r][c][1]===mx); }
+  }
+
+  /* ① 方法说明 */
+  steps.push({tag:'① 方法', phase:'intro', html:'<span class="lead">找纯策略纳什均衡的三步法</span>'
+    + '<b>①</b> 站在 <b>'+n1+'</b> 的立场:固定 '+n2+' 的<b>每一列</b>,在该列圈出 <b>'+n1+' 收益最大</b>的红数字 ★。<br>'
+    + '<b>②</b> 站在 <b>'+n2+'</b> 的立场:固定 '+n1+' 的<b>每一行</b>,在该行圈出 <b>'+n2+' 收益最大</b>的蓝数字 ★。<br>'
+    + '<b>③</b> 逐格检查:<b>红蓝两个数字都被圈 ★</b> 的格子 = 双圈相交 = <b>纳什均衡</b>。<br>'
+    + '<span class="why">为什么这样就能找到?因为纳什均衡 = 「给定对方策略,我已在做最优」。①保证了行玩家不想改,②保证了列玩家不想改,两者同时成立的那格就是谁都不想离开的格子。</span>'
+    + '<span class="why">先自己试着找一遍,再点「下一步 ▶」逐步对照。</span>'});
+
+  /* ② 逐列圈 P1 最佳回应 */
+  for(let c=0;c<g.cols.length;c++){
+    const items = g.rows.map((r,ri)=>({name:r, v:g.cells[ri][c][0], ri:ri}));
+    const mx = Math.max.apply(null, items.map(x=>x.v));
+    const win = items.filter(x=>x.v===mx);
+    const cmp = items.map(x=>'<b>'+x.name+'</b> → <span class="cmp r">'+x.v+'</span>').join('，');
+    const mark = win.map(x=>[x.ri,c]);
+    let h = '<span class="lead">第 ② 阶段 · '+n1+' 的最佳回应（第 '+(c+1)+' / '+g.cols.length+' 列）</span>'
+      + '把视线<b>锁定这一列</b>:'+n2+' 已选定「<b>'+g.cols[c]+'</b>」。此时 '+n1+' 能拿到的红数字是:'+cmp+'。<br>'
+      + '最大的是 <span class="hit">'+mx+'</span>,对应 '+n1+' 选「<b>'+win.map(x=>x.name).join('」与「')+'</b>」'
+      + (win.length>1?'（并列最大,两格都要圈）':'')
+      + ' → 在 <span class="hit">（'+win[0].name+' , '+g.cols[c]+'）</span> 这一格的红数字上 <span class="hit">圈 ★</span>。'
+      + '<span class="why">问的是:'+n2+' 不变的话,'+n1+' 想不想换?不想换的那个就是该列的最佳回应。</span>';
+    steps.push({tag:'P1 列'+(c+1), phase:'col', html:h, act:{type:'col', i:c, mark:mark}});
+  }
+
+  /* ③ 逐行圈 P2 最佳回应 */
+  for(let r=0;r<g.rows.length;r++){
+    const items = g.cols.map((c,ci)=>({name:c, v:g.cells[r][ci][1], ci:ci}));
+    const mx = Math.max.apply(null, items.map(x=>x.v));
+    const win = items.filter(x=>x.v===mx);
+    const cmp = items.map(x=>'<b>'+x.name+'</b> → <span class="cmp b">'+x.v+'</span>').join('，');
+    const mark = win.map(x=>[r,x.ci]);
+    let h = '<span class="lead">第 ③ 阶段 · '+n2+' 的最佳回应（第 '+(r+1)+' / '+g.rows.length+' 行）</span>'
+      + '换过来,把视线<b>锁定这一行</b>:'+n1+' 已选定「<b>'+g.rows[r]+'</b>」。此时 '+n2+' 能拿到的蓝数字是:'+cmp+'。<br>'
+      + '最大的是 <span class="hit">'+mx+'</span>,对应 '+n2+' 选「<b>'+win.map(x=>x.name).join('」与「')+'</b>」'
+      + (win.length>1?'（并列最大,两格都要圈）':'')
+      + ' → 在 <span class="hit">（'+g.rows[r]+' , '+win[0].name+'）</span> 这一格的蓝数字上 <span class="hit">圈 ★</span>。'
+      + '<span class="why">问的是:'+n1+' 不变的话,'+n2+' 想不想换?</span>';
+    steps.push({tag:'P2 行'+(r+1), phase:'row', html:h, act:{type:'row', i:r, mark:mark}});
+  }
+
+  /* ④ 逐格核对双圈 */
+  let found = 0;
+  for(let r=0;r<g.rows.length;r++){
+    for(let c=0;c<g.cols.length;c++){
+      const ok = bestP1[r][c] && bestP2[r][c];
+      let h = '<span class="lead">第 ④ 阶段 · 逐格核对（'+g.rows[r]+' , '+g.cols[c]+'）</span>';
+      if(ok){
+        found++;
+        h += '红数字 <span class="cmp r">'+g.cells[r][c][0]+'</span> 有 <span class="hit">★</span>('+n1+'不想换),'
+          + '蓝数字 <span class="cmp b">'+g.cells[r][c][1]+'</span> 也有 <span class="hit">★</span>('+n2+'不想换) '
+          + '→ <span class="hit">双圈相交!这就是纳什均衡</span>,无人有动机单方面偏离。';
+      } else if(!bestP1[r][c] && !bestP2[r][c]){
+        h += '红数字 <span class="cmp r">'+g.cells[r][c][0]+'</span> 无 ★,蓝数字 <span class="cmp b">'+g.cells[r][c][1]+'</span> 也无 ★'
+          + ' → 双方都想换,<b>不是均衡</b>。';
+      } else if(!bestP1[r][c]){
+        let alt='';
+        for(let rr=0;rr<g.rows.length;rr++){ if(bestP1[rr][c]) alt = g.rows[rr]; }
+        h += '红数字 <span class="cmp r">'+g.cells[r][c][0]+'</span> 无 ★ → '+n1+' 想换到「<b>'+alt+'</b>」'
+          + '(该列最大 <span class="hit">'+Math.max.apply(null,g.rows.map((x,ri)=>g.cells[ri][c][0]))+'</span>)'
+          + ',<b>不是均衡</b>。';
+      } else {
+        let alt='';
+        for(let cc=0;cc<g.cols.length;cc++){ if(bestP2[r][cc]) alt = g.cols[cc]; }
+        h += '蓝数字 <span class="cmp b">'+g.cells[r][c][1]+'</span> 无 ★ → '+n2+' 想换到「<b>'+alt+'</b>」'
+          + '(该行最大 <span class="hit">'+Math.max.apply(null,g.cols.map((x,ci)=>g.cells[r][ci][1]))+'</span>)'
+          + ',<b>不是均衡</b>。';
+      }
+      steps.push({tag:'核对 '+(r+1)+'-'+(c+1), phase:'check', html:h, act:{type:'check', r:r, c:c, ok:ok}});
+    }
+  }
+
+  /* ⑤ 结论 */
+  let concl = '<span class="lead">⑤ 结论</span>';
+  if(g.eq.length===0){
+    concl += '整张矩阵<b>没有任何双圈相交的格子</b> → <span class="hit">不存在纯策略纳什均衡</span>。'
+      + (g.mixed ? '<br>'+g.mixed : '');
+  } else {
+    concl += '双圈相交的格子共 <span class="hit">'+g.eq.length+' 个</span>:'
+      + g.eq.map(function(e){ return '<b>（'+g.rows[e[0]]+' , '+g.cols[e[1]]+'）= ('+g.cells[e[0]][e[1]][0]+' , '+g.cells[e[0]][e[1]][1]+')</b>'; }).join('、')
+      + '。这就是纯策略纳什均衡。<br>'+g.note
+      + (g.mixed ? '<br><span style="color:var(--gold-600);font-weight:700">★ 混合策略:</span> '+g.mixed : '');
+  }
+  steps.push({tag:'⑤ 结论', phase:'final', html:concl});
+
+  return steps;
+}
+
+/* ═══ 方法 B · 重复剔除严格劣策略 IDSDS ═══ */
+function brSubTable(key, aliveR, aliveC){
+  const g = GAMES[key];
+  let h = '<div class="submtx">剔除后的新矩阵 '+aliveR.length+' × '+aliveC.length+':</div><table class="payoff mini"><tr><th class="corner">P1 ＼ P2</th>';
+  aliveC.forEach(function(c){ h += '<th>'+g.cols[c]+'</th>'; });
+  h += '</tr>';
+  aliveR.forEach(function(r){
+    h += '<tr><th>'+g.rows[r]+'</th>';
+    aliveC.forEach(function(c){
+      h += '<td><div class="pcell"><span class="pay p1">'+g.cells[r][c][0]+'</span><span class="pay p2">'+g.cells[r][c][1]+'</span></div></td>';
+    });
+    h += '</tr>';
+  });
+  return h + '</table>';
+}
+function brBuildIDS(key){
+  const g = GAMES[key], meta = BRMETA[key] || {};
+  const n1 = meta.p1 || 'P1（行玩家）', n2 = meta.p2 || 'P2（列玩家）';
+  const steps = [];
+  steps.push({tag:'① 思路', phase:'intro', html:'<span class="lead">另一种思路:删掉没人会用的策略</span>'
+    + '<b>与「方法 A」的区别:</b>方法 A 是在完整矩阵里<b>找出</b>谁都不想离开的格子;方法 B 是反过来——先把<b>理性玩家绝不会选</b>的策略<b>划掉</b>,矩阵缩小后重复这一过程,最后剩下的就是解。<br>'
+    + '<b>严格劣策略:</b>无论对手选什么,它的收益都<b>严格小于</b>另一个策略。既然处处更差,理性玩家永远不会选它 → 整行(或整列)直接划掉。<br>'
+    + '<span class="why">前提:理性的共同知识——'+n1+'知道'+n2+'理性,'+n2+'也知道'+n1+'理性,而且知道对方知道自己理性…如此递推。</span>'
+    + '<span class="why">注意「严格」二字:只要有某处打平,就不是严格劣,不能这样划掉(划掉它需要更强的假设)。</span>'});
+
+  let aliveR = g.rows.map(function(_,i){ return i; });
+  let aliveC = g.cols.map(function(_,i){ return i; });
+  let any = false;
+  function domRow(r,r2){ return aliveC.every(function(c){ return g.cells[r][c][0] < g.cells[r2][c][0]; }); }
+  function domCol(c,c2){ return aliveR.every(function(r){ return g.cells[r][c][1] < g.cells[r][c2][1]; }); }
+  function findDom(){
+    for(let i=0;i<aliveR.length;i++) for(let j=0;j<aliveR.length;j++){
+      if(i!==j && domRow(aliveR[i],aliveR[j])) return {p:1, idx:aliveR[i], by:aliveR[j]};
+    }
+    for(let i=0;i<aliveC.length;i++) for(let j=0;j<aliveC.length;j++){
+      if(i!==j && domCol(aliveC[i],aliveC[j])) return {p:2, idx:aliveC[i], by:aliveC[j]};
+    }
+    return null;
+  }
+
+  let d = findDom();
+  while(d){
+    any = true;
+    const snapR = aliveR.slice(), snapC = aliveC.slice();
+    if(d.p===1){
+      const cmps = snapC.map(function(c){
+        return n2+' 选「<b>'+g.cols[c]+'</b>」时:<span class="cmp r">'+g.cells[d.idx][c][0]+'</span> &lt; <span class="cmp r">'+g.cells[d.by][c][0]+'</span>';
+      }).join(';');
+      steps.push({tag:'发现·行'+(d.idx+1), phase:'find',
+        html:'<span class="lead">找严格劣策略 · 看 '+n1+' 的「'+g.rows[d.idx]+'」</span>'
+          + '拿它和「<b>'+g.rows[d.by]+'</b>」逐列比红数字:'+cmps+'。<br>'
+          + '<b>每一个对手选择下都严格更小</b> → 「<b>'+g.rows[d.idx]+'</b>」对 '+n1+' 来说是<span class="hit">严格劣策略</span>,理性时绝不会选。',
+        act:{type:'find', player:1, idx:d.idx, by:d.by, aliveR:snapR, aliveC:snapC}});
+      aliveR = aliveR.filter(function(x){ return x!==d.idx; });
+      steps.push({tag:'剔除·行'+(d.idx+1), phase:'elim',
+        html:'<span class="lead">划掉这一行 → 矩阵缩小</span>'
+          + '既然 '+n1+' 不会选「<b>'+g.rows[d.idx]+'</b>」,这一整行都可以划掉(见上方矩阵中灰掉的斜纹行)。'
+          + brSubTable(key, aliveR, aliveC)
+          + '<span class="why">接下来只在剩下的新矩阵里继续找 —— 这是 IDSDS 的关键:剔除会改变局面,可能让原来不劣的策略也变劣。</span>',
+        act:{type:'elim', player:1, idx:d.idx}});
+    } else {
+      const cmps = snapR.map(function(r){
+        return n1+' 选「<b>'+g.rows[r]+'</b>」时:<span class="cmp b">'+g.cells[r][d.idx][1]+'</span> &lt; <span class="cmp b">'+g.cells[r][d.by][1]+'</span>';
+      }).join(';');
+      steps.push({tag:'发现·列'+(d.idx+1), phase:'find',
+        html:'<span class="lead">找严格劣策略 · 看 '+n2+' 的「'+g.cols[d.idx]+'」</span>'
+          + '拿它和「<b>'+g.cols[d.by]+'</b>」逐行比蓝数字:'+cmps+'。<br>'
+          + '<b>每一个对手选择下都严格更小</b> → 「<b>'+g.cols[d.idx]+'</b>」对 '+n2+' 来说是<span class="hit">严格劣策略</span>,理性时绝不会选。',
+        act:{type:'find', player:2, idx:d.idx, by:d.by, aliveR:snapR, aliveC:snapC}});
+      aliveC = aliveC.filter(function(x){ return x!==d.idx; });
+      steps.push({tag:'剔除·列'+(d.idx+1), phase:'elim',
+        html:'<span class="lead">划掉这一列 → 矩阵缩小</span>'
+          + '既然 '+n2+' 不会选「<b>'+g.cols[d.idx]+'</b>」,这一整列都可以划掉(见上方矩阵中灰掉的斜纹列)。'
+          + brSubTable(key, aliveR, aliveC)
+          + '<span class="why">接下来只在剩下的新矩阵里继续找。</span>',
+        act:{type:'elim', player:2, idx:d.idx}});
+    }
+    d = findDom();
+  }
+
+  if(!any){
+    steps.push({tag:'② 结论', phase:'final',
+      html:'<span class="lead">IDSDS 在这里启动不了</span>'
+        + '检查下来,这个矩阵里<b>没有任何严格劣策略</b>:每个策略都至少在某个对手选择下不比别人差。<br>'
+        + '所以<b>方法 B 不适用</b>——请切回 <b>方法 A · 最佳回应标记法</b>。<br>'
+        + '<span class="why">这正是两种方法要并列存在的原因:有的博弈能靠「删」解出来(如囚徒困境、智猪博弈),有的必须靠「圈」(如本矩阵、性别之战、匹配硬币)。</span>',
+      act:{type:'final', eq:[]}});
+    return steps;
+  }
+
+  if(aliveR.length===1 && aliveC.length===1){
+    const r = aliveR[0], c = aliveC[0];
+    steps.push({tag:'③ 结论', phase:'final',
+      html:'<span class="lead">新矩阵只剩一格 → 解出来了</span>'
+        + '经过逐轮剔除,矩阵收缩到唯一剩下的格子:<span class="hit">('+g.rows[r]+' , '+g.cols[c]+') = ('+g.cells[r][c][0]+' , '+g.cells[r][c][1]+')</span>。<br>'
+        + '这就是 <b>IDSDS 解(iterated dominance equilibrium)</b>:双方都只剩这一种理性选择,谁也无意偏离,它同时也是一个纳什均衡。<br>'
+        + g.note
+        + '<span class="why">用方法 A 圈最佳回应会得到同一个答案 —— 两条路殊途同归,可以切换过去对照一下。</span>',
+      act:{type:'final', eq:[[r,c]]}});
+  } else if(aliveC.length===1){
+    const c = aliveC[0];
+    let mx = -Infinity;
+    aliveR.forEach(function(r){ mx = Math.max(mx, g.cells[r][c][0]); });
+    const winners = aliveR.filter(function(r){ return g.cells[r][c][0]===mx; });
+    const cmp = aliveR.map(function(r){ return '<b>'+g.rows[r]+'</b> → <span class="cmp r">'+g.cells[r][c][0]+'</span>'; }).join('，');
+    steps.push({tag:'③ 只剩一列', phase:'pick',
+      html:'<span class="lead">剔除到此为止 → 在剩下的矩阵里做最后一次选择</span>'
+        + n2+' 现在只有「<b>'+g.cols[c]+'</b>」可选,没有别的选择。于是轮到 '+n1+' 在这一列里挑最大的:'+cmp+'。<br>'
+        + '最大是 <span class="hit">'+mx+'</span> → '+n1+' 选「<b>'+winners.map(function(r){ return g.rows[r]; }).join('」或「')+'</b>」。',
+      act:{type:'pick', r:winners[0], c:c}});
+    steps.push({tag:'④ 结论', phase:'final',
+      html:'<span class="lead">IDSDS 解</span>'
+        + '均衡 = <span class="hit">('+g.rows[winners[0]]+' , '+g.cols[c]+') = ('+g.cells[winners[0]][c][0]+' , '+g.cells[winners[0]][c][1]+')</span>。<br>'
+        + g.note
+        + '<span class="why">'+n2+' 的「等待」被剔除后,'+n1+' 明知对方会搭便车,也只能自己去踩 —— 这就是「小猪躺着、大猪跑腿」的理性基础。</span>',
+      act:{type:'final', eq:winners.map(function(r){ return [r,c]; })}});
+  } else if(aliveR.length===1){
+    const r = aliveR[0];
+    let mx = -Infinity;
+    aliveC.forEach(function(c){ mx = Math.max(mx, g.cells[r][c][1]); });
+    const winners = aliveC.filter(function(c){ return g.cells[r][c][1]===mx; });
+    const cmp = aliveC.map(function(c){ return '<b>'+g.cols[c]+'</b> → <span class="cmp b">'+g.cells[r][c][1]+'</span>'; }).join('，');
+    steps.push({tag:'③ 只剩一行', phase:'pick',
+      html:'<span class="lead">剔除到此为止 → 在剩下的矩阵里做最后一次选择</span>'
+        + n1+' 现在只有「<b>'+g.rows[r]+'</b>」可选。于是 '+n2+' 在这一行里挑最大的:'+cmp+'。<br>'
+        + '最大是 <span class="hit">'+mx+'</span> → '+n2+' 选「<b>'+winners.map(function(c){ return g.cols[c]; }).join('」或「')+'</b>」。',
+      act:{type:'pick', r:r, c:winners[0]}});
+    steps.push({tag:'④ 结论', phase:'final',
+      html:'<span class="lead">IDSDS 解</span>'
+        + '均衡 = <span class="hit">('+g.rows[r]+' , '+g.cols[winners[0]]+') = ('+g.cells[r][winners[0]][0]+' , '+g.cells[r][winners[0]][1]+')</span>。<br>'+g.note,
+      act:{type:'final', eq:winners.map(function(c){ return [r,c]; })}});
+  } else {
+    steps.push({tag:'③ 结论', phase:'final',
+      html:'<span class="lead">IDSDS 到此为止</span>'
+        + '剩下的子矩阵里再没有严格劣策略可划掉了。剩余 '+aliveR.length+' × '+aliveC.length+' 的格子需要配合 <b>方法 A(圈最佳回应)</b> 才能定出均衡。'
+        + brSubTable(key, aliveR, aliveC)
+        + '<span class="why">IDSDS 是「能解就解到底,解不完就缩小范围」的工具,它常常把问题变小,但不总能独自给出答案。</span>',
+      act:{type:'final', eq:[]}});
+  }
+  return steps;
+}
+
+function brInit(key){
+  BR[key] = {mode:'mark', mark:{steps:brBuild(key), idx:0}, ids:{steps:brBuildIDS(key), idx:0}};
+  brPaint(key);
+}
+function brCell(key,r,c){ return document.querySelector('#m-'+key+' .pcell[data-r="'+r+'"][data-c="'+c+'"]'); }
+function brMarkLine(key,type,i,on){
+  const host = document.getElementById('m-'+key);
+  const tbl = host.querySelector('table.payoff');
+  if(type==='col'){
+    const th = tbl.querySelectorAll('tr')[0].querySelectorAll('th')[i+1];
+    if(th){ if(on) th.classList.add('scan'); else th.classList.remove('scan'); }
+    for(let r=0;r<GAMES[key].rows.length;r++){
+      const cell = brCell(key,r,i);
+      if(cell && cell.parentElement){ if(on) cell.parentElement.classList.add('scan'); else cell.parentElement.classList.remove('scan'); }
+    }
+  } else {
+    const tr = tbl.querySelectorAll('tr')[i+1];
+    if(tr){
+      const th = tr.querySelector('th');
+      if(th){ if(on) th.classList.add('scan'); else th.classList.remove('scan'); }
+      tr.querySelectorAll('td').forEach(td=>{ if(on) td.classList.add('scan'); else td.classList.remove('scan'); });
+    }
+  }
+}
+/* 通用 UI:文案 / 进度 / 步骤胶囊 / 按钮状态 */
+function brUI(key, steps, idx){
+  document.getElementById('brs-'+key).innerHTML = steps[idx].html;
+  document.getElementById('brc-'+key).textContent = '第 '+(idx+1)+' / '+steps.length+' 步';
+  document.getElementById('brb-'+key).style.width = Math.round(idx/Math.max(1,steps.length-1)*100)+'%';
+  const chips = document.getElementById('brch-'+key);
+  chips.innerHTML = '';
+  steps.forEach(function(s,i){
+    const b = document.createElement('button');
+    b.className = 'br-chip'+(i===idx?' cur':(i<idx?' done':''));
+    b.textContent = s.tag;
+    b.setAttribute('type','button');
+    b.onclick = function(){ brGo(key,i); };
+    chips.appendChild(b);
+  });
+  document.getElementById('brp-'+key).disabled = (idx===0);
+  document.getElementById('brn-'+key).disabled = (idx===steps.length-1);
+  document.getElementById('brf-'+key).disabled = (idx===steps.length-1);
+}
+/* 清空矩阵上的所有标记 */
+function brClear(key){
+  const host = document.getElementById('m-'+key);
+  host.querySelectorAll('.pcell').forEach(function(c){
+    c.classList.remove('scanning','rejected','confirmed','eq','dom-cmp','ids-pick');
+    var p1=c.querySelector('.pay.p1'), p2=c.querySelector('.pay.p2');
+    if(p1) p1.classList.remove('best');
+    if(p2) p2.classList.remove('best');
+  });
+  host.querySelectorAll('.scan,.elim').forEach(function(t){ t.classList.remove('scan','elim'); });
+}
+function brPaint(key){
+  const st = BR[key]; if(!st) return;
+  brClear(key);
+  if(st.mode==='ids') brPaintIDS(key); else brPaintMark(key);
+}
+/* 给整行/整列加 elim(划掉) */
+function brMarkElim(key,type,i){
+  const host = document.getElementById('m-'+key);
+  const tbl = host.querySelector('table.payoff');
+  if(type==='row'){
+    const tr = tbl.querySelectorAll('tr')[i+1];
+    if(tr){ tr.querySelectorAll('th,td').forEach(function(t){ t.classList.add('elim'); }); }
+  } else {
+    const th = tbl.querySelectorAll('tr')[0].querySelectorAll('th')[i+1];
+    if(th) th.classList.add('elim');
+    for(let r=0;r<GAMES[key].rows.length;r++){
+      const cell = brCell(key,r,i);
+      if(cell && cell.parentElement) cell.parentElement.classList.add('elim');
+    }
+  }
+}
+/* ═══ 方法 B · IDSDS 绘制 ═══ */
+function brPaintIDS(key){
+  const st = BR[key].ids, g = GAMES[key], host = document.getElementById('m-'+key);
+  for(let i=0;i<=st.idx;i++){
+    const s = st.steps[i], a = s.act;
+    if(!a) continue;
+    const isCur = (i===st.idx);
+    if(a.type==='find'){
+      a.aliveC.forEach(function(c){
+        if(a.player===1){
+          [a.idx,a.by].forEach(function(r){
+            const cell = brCell(key,r,c);
+            if(cell && isCur) cell.classList.add('dom-cmp');
+          });
+        }
+      });
+      a.aliveR.forEach(function(r){
+        if(a.player===2){
+          [a.idx,a.by].forEach(function(c){
+            const cell = brCell(key,r,c);
+            if(cell && isCur) cell.classList.add('dom-cmp');
+          });
+        }
+      });
+      if(isCur){
+        if(a.player===1){ brMarkLine(key,'row',a.idx,true); brMarkLine(key,'row',a.by,true); }
+        else { brMarkLine(key,'col',a.idx,true); brMarkLine(key,'col',a.by,true); }
+      }
+    } else if(a.type==='elim'){
+      brMarkElim(key, a.player===1?'row':'col', a.idx);
+    } else if(a.type==='pick'){
+      const cell = brCell(key,a.r,a.c);
+      if(cell){ cell.classList.add('ids-pick'); cell.classList.add('confirmed','eq'); }
+    } else if(a.type==='final'){
+      a.eq.forEach(function(e){
+        const cell = brCell(key,e[0],e[1]);
+        if(cell) cell.classList.add('confirmed','eq');
+      });
+    }
+  }
+  brUI(key, st.steps, st.idx);
+}
+/* ═══ 方法 A · 最佳回应标记法绘制 ═══ */
+function brPaintMark(key){
+  const st = BR[key].mark; if(!st) return;
+  const g = GAMES[key], host = document.getElementById('m-'+key);
+  /* 累积绘制 0..idx */
+  for(let i=0;i<=st.idx;i++){
+    const s = st.steps[i], a = s.act;
+    if(!a) continue;
+    const isCur = (i===st.idx);
+    if(a.type==='col'){
+      a.mark.forEach(function(m){
+        const el = host.querySelector('.pcell[data-r="'+m[0]+'"][data-c="'+m[1]+'"] .pay.p1');
+        if(el) el.classList.add('best');
+      });
+      if(isCur) brMarkLine(key,'col',a.i,true);
+    } else if(a.type==='row'){
+      a.mark.forEach(function(m){
+        const el = host.querySelector('.pcell[data-r="'+m[0]+'"][data-c="'+m[1]+'"] .pay.p2');
+        if(el) el.classList.add('best');
+      });
+      if(isCur) brMarkLine(key,'row',a.i,true);
+    } else if(a.type==='check'){
+      const cell = brCell(key,a.r,a.c);
+      if(!cell) continue;
+      if(a.ok) cell.classList.add('confirmed','eq');
+      if(isCur){
+        cell.classList.add('scanning');
+        if(!a.ok) cell.classList.add('rejected');
+      }
+    }
+  }
+  const cur = st.steps[st.idx];
+  if(cur.phase==='final'){
+    g.eq.forEach(function(e){
+      const cell = brCell(key,e[0],e[1]);
+      if(cell) cell.classList.add('confirmed','eq');
+    });
+  }
+  brUI(key, st.steps, st.idx);
+  const n = document.getElementById('n-'+key);
+  if(n && st.idx===0) n.innerHTML = '提示:矩阵里红数字 = '+ (BRMETA[key]?BRMETA[key].p1:'P1') +'的收益,蓝数字 = '+ (BRMETA[key]?BRMETA[key].p2:'P2') +'的收益。';
+}
+function brMode(key,mode){
+  BR[key].mode = mode;
+  const a = document.getElementById('brtab-mark-'+key), b = document.getElementById('brtab-ids-'+key);
+  if(a) a.classList.toggle('on', mode==='mark');
+  if(b) b.classList.toggle('on', mode==='ids');
+  brPaint(key);
+}
+function brCur(key){ return BR[key][BR[key].mode]; }
+function brGo(key,i){ const st = brCur(key); st.idx = Math.max(0, Math.min(st.steps.length-1, i)); brPaint(key); }
+function brNext(key){ brGo(key, brCur(key).idx+1); }
+function brPrev(key){ brGo(key, brCur(key).idx-1); }
+function brFinal(key){ brGo(key, brCur(key).steps.length-1); }
+function brReset(key){ brGo(key,0); }
+/* 兼容旧调用 */
+function highlightBest(key){ brFinal(key); }
+function showEq(key){ brFinal(key); }
+function resetMatrix(key){ brReset(key); }
+Object.keys(GAMES).forEach(renderGame);
+
+/* ═══════════ 矩阵补全引擎(智猪博弈) ═══════════ */
+const FILLPIGS = {
+  rows:['大猪踩','大猪等待'], cols:['小猪踩','小猪等待'],
+  steps:[
+    {tag:'条件', add:null, fill:[],
+     html:'<span class="lead">四个空格 = 四种情况</span>'
+       + '行是大猪的选择、列是小猪的选择,每格填(大猪收益, 小猪收益)。现在矩阵是空的 —— 先自己想一想:两头猪都去踩时,各能吃到几份?'},
+    {tag:'① 都踩', add:[0,0], fill:[[0,0,5,1]],
+     html:'<span class="lead">情况一:两头猪都去踩</span>'
+       + '两头同时踩、同时冲向食槽,<b>谁也不占先</b>。10 份食物按实力分:大猪吃 7 份、小猪吃 3 份。两头都付出了踩踏板的代价 2:<br>'
+       + '<span class="calc">大猪 7 − 2 = 5</span>　<span class="calc">小猪 3 − 2 = 1</span> → 填入 <span class="hit">(5, 1)</span>。'
+       + '<span class="why">为什么大猪拿 7?它吃得快、抢得多 —— 同时到达时强者多分,这是讲义设定的份数分配。</span>'},
+    {tag:'② 大猪踩·小猪等', add:[0,1], fill:[[0,0,5,1],[0,1,4,4]],
+     html:'<span class="lead">情况二:大猪踩,小猪在食槽边等</span>'
+       + '小猪守着不动,大猪跑去踩。食物一流出来<b>小猪先吃</b> 4 份;等大猪气喘吁吁跑到,只剩 6 份,还要再扣掉代价 2:<br>'
+       + '<span class="calc">大猪 6 − 2 = 4</span>　<span class="calc">小猪 4</span> → 填入 <span class="hit">(4, 4)</span>。'
+       + '<span class="why">等待者占「先到」的便宜,踩踏板者既晚到又付代价 —— 两头猪的收益因此被拉平了。</span>'},
+    {tag:'③ 大猪等·小猪踩', add:[1,0], fill:[[0,0,5,1],[0,1,4,4],[1,0,9,-1]],
+     html:'<span class="lead">情况三:小猪踩,大猪在食槽边等</span>'
+       + '反过来,大猪守在槽边。小猪踩完跑过来时,大猪已经吃掉 <b>9 份</b>,只剩 1 份给小猪,小猪还要扣掉代价 2:<br>'
+       + '<span class="calc">大猪 9</span>　<span class="calc">小猪 1 − 2 = −1</span> → 填入 <span class="hit">(9, −1)</span>。<br>'
+       + '对小猪来说这是最糟的一格:白跑一趟还倒贴。'
+       + '<span class="why">大猪守槽时吃得最多(9 份),因为小猪踩出来的食物大头被强者拿走了。</span>'},
+    {tag:'④ 都不踩', add:[1,1], fill:[[0,0,5,1],[0,1,4,4],[1,0,9,-1],[1,1,0,0]],
+     html:'<span class="lead">情况四:谁也不踩</span>'
+       + '没人去踩踏板 → 食槽根本不会有食物流出 → 两头都一无所获:<span class="hit">(0, 0)</span>。'},
+    {tag:'⑤ 补全完成', add:null, fill:[[0,0,5,1],[0,1,4,4],[1,0,9,-1],[1,1,0,0]],
+     html:'<span class="lead">矩阵补全完成 ✓</span>'
+       + '请与下方「表 2 · 智猪博弈支付矩阵」对照,四个数字应当完全一致。<br>'
+       + '接下来求均衡,下面提供<b>两种并列的方法</b>:<b>方法 A</b> 在完整矩阵里圈出双方的最佳回应、找双圈相交;<b>方法 B</b> 先划掉严格劣策略、把矩阵缩小再解。建议两种都走一遍 —— 它们会得到同一个答案,但思路完全不同。'}
+  ]
+};
+let fillIdx = 0;
+function fillTable(step){
+  const F = FILLPIGS;
+  let h = '<table class="payoff" role="grid" aria-label="智猪博弈矩阵补全"><tr><th class="corner">大猪 ＼ 小猪</th>';
+  F.cols.forEach(function(c){ h += '<th>'+c+'</th>'; });
+  h += '</tr>';
+  F.rows.forEach(function(r,ri){
+    h += '<tr><th>'+r+'</th>';
+    F.cols.forEach(function(c,ci){
+      const f = step.fill.filter(function(x){ return x[0]===ri && x[1]===ci; })[0];
+      const isNew = step.add && step.add[0]===ri && step.add[1]===ci;
+      if(f){
+        h += '<td><div class="pcell'+(isNew?' filled':'')+'"><span class="pay p1">'+f[2]+'</span><span class="pay p2">'+f[3]+'</span></div></td>';
+      } else {
+        h += '<td><div class="pcell tbd"><span class="pay p1">?</span><span class="pay p2">?</span></div></td>';
+      }
+    });
+    h += '</tr>';
+  });
+  return h + '</table>';
+}
+function fillPaint(){
+  const steps = FILLPIGS.steps, step = steps[fillIdx];
+  const host = document.getElementById('fill-pigs');
+  if(host) host.innerHTML = fillTable(step);
+  document.getElementById('fps').innerHTML = step.html;
+  document.getElementById('fpc').textContent = '第 '+(fillIdx+1)+' / '+steps.length+' 步';
+  document.getElementById('fpb').style.width = Math.round(fillIdx/(steps.length-1)*100)+'%';
+  const chips = document.getElementById('fpch');
+  chips.innerHTML = '';
+  steps.forEach(function(s,i){
+    const b = document.createElement('button');
+    b.className = 'br-chip'+(i===fillIdx?' cur':(i<fillIdx?' done':''));
+    b.textContent = s.tag;
+    b.setAttribute('type','button');
+    b.onclick = function(){ fillGo(i); };
+    chips.appendChild(b);
+  });
+  document.getElementById('fpp').disabled = (fillIdx===0);
+  document.getElementById('fpn').disabled = (fillIdx===steps.length-1);
+}
+function fillGo(i){ fillIdx = Math.max(0, Math.min(FILLPIGS.steps.length-1, i)); fillPaint(); }
+function fillNext(){ fillGo(fillIdx+1); }
+function fillPrev(){ fillGo(fillIdx-1); }
+function fillAll(){ fillGo(FILLPIGS.steps.length-1); }
+function fillReset(){ fillGo(0); }
+if(document.getElementById('fill-pigs')) fillPaint();
+
+/* ═══════════ 博弈树 · 逆向归纳 ═══════════ */
+function treeStep(s){
+  document.querySelectorAll('#entryTree .link').forEach(l=>l.classList.remove('sel'));
+  document.querySelectorAll('#entryTree .terminal').forEach(t=>t.classList.remove('sel'));
+  const note = document.getElementById('treeNote');
+  if(s===0){
+    note.innerHTML = '逆向归纳:从博弈树末端倒推,逐层确定最佳选择,剔除不可置信的威胁。';
+  } else if(s===1){
+    document.getElementById('lk-3').classList.add('sel');
+    document.getElementById('t-acc').classList.add('sel');
+    note.innerHTML = '<b style="color:var(--gold-600)">B 的选择:</b>若 A 进入,B 在「容纳得 1」与「反击得 −3」之间选容纳(1 &gt; −3)。B 的「反击」承诺是不可置信威胁。';
+  } else {
+    document.getElementById('lk-3').classList.add('sel');
+    document.getElementById('lk-2').classList.add('sel');
+    document.getElementById('t-acc').classList.add('sel');
+    note.innerHTML = '<b style="color:var(--gold-600)">A 的选择:</b>A 预判 B 会容纳,进入得 1 &gt; 不进入 0 → A 选择进入。<br><b style="color:var(--gold-600)">子博弈完美均衡:(进入, 容纳),支付 (1,1)。</b>';
+  }
+  document.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('st-'+s).classList.add('active');
+}
+
+/* ═══════════ 海盗分金 ═══════════ */
+const PIRATES = [
+  { label:'剩 D、E', rows:[['D','100','supp'],['E','0','']],
+    desc:'D 提议 (D:100, E:0)。D 自己投票,平票时提议者有一票 → 通过。E 一无所获。' },
+  { label:'剩 C、D、E', rows:[['C','99','supp'],['D','0',''],['E','1','supp']],
+    desc:'C 提议 (C:99, D:0, E:1)。E 接受:否则下轮只得 0。D 反对但 2:1 通过。' },
+  { label:'剩 B、C、D、E', rows:[['B','99','supp'],['C','0',''],['D','1','supp'],['E','0','']],
+    desc:'B 提议 (B:99, C:0, D:1, E:0)。D 接受:否则下轮得 0。B 与 D 赞成,2:2 平票,提议者投决定性一票 → 通过。' },
+  { label:'A 的提议', rows:[['A','98','supp'],['B','0',''],['C','1','supp'],['D','0',''],['E','1','supp']],
+    desc:'A 提议 (A:98, B:0, C:1, D:0, E:1)。C 与 E 接受(否则下轮各得 0)。3:2 通过——<b style="color:var(--gold-600)">A 拿走 98 金币</b>。' }
+];
+function pirateStep(i){
+  const p = PIRATES[i];
+  document.querySelectorAll('[id^="pst-"]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pst-'+i).classList.add('active');
+  let h = '<p style="margin-bottom:6px"><b>'+p.label+':</b> '+p.desc+'</p>';
+  h += '<table class="pirate-table"><tr><th>海盗</th><th>金币</th></tr>';
+  p.rows.forEach(r=>{ h += '<tr><td>'+r[0]+'</td><td class="'+r[2]+'">'+r[1]+'</td></tr>'; });
+  h += '</table>';
+  document.getElementById('pirateStep').innerHTML = h;
+  document.getElementById('pirateNote').textContent =
+    (i===3)?'反直觉之处:最资深的 A 拿最多,而 B 分文不得——因为 B 知道自己在任何后续局面中都拿不到更好的。'
+    : '回顾:从末端倒推,每个海盗只比较「接受」与「下一轮自己的所得」。';
+}
+pirateStep(0);
+
+/* ═══════════ 回合制竞速棋 ═══════════ */
+const RACE_TABLE = {
+  '1,0': 'P1 已输(距离 0 的 P2 已在终点):<b>P1 不移动,得分 (0, 5.5)</b>。P1 移动只会白费代价。',
+  '1,1': 'P1 先手优势:<b>第一轮走 1 步到达,得 5.5−1 = 4.5</b>;P2 输定,不移动,得 0 → <b>(4.5, 0)</b>。',
+  '2,1': 'P1 先手优势:<b>第一轮走 2 步(代价 3)直接到达,得 5.5−3 = 2.5</b>;P2 来不及 → <b>(2.5, 0)</b>。',
+  '3,1': 'P1 输定(距离 3,无法一轮到达,而 P2 距离 1):<b>P1 无论走几步,P2 下一轮都能到达 → P1 不动,得 0</b>;P2 走 1 步得 4.5 → <b>(0, 4.5)</b>。',
+  '3,3': 'P1 先手 + 距离相等:<b>P1 每轮走 1 步,第 3 轮到达,代价 3,得 2.5</b>;P2 追不上,不移动 → <b>(2.5, 0)</b>。',
+  '4,4': 'P1 先手 + 距离相等:<b>P1 每轮走 1 步,第 4 轮到达,代价 4,得 1.5</b>;P2 输定,不移动 → <b>(1.5, 0)</b>。'
+};
+function solveRace(){
+  const d1 = parseInt(document.getElementById('d1').value||'0',10);
+  const d2 = parseInt(document.getElementById('d2').value||'0',10);
+  const res = document.getElementById('raceResult');
+  if(isNaN(d1)||isNaN(d2)||d1<0||d1>10||d2<0||d2>10){res.innerHTML='请输入 0–10 的距离。';return;}
+  const key = d1+','+d2;
+  if(RACE_TABLE[key]){
+    res.innerHTML = RACE_TABLE[key];
+  } else if(d2===0){
+    res.innerHTML = 'P2 已在终点:P1 输定,不移动,得 0;<b>得分 (0, 5.5)</b>。P1 移动只会白费代价。';
+  } else if(d1<=d2){
+    const B=5.5;
+    res.innerHTML = 'P1 先手且距离 ≤ P2:<b>P1 每轮走 1 步</b>,代价 '+d1+',净得 <b>'+(B-d1).toFixed(1)+'</b>;P2 追不上,不移动 → <b>('+(B-d1).toFixed(1)+', 0)</b>。启示:先手 + 距离不落后 ⇒ 必胜。';
+  } else if(d1-d2<=1){
+    res.innerHTML = 'P1 距离略远但先手:若 P1 走 2 步后剩余 ≤ P2 剩余,且可一轮到达,则 P1 直接冲线得 2.5;否则 P2 更近占优 → 建议对照讲义 (3,1) 情形,<b>P1 输定时选择不移动</b>。';
+  } else {
+    res.innerHTML = 'P2 距离明显更近:<b>P1 输定,选择不移动 (0)</b>;P2 走 1 步/轮,净得 <b>'+(5.5-d2).toFixed(1)+'</b>。启示:<b>「赢家通吃」下,输在起跑线的人直接躺平</b>。';
+  }
+}
+solveRace();
+
+/* ═══════════ 导航 · scrollspy ═══════════ */
+function toggleDrawer(open){
+  document.getElementById('drawer').classList.toggle('open',open);
+  document.getElementById('overlay').classList.toggle('show',open);
+  document.getElementById('burgerBtn').setAttribute('aria-expanded',open);
+}
+const SPY_IDS = ['top','ch1','s11','s12','s13','s14','s15','gloss1','ch2','s21','s22','s23','s24','gloss2','ch3','s31','s32','s33','s34','s35','s36','gloss3'];
+function currentSection(){
+  const top = 90;
+  let cur = 'top';
+  for(const id of SPY_IDS){
+    const el = document.getElementById(id);
+    if(el && el.getBoundingClientRect().top <= top) cur = id;
+  }
+  return cur;
+}
+function updateSpy(){
+  const cur = currentSection();
+  document.querySelectorAll('.side-nav a, .drawer a').forEach(a=>{
+    const target = a.getAttribute('href');
+    a.classList.toggle('active', target === '#'+cur);
+  });
+}
+window.addEventListener('scroll', updateSpy, {passive:true});
+window.addEventListener('resize', updateSpy);
+updateSpy();
+
+/* ═══════════ 课后习题:答案门禁(默认隐藏,先作答再对照) ═══════════ */
+function initAnswerGates(){
+  /* 1) 课后习题:每道题自动挂一个「显示分步答案」按钮 */
+  document.querySelectorAll('.exercise').forEach(function(ex){
+    const tut = ex.querySelector('.tutor');
+    if(!tut || ex.querySelector('.ans-gate')) return;
+    const gate = document.createElement('div');
+    gate.className = 'ans-gate';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ans-btn';
+    btn.setAttribute('aria-expanded','false');
+    btn.innerHTML = '<span class="ans-ico">🔒</span><span class="ans-txt">显示分步答案</span>'
+      + '<span class="ans-hint">建议先独立完成,再对照</span>';
+    gate.appendChild(btn);
+    tut.parentNode.insertBefore(gate, tut);
+    btn.onclick = function(){
+      const isOpen = !ex.classList.contains('revealed');
+      ex.classList.toggle('revealed', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.querySelector('.ans-ico').textContent = isOpen ? '🔓' : '🔒';
+      btn.querySelector('.ans-txt').textContent = isOpen ? '收起答案' : '显示分步答案';
+      btn.querySelector('.ans-hint').textContent = isOpen ? '可用「上一步 / 下一步」逐步回看' : '建议先独立完成,再对照';
+      if(isOpen){
+        const head = tut.querySelector('.tutor-head') || tut;
+        if(head && typeof head.scrollIntoView === 'function') head.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    };
+  });
+
+  /* 2) 其他需要隐藏的答案块(如 2.1 竞速棋答案表):用 data-gate 指定目标 id */
+  document.querySelectorAll('.ans-gate[data-gate]').forEach(function(gate){
+    const body = document.getElementById(gate.getAttribute('data-gate'));
+    const btn = gate.querySelector('.ans-btn');
+    if(!body || !btn) return;
+    btn.setAttribute('aria-expanded','false');
+    btn.onclick = function(){
+      const isOpen = !body.classList.contains('open');
+      body.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.querySelector('.ans-ico').textContent = isOpen ? '🔓' : '🔒';
+      btn.querySelector('.ans-txt').textContent = isOpen ? '收起参考答案' : '显示参考答案';
+      if(isOpen && typeof body.scrollIntoView === 'function') body.scrollIntoView({behavior:'smooth', block:'nearest'});
+    };
+  });
+}
+
+/* ═══════════ 图解模式:经济学互动实验室小程序嵌入 ═══════════ */
+const MINI_LAB_BASE = '';   /* 留空 = 用同目录 mini-lab/;改走局域网可填 'http://192.168.1.4:8666/static/resources/mini_lab/' */
+function initLabEmbeds(){
+  document.querySelectorAll('.lab-stage').forEach(function(stage){
+    const rel = stage.getAttribute('data-src') || '';
+    const url = MINI_LAB_BASE ? MINI_LAB_BASE + rel.replace(/^mini-lab\//, '') : rel;
+    const openLink = stage.querySelector('.lab-open');
+    if(openLink) openLink.setAttribute('href', url);
+    const btn = stage.querySelector('.lab-launch');
+    if(!btn) return;
+    btn.onclick = function(){
+      stage.classList.add('loading');
+      const f = document.createElement('iframe');
+      f.className = 'lab-frame';
+      f.setAttribute('title', stage.getAttribute('data-title') || '交互小程序');
+      f.onload = function(){ stage.classList.remove('loading'); stage.classList.add('loaded'); };
+      f.src = url;
+      stage.appendChild(f);
+      btn.remove();
+      setTimeout(function(){ if(!stage.classList.contains('loaded')) stage.classList.add('failed'); }, 8000);
+    };
+  });
+}
+
+/* 门禁与嵌入不依赖 KaTeX,文档解析完立即执行 —— 避免答案闪现已见 */
+initAnswerGates();
+initLabEmbeds();
+
+/* ═══ 初始化:等待 KaTeX 加载后渲染讲解器 ═══ */
+function initTutors(){
+  Object.keys(TUTORS).forEach(renderTutor);
+  renderGlossary();
+}
+if(window.katex){
+  initTutors();
+} else {
+  window.addEventListener('load', initTutors);
+}
+
+/* ═══════════ 双语术语卡 Glossary(按章节归属) ═══════════ */
+const GLOSSARY = [
+  {ch:1, en:'Game Theory', zh:'博弈论', one:'研究多个决策者在互动环境中如何做出理性选择的学科。',
+   more:'<b>要素:</b>玩家 Players、策略集 Strategy Set、支付 Payoffs、信息 Information。核心假设:玩家理性且追求自身支付最大化。',
+   ex:'例:囚徒困境是博弈论最著名的入门案例。'},
+  {ch:1, en:'Player', zh:'玩家', one:'博弈中的决策主体,通常假设理性(最大化自身支付)。',
+   more:'<b>Player / 参与人:</b>可以是个人、厂商、国家,甚至是基因。在演化博弈中,选择单位从个体转向种群或基因。',
+   ex:'例:古诺模型中的两家寡头厂商。'},
+  {ch:1, en:'Strategy Set', zh:'策略集', one:'每个玩家可选择的行动集合 (Set of Actions)。',
+   more:'<b>策略 vs 行动:</b>行动是具体动作,策略是完整的「如果…就…」行动计划。在序贯博弈中策略尤其复杂。',
+   ex:'例:囚徒困境中每个囚犯的策略集 = {合作, 背叛}。'},
+  {ch:1, en:'Payoff', zh:'支付 / 收益', one:'每个策略组合对应的收益 (Outcomes),通常用数字表示。',
+   more:'<b>Payoff Matrix:</b>把双方策略与收益画成矩阵,行玩家收益写在前、列玩家在后,如 (X, Y)。',
+   ex:'例:(10,10) 表示双方都合作时各得 10。'},
+  {ch:1, en:'Dominant Strategy', zh:'占优策略', one:'无论对手如何选择,都给你带来最高收益的策略。',
+   more:'<b>严格占优:</b>不管对方选什么,这个策略都严格优于其他策略。<b>占优均衡:</b>由所有玩家占优策略构成的组合,结果极易预测。',
+   ex:'例:囚徒困境中「背叛」对双方都是严格占优策略。'},
+  {ch:1, en:'Dominated Strategy', zh:'被支配策略', one:'无论对手如何行动,都不比另一策略更好的选择。',
+   more:'<b>严格劣策略:</b>总是比另一策略差;可被重复剔除(IDSDS)简化博弈。<b>弱劣策略:</b>有时更差、有时打平。',
+   ex:'例:智猪博弈中小猪的「踩」是严格劣策略。'},
+  {ch:1, en:'Nash Equilibrium', zh:'纳什均衡', one:'每个玩家的策略都是对对手策略的最佳反应,无人有动机单方面偏离。',
+   more:'<b>Nash Equilibrium:</b>No Incentive to Deviate Unilaterally。「你不变,我就不变。」找法:逐列圈出 P1 最大、逐行圈出 P2 最大,双圈相交处即均衡。',
+   ex:'例:囚徒困境的 (背叛,背叛)=(2,2);性别之战有两个纯策略均衡。'},
+  {ch:1, en:'Best Response', zh:'最佳回应', one:'给定对手策略时,使自己收益最大的策略。',
+   more:'<b>反应函数 (Reaction Function):</b>把最佳回应写成对手策略的函数,如古诺模型的 Q₁ = (a−c−bQ₂)/(2b)。纳什均衡即互为最佳回应。',
+   ex:'例:古诺模型联立两家反应函数得均衡产量。'},
+  {ch:1, en:'Pareto Improvement', zh:'帕累托改进', one:'在不损害任何人的情况下,使至少一人变得更好的改变。',
+   more:'<b>帕累托最优:</b>不存在任何帕累托改进的状态。囚徒困境中 (10,10) 是 (2,2) 的帕累托改进,但因个体理性无法实现。',
+   ex:'例:囚徒从 (背叛,背叛) 转向 (合作,合作)。'},
+  {ch:1, en:'Mixed Strategy', zh:'混合策略', one:'按概率分布随机化选择的策略。',
+   more:'<b>Pure vs Mixed:</b>纯策略以概率 1 选某个行动;混合策略随机化。混合均衡要求双方让对手在任意选择下期望收益无差异 (Make Opponent Indifferent)。',
+   ex:'例:匹配硬币双方各以 1/2 概率出正反。'},
+  {ch:1, en:'IDSDS', zh:'重复剔除严格劣策略', one:'Iterated Deletion of Strictly Dominated Strategies——反复删除严格劣策略求解博弈。',
+   more:'<b>前提:</b>理性的共同知识 (Common Knowledge of Rationality)——每个人知道每个人知道…彼此理性。可解的博弈称 iterated dominance solvable。',
+   ex:'例:智猪博弈剔小猪「踩」列;4×4 习题逐轮剔除至 (R2,C2)。'},
+  {ch:2, en:'Backward Induction', zh:'逆向归纳', one:'从博弈树末端倒推,逐层确定最佳选择的求解方法。',
+   more:'<b>方法:</b>从最后行动的玩家开始,在每个决策点选最优,再向前逐层倒推。它剔除不可置信的威胁。',
+   ex:'例:市场进入博弈中,先看 B 会容纳,再推 A 会选择进入。'},
+  {ch:2, en:'Subgame Perfect Equilibrium', zh:'子博弈完美均衡', one:'不包含不可置信行动的战略所组成的纳什均衡。',
+   more:'<b>SPNE:</b>不论过去发生了什么,构成均衡的战略在每一个决策点上都最优。通过逆向归纳求得。',
+   ex:'例:市场进入博弈的 (进入, 容纳)=(1,1)。'},
+  {ch:2, en:'Incredible Threat', zh:'不可置信威胁', one:'事后不会执行的威胁——事前最优与事后最优不同。',
+   more:'<b>根源:</b>决策者会倒推,所以只有事后仍最优的威胁才可信。建立「感情用事」的名声可使威胁变得可信。',
+   ex:'例:在位厂商扬言「你进入我就降价」,但真进入后容纳更优,威胁不可信。'},
+  {ch:2, en:'Discount Factor', zh:'贴现因子 δ', one:'衡量未来收益折现到现在的权重,0 &lt; δ &lt; 1,反映耐心程度。',
+   more:'<b>公式:</b>第 1+t 期的支付 1 相当于第 1 期的 δᵗ。无限期等比数列求和:1 + δ + δ² + … = 1/(1−δ)。δ 越大越耐心,合作越可能。',
+   ex:'例:重复囚徒困境中 δ ≥ 1/2 时 Trigger 策略可支撑合作。'},
+  {ch:2, en:'Folk Theorem', zh:'无名氏定理', one:'无限次重复博弈中,若贴现因子足够大,任何程度的合作都可成为子博弈完美均衡。',
+   more:'<b>含义:</b>「合作可行」不再是问题,「具体如何协调到某个均衡」才是问题。',
+   ex:'例:无限次重复囚徒困境可支撑 (3,3) 合作。'},
+  {ch:2, en:'Tit-for-Tat', zh:'以牙还牙 TFT', one:'从合作开始,之后每次复制对方上一期的行动。',
+   more:'<b>成功秘诀:</b>善良(先合作)、报复(惩罚背叛)、宽容(原谅回头)、清晰(规则简单)。Robert Axelrod 锦标赛中 TFT 最成功。',
+   ex:'例:汉谟拉比法典「以眼还眼,以牙还牙」。'},
+  {ch:2, en:'Information Set', zh:'信息集', one:'序贯博弈中玩家无法区分的决策节点集合。',
+   more:'<b>完全信息 vs 不完全信息:</b>本讲义主要假设完全信息——玩家知道所有历史行动,故每个信息集只有一个节点。',
+   ex:'例:市场进入博弈中 B 知道 A 是否进入,信息集为单点。'},
+  {ch:3, en:'Evolutionarily Stable Strategy', zh:'进化稳定策略 ESS', one:'不能被变异成功侵入、在动态中逐步主导种群的策略。',
+   more:'<b>ESS vs Nash:</b>ESS 必是纳什均衡,但纳什均衡不一定是 ESS——ESS 更强,能抵抗入侵。',
+   ex:'例:蜗牛右旋、QWERTY 键盘、靠右行走。'},
+  {ch:3, en:"Hamilton's Rule", zh:'汉密尔顿法则', one:'当 r × B &gt; C 时,利他行为是 ESS。',
+   more:'<b>变量:</b>r = 亲缘系数(基因共享程度)、B = 受益者增益、C = 利他者成本。理性的单位是基因而非个体。',
+   ex:'例:工蜂牺牲:0.75 × 200 &gt; 1,牺牲是 ESS。'},
+  {ch:3, en:'Natural Selection', zh:'自然选择', one:'收益高于种群平均的策略在竞争中占优,其比例随时间上升的过程。',
+   more:'<b>演化博弈视角:</b>模拟自然选择——行动者不主动思考,而是依照本能与习惯行动;收益差异驱动策略比例变化。',
+   ex:'例:右旋蜗牛因交配优势逐渐主导种群。'},
+  {ch:3, en:'Altruism', zh:'利他主义', one:'以自身代价增进他人收益的行为;传统经济学视为「非理性」。',
+   more:'<b>演化解释:</b>利他提高相关基因频率(汉密尔顿法则),或作为群体水平 ESS 存在。',
+   ex:'例:工蜂刺敌牺牲、为陌生人牺牲。'},
+  {ch:3, en:'Kinship Coefficient', zh:'亲缘系数 r', one:'衡量两个个体共享基因程度的指标。',
+   more:'<b>取值:</b>人与父母/兄弟姐妹 r=0.5;工蜂间 r=0.75(特殊单倍二倍体);雄蜂与蜂王 r=1。',
+   ex:'例:工蜂与姐妹 r=0.75 → 0.75×200 &gt; 1,牺牲是 ESS。'}
+];
+
+let glossaryOpen = null;
+function renderGlossary(){
+  [1,2,3].forEach(function(ch){
+    const grid = document.getElementById('gGrid-'+ch);
+    if(!grid) return;
+    grid.innerHTML = '';
+    GLOSSARY.forEach(function(g,i){
+      if(g.ch !== ch) return;
+      const card = document.createElement('div');
+      card.className = 'g-card';
+      card.id = 'g-'+ch+'-'+i;
+      card.setAttribute('role','button');
+      card.setAttribute('tabindex','0');
+      card.setAttribute('aria-expanded','false');
+      card.innerHTML = '<div><span class="g-en">'+g.en+'</span><span class="g-zh">'+g.zh+'</span></div>'
+        + '<div class="g-one">'+g.one+'</div>'
+        + '<div class="g-more">'+g.more+'<div class="g-ex">'+g.ex+'</div></div>'
+        + '<span class="g-hint">点开查看中英释义 ▾</span>';
+      card.onclick = function(){ glossaryToggle(ch,i); };
+      card.onkeydown = function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); glossaryToggle(ch,i); } };
+      grid.appendChild(card);
+    });
+    const search = document.getElementById('gSearch-'+ch);
+    if(search){
+      search.addEventListener('input', function(){
+        const q = this.value.trim().toLowerCase();
+        grid.querySelectorAll('.g-card').forEach(function(card,idx){
+          const list = GLOSSARY.filter(g=>g.ch===ch);
+          const g = list[idx];
+          const hit = !q || g.en.toLowerCase().includes(q) || g.zh.includes(q) || g.one.toLowerCase().includes(q);
+          card.style.display = hit ? '' : 'none';
+        });
+      });
+    }
+  });
+}
+function glossaryToggle(ch,i){
+  const card = document.getElementById('g-'+ch+'-'+i);
+  if(!card) return;
+  const willOpen = !card.classList.contains('open');
+  const grid = document.getElementById('gGrid-'+ch);
+  grid.querySelectorAll('.g-card').forEach(c=>{ c.classList.remove('open'); c.setAttribute('aria-expanded','false'); });
+  if(willOpen){
+    card.classList.add('open');
+    card.setAttribute('aria-expanded','true');
+  }
+}
+
+/* ═══════════ 思考-揭示 Reveal ═══════════ */
+function revealToggle(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('open');
+  const btn = el.querySelector('.rv-btn');
+  if(btn) btn.textContent = el.classList.contains('open') ? '收起解释 ▴' : '点开看解释 ▸';
+}
+</script>
+</body>
+</html>
