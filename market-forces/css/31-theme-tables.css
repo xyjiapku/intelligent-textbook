@@ -1,0 +1,13 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- tables ---- */
+table.dt th{background:linear-gradient(#F6EFE0,#EEE4CE);border-bottom-color:var(--line)}
+table.dt td{border-bottom-color:#F0E9D8}
+table.dt tbody tr:nth-child(even) td{background:#FBF7EC}
+table.dt tbody tr:hover td{background:#F2EBDB}
+table.dt tr.pick td{background:#EAEFF9!important;color:var(--brand-d)}
+.scroll{background:#FFFDF8;border-color:var(--line)}
+table.mx td{background:linear-gradient(#FFFDF8,#F7F0E1);border-color:var(--line)}
+table.mx td.you{background:linear-gradient(#F1F4FC,#E6ECF8);border-color:var(--brand)}
+table.mx td.taken{background:linear-gradient(#FCF5DE,#F8ECC6);box-shadow:inset 0 0 0 3px rgba(190,135,28,.5)}
+
+/* ==MF:CSS-END== */

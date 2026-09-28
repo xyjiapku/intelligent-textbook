@@ -1,0 +1,7 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- two charts share a row on wide screens ---- */
+.chartpair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start}
+.chartpair .chartcard{margin:.4rem 0}
+@media (max-width:920px){.chartpair{grid-template-columns:1fr}}
+
+/* ==MF:CSS-END== */

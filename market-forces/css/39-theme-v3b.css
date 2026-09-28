@@ -1,0 +1,13 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- v3b: closing the loop on hero, scorelines and toast ---- */
+.rankcard{
+  background:
+    radial-gradient(30rem 18rem at 102% -20%, rgba(45,194,183,.35), transparent 60%),
+    radial-gradient(26rem 18rem at -8% 120%, rgba(190,135,28,.28), transparent 60%),
+    linear-gradient(132deg,#1E2A52 0%,#273C78 48%,#0E6A6B 118%);
+  box-shadow:0 26px 54px -22px rgba(22,38,80,.65), inset 0 1px 0 rgba(255,255,255,.14)}
+.rankcard::after{background:radial-gradient(circle,rgba(255,244,214,.20),transparent 70%)}
+.scoreline{border-bottom-color:#ECE4D2}
+.scoreline:hover{background:#F6EFE0}
+.toast{background:rgba(30,36,58,.96);box-shadow:0 18px 40px -12px rgba(20,28,52,.6)}
+/* ==MF:CSS-END== */

@@ -1,0 +1,9 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- event cards ---- */
+.event{background:linear-gradient(105deg,#F2EEE2,#FFFDF8 46%)}
+.event.warn{background:linear-gradient(105deg,#FBF1DC,#FFFDF8 46%)}
+.event.bad{background:linear-gradient(105deg,#F8E9E4,#FFFDF8 46%)}
+.event.good{background:linear-gradient(105deg,#E7F2EA,#FFFDF8 46%)}
+.evt-tag{background:linear-gradient(180deg,#313C5E,#1B2340)}
+
+/* ==MF:CSS-END== */

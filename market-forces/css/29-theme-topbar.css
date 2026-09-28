@@ -1,0 +1,15 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- top bar: frosted warm glass ---- */
+.topbar{background:rgba(250,246,236,.85);
+  border-bottom:1px solid rgba(208,198,173,.75);
+  box-shadow:0 6px 20px -14px rgba(74,60,32,.5);
+  backdrop-filter:blur(13px) saturate(1.15);-webkit-backdrop-filter:blur(13px) saturate(1.15)}
+.stat{background:linear-gradient(#FFFDF7,#F3ECDB);border-color:var(--line);
+  box-shadow:inset 0 1px 0 #fff}
+.fsbtn{background:linear-gradient(#FFFDF8,#F4EDDD);border-color:var(--line)}
+.iconbtn{background:linear-gradient(#FFFDF8,#F4EDDD);border-color:var(--line)}
+.tb-progress{background:rgba(208,198,173,.5)}
+.tb-progress i{background:linear-gradient(90deg,var(--brand-l),var(--teal));
+  box-shadow:0 0 10px rgba(14,124,123,.55)}
+
+/* ==MF:CSS-END== */

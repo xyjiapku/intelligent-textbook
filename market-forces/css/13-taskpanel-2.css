@@ -1,0 +1,19 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- the notebook, living inside the task panel ---- */
+.tp-book{margin:.8rem 0 0;padding:.7rem .8rem;border-radius:12px;
+  background:linear-gradient(180deg,#FEFAF0,#FDF4DE);border:1px solid #EBD9A8}
+.tp-book .tbrow{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;font-size:.84rem}
+.tp-book .tbrow b{font-weight:800;color:#7A5600}
+.tp-book .tp-bar{margin:.5rem 0 .2rem;background:#EFE3C6}
+.tp-book .tbnote{font-size:.76rem;color:#8A6A28;line-height:1.4}
+
+.optrow{display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0}
+.opt{border:1.5px solid var(--line);background:linear-gradient(#fff,#F8FBFE);border-radius:13px;padding:.55rem .85rem;cursor:pointer;
+  font-weight:800;font-size:.85rem;color:var(--ink2);transition:all .14s ease;text-align:left;font-family:inherit}
+.opt:hover{border-color:var(--line2);transform:translateY(-1px);box-shadow:0 6px 14px -10px rgba(16,42,84,.3)}
+.opt.sel{border-color:var(--brand);background:linear-gradient(160deg,#F5F9FF,#EAF1FF);color:var(--brand-d);
+  box-shadow:0 8px 18px -12px rgba(37,99,235,.55)}
+.opt small{display:block;font-weight:600;font-size:.66rem;color:var(--muted);margin-top:.1rem}
+.opt.sel small{color:#5B7FCF}
+
+/* ==MF:CSS-END== */

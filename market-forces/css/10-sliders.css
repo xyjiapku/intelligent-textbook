@@ -1,0 +1,13 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- sliders get a minus and a plus: dragging is for exploring, the buttons
+   are for landing exactly on a value ---- */
+.srow{display:flex;align-items:center;gap:.5rem}
+.srow input[type=range]{flex:1;min-width:0}
+.sbtn{flex:0 0 auto;width:2.5rem;height:2.5rem;border-radius:12px;border:1.5px solid var(--line2);
+  background:var(--surface);color:var(--ink);font-size:1.3rem;font-weight:800;cursor:pointer;
+  display:grid;place-items:center;line-height:1;user-select:none;font-variant-numeric:tabular-nums;
+  transition:background .12s ease,border-color .12s ease,transform .08s ease}
+.sbtn:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-d)}
+.sbtn:active{transform:translateY(1px)}
+
+/* ==MF:CSS-END== */

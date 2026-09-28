@@ -1,0 +1,14 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- factory illustration: softer card frame ---- */
+.chartcard.fac{padding:.5rem .55rem .35rem;background:linear-gradient(180deg,#FCFDFF,#F6F9FE)}
+
+@media (max-width:1040px){
+  .decwork,.decwork-nc{grid-template-columns:1fr}
+  .decrail{position:static;order:1}
+  .decchart{order:2}
+  .decmatrix{order:2}
+}
+
+
+/* ============================================================
+/* ==MF:CSS-END== */

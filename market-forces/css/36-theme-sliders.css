@@ -1,0 +1,31 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- sliders ---- */
+input[type=range]::-webkit-slider-runnable-track{
+  background:linear-gradient(90deg,#5A74B6 var(--pct),#DCD2BB var(--pct));
+  box-shadow:inset 0 1px 2px rgba(74,60,32,.20)}
+input[type=range]::-webkit-slider-thumb{
+  background:linear-gradient(180deg,#fff,#EDF0F8);border:3px solid var(--brand);
+  box-shadow:0 3px 10px rgba(30,45,90,.42), inset 0 1px 0 #fff}
+input[type=range]::-moz-range-track{background:#DCD2BB;box-shadow:inset 0 1px 2px rgba(74,60,32,.20)}
+input[type=range]::-moz-range-progress{background:#5A74B6}
+input[type=range]::-moz-range-thumb{background:linear-gradient(180deg,#fff,#EDF0F8);border:3px solid var(--brand);
+  box-shadow:0 3px 10px rgba(30,45,90,.42)}
+.sbtn{background:linear-gradient(#FFFDF8,#F2EAD7);border-color:var(--line2)}
+.sbtn:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-d)}
+
+/* discrete decision sliders: notched tracks, pointer-driven ratchet */
+.srow.discrete{cursor:pointer}
+.srow.discrete input[type=range]{pointer-events:none;cursor:pointer}
+.srow.discrete input[type=range]::-webkit-slider-runnable-track{
+  background:
+    repeating-linear-gradient(90deg, rgba(34,40,58,.24) 0 1px, transparent 1px, transparent calc(100%/var(--n))),
+    linear-gradient(90deg,#5A74B6 var(--pct),#DCD2BB var(--pct));
+  background-repeat:repeat,no-repeat}
+.srow.discrete input[type=range]::-moz-range-track{
+  background:
+    repeating-linear-gradient(90deg, rgba(34,40,58,.24) 0 1px, transparent 1px, transparent calc(100%/var(--n))),
+    #DCD2BB}
+@keyframes tickglow{0%{filter:drop-shadow(0 0 0 rgba(90,116,182,0))}35%{filter:drop-shadow(0 0 8px rgba(90,116,182,.8))}100%{filter:drop-shadow(0 0 0 rgba(90,116,182,0))}}
+.srow.tickpop input{animation:tickglow .3s ease}
+
+/* ==MF:CSS-END== */

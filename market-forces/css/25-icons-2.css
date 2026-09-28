@@ -1,0 +1,16 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- hand-drawn SVG icon system ---- */
+.em svg,.pv-em svg,.e svg,.ch-icon svg,.jdisc svg,.chip svg,.tp-crest svg{display:block}
+.em svg{width:2.15rem;height:2.15rem}
+.pv-em svg{width:3.5rem;height:3.5rem;filter:drop-shadow(0 3px 5px rgba(0,0,0,.28))}
+.e svg{width:1.4rem;height:1.4rem}
+.ch-icon svg{width:1.95rem;height:1.95rem}
+.jdisc svg{width:1.42rem;height:1.42rem}
+.chip svg{width:1.28rem;height:1.28rem}
+.tp-crest svg{width:1.55rem;height:1.55rem}
+.uic{width:1.02em;height:1.02em;vertical-align:-.15em;display:inline-block;flex:none}
+.iconbtn .uic{width:.96em;height:.96em;margin-right:.3em}
+.btn .uic{margin-right:.32em}
+.fac svg{display:block;width:100%;height:auto}
+
+/* ==MF:CSS-END== */

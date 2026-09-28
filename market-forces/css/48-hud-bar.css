@@ -1,0 +1,318 @@
+/* ==MF:CSS-BEGIN== */
+/* ==========================================================================
+   48-hud-bar.css — the bottom dashboard
+   --------------------------------------------------------------------------
+   Round 8: "做一个底栏，把顶栏的 Cash，Firm value，Insight 都放在这里，
+   还有 tasks 和 check my answer。"
+
+   One permanent brass-framed instrument panel along the foot of the board.
+   Left: the three counters that say how the firm is doing. Right: the two
+   things a student does next — open Tasks, submit the answer.
+
+   It replaced three separate floating things (the appearing/disappearing
+   action dock, the Tasks bubble, and the counters stranded in the top bar),
+   so this layer also has to undo them. Each undo is fenced off and
+   commented: deleting this file restores all three.
+
+   Layering (unchanged from the pieces it replaces):
+     page content        < 1
+     this bar            = 58   (below Tasks' overlay so the sheet still wins,
+                                 above the sticky decision bars at 26)
+     task overlay        = 70
+     toast               = 80
+   ========================================================================== */
+
+/* ---------------------------------------------------------------
+   THE PANEL
+   A brass-framed plaque, not a toolbar. The frame is a real border plus
+   an inset highlight line, and the stock is the same laid paper the rest
+   of the board is printed on, so it reads as part of the edition rather
+   than a browser chrome strip.
+   --------------------------------------------------------------- */
+.hudbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:58;
+  display:flex;align-items:stretch;
+  padding:0;
+  background:
+    linear-gradient(180deg, rgba(239,230,211,0) 0%, rgba(239,230,211,0) 0),
+    linear-gradient(180deg, var(--v-paper-3,#F6F0E1) 0%, var(--v-paper,#EFE6D3) 100%);
+  /* the double hairline across the top is a printed rule, matching the one
+     under the running head — the board is now ruled top and bottom */
+  border-top:1px solid var(--v-rule,#BFB29A);
+  box-shadow:
+    0 -1px 0 rgba(255,255,255,.7) inset,
+    0 -3px 0 -2px rgba(191,178,154,.55),
+    0 -14px 30px -18px rgba(58,44,24,.6);
+}
+/* a brass rail riding the top edge, the way a lectern has one to stop the
+   book sliding off */
+.hudbar .hb-rule{
+  position:absolute;left:0;right:0;top:-1px;height:3px;
+  background:linear-gradient(90deg,
+    rgba(150,118,58,0) 0%, rgba(176,140,70,.75) 8%,
+    rgba(232,206,142,.95) 50%, rgba(176,140,70,.75) 92%,
+    rgba(150,118,58,0) 100%);
+  pointer-events:none;
+}
+.hudbar .hb-in{
+  display:flex;align-items:center;gap:.6rem;
+  width:100%;max-width:1180px;margin:0 auto;
+  padding:.42rem 1.15rem .5rem;
+  min-height:3.4rem;
+}
+
+/* ---------------------------------------------------------------
+   THE COUNTERS
+   Each is a struck medallion on a small raised plate. The plate is what
+   makes the row read as one instrument rather than three loose icons.
+   --------------------------------------------------------------- */
+.hudbar .hb-stats{
+  display:flex;align-items:center;gap:.5rem;min-width:0;
+  margin-right:auto;
+}
+.hudbar .hb-stat{
+  position:relative;
+  display:flex;align-items:center;gap:.5rem;
+  padding:.3rem .76rem .3rem .42rem;
+  border:1px solid var(--v-rule,#BFB29A);
+  border-radius:3px;
+  background:
+    linear-gradient(180deg, rgba(255,253,246,.92), rgba(246,240,225,.92));
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.85) inset,
+    0 -1px 0 rgba(150,118,58,.14) inset,
+    0 2px 5px -3px rgba(58,44,24,.4);
+  min-width:0;
+}
+.hudbar .hb-ic{
+  flex:0 0 auto;display:block;width:1.94rem;height:1.94rem;
+  filter:drop-shadow(0 1px 1px rgba(58,36,4,.5));
+}
+.hudbar .hb-ic svg{display:block;width:100%;height:100%}
+.hudbar .hb-tx{
+  display:flex;flex-direction:column;line-height:1.1;min-width:0;
+}
+.hudbar .hb-lab{
+  font-size:.86rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--v-ink-2,#4A4133);white-space:nowrap;
+}
+.hudbar .hb-stat b{
+  font-size:1.06rem;font-weight:800;letter-spacing:-.01em;
+  font-variant-numeric:tabular-nums;
+  color:var(--v-ink,#2A2620);
+  text-shadow:0 1px 0 rgba(255,255,255,.6);
+  white-space:nowrap;
+}
+/* only firm value carries a sign, so only it gets the colours */
+.hudbar .hb-stat.pos b{color:#14634A}
+.hudbar .hb-stat.neg b{color:#9E2C18}
+
+/* ---------------------------------------------------------------
+   THE ACTIONS
+   --------------------------------------------------------------- */
+.hudbar .hb-act{
+  display:flex;align-items:center;gap:.5rem;flex:0 0 auto;
+}
+
+/* --- Tasks --- */
+.hudbar .hb-tasks{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.3rem .8rem .3rem .4rem;
+  border:1.5px solid var(--v-gold,#A9761B);
+  border-radius:3px;
+  background:linear-gradient(180deg,#FDF2C4,#EFC542);
+  color:#4A3200;font:inherit;font-weight:800;cursor:pointer;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 3px 9px -5px rgba(122,86,4,.7);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.hudbar .hb-tasks:hover{transform:translateY(-1px);box-shadow:0 6px 14px -6px rgba(122,86,4,.75)}
+.hudbar .hb-tasks .hb-ring{display:block;flex:0 0 auto}
+.hudbar .hb-ttx{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+.hudbar .hb-ttx b{font-size:.94rem;letter-spacing:-.01em}
+.hudbar .hb-ttx small{
+  font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  opacity:.74;white-space:nowrap;
+}
+/* nothing to do / everything done: the button steps back rather than
+   disappearing, so its position never moves under the student's thumb */
+.hudbar .hb-tasks.quiet{
+  border-color:var(--v-rule,#BFB29A);
+  background:linear-gradient(180deg,#FBF7EA,#EFE7D3);
+  color:var(--v-ink-3,#6E6555);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.hudbar .hb-tasks.hb-off{display:none}
+
+/* --- the mirrored commit button ---
+   It sits to the LEFT of Tasks and RESERVES ITS WIDTH whether or not a button
+   is in it. Round-8 follow-up: with the slot on the right, Tasks slid sideways
+   every time the commit button appeared or disappeared — a control that moves
+   while you are aiming at it. A fixed min-width means the row is static; the
+   empty state simply shows nothing in a space that was already there.
+   (The empty slot is invisible, so the reserved width reads as deliberate
+   breathing room rather than as a hole.) */
+.hudbar .hb-commit{
+  display:flex;align-items:center;gap:.45rem;
+  justify-content:flex-end;
+  /* wide enough for the longest label this ever carries ("Lock in the
+     decision"). The reservation is UNCONDITIONAL — if the width collapsed
+     when the slot emptied, Tasks would still jump, which is the whole thing
+     this is here to prevent. An empty slot is just quiet space. */
+  min-width:12.4rem;
+}
+.hudbar .hb-commit .btn{
+  white-space:nowrap;flex:0 0 auto;
+  border-radius:3px;
+  /* the button grows INTO the reserved space, right-aligned, so its left edge
+     is the only thing that moves — and Tasks, which is to its right, never does */
+  margin-left:auto;
+}
+.hudbar .hb-sec{
+  border:1px solid var(--v-rule,#BFB29A);
+  background:linear-gradient(180deg,#FFFDF8,#F4EDDD);
+  color:var(--v-ink-2,#4A443A);font:inherit;font-weight:700;font-size:.86rem;
+  padding:.42rem .7rem;border-radius:3px;cursor:pointer;white-space:nowrap;
+}
+.hudbar .hb-sec:hover{border-color:var(--v-gold,#A9761B)}
+
+/* --- text size, behind a cog --- */
+.hudbar .hb-fs{position:relative}
+.hudbar .hb-cog{
+  width:2.1rem;height:2.1rem;display:grid;place-items:center;
+  border:1px solid var(--v-rule,#BFB29A);border-radius:3px;
+  background:linear-gradient(180deg,#FFFDF8,#F4EDDD);
+  color:var(--v-ink-3,#6E6555);cursor:pointer;
+}
+.hudbar .hb-cog svg{width:1.05rem;height:1.05rem;display:block}
+.hudbar .hb-cog:hover{color:var(--v-ink,#2A2620);border-color:var(--v-gold,#A9761B)}
+.hudbar .hb-fsmenu{
+  position:absolute;right:0;bottom:calc(100% + .5rem);
+  display:none;gap:.24rem;padding:.3rem;
+  border:1px solid var(--v-rule,#BFB29A);border-radius:4px;
+  background:var(--v-paper-3,#F6F0E1);
+  box-shadow:0 12px 28px -12px rgba(58,44,24,.6);
+}
+.hudbar.fs-open .hb-fsmenu{display:flex}
+.hudbar.fs-open .hb-cog{
+  color:var(--v-ink,#2A2620);border-color:var(--v-gold,#A9761B);
+  background:linear-gradient(180deg,#FDF2C4,#EFC542);
+}
+
+/* ---------------------------------------------------------------
+   NARROW — the bar grows upward instead of sideways.
+   Measured at 390px: three counters + Tasks + commit do not fit on one
+   line. The counters keep their own row (they are the glanceable half),
+   the actions drop below, and the labels go: the medallions are already
+   distinct at that size, which is why they were redrawn as medallions.
+   --------------------------------------------------------------- */
+@media (max-width:760px){
+  .hudbar .hb-in{
+    flex-direction:column;align-items:stretch;gap:.34rem;
+    padding:.4rem .7rem .5rem;
+  }
+  .hudbar .hb-stats{margin-right:0;justify-content:space-between;gap:.34rem}
+  .hudbar .hb-stat{flex:1 1 0;padding:.26rem .5rem .26rem .34rem;gap:.36rem}
+  .hudbar .hb-ic{width:1.42rem;height:1.42rem}
+  .hudbar .hb-lab{font-size:.8rem;letter-spacing:.05em}
+  .hudbar .hb-stat b{font-size:.96rem}
+  .hudbar .hb-act{justify-content:space-between;gap:.4rem}
+  .hudbar .hb-tasks{flex:0 0 auto;justify-content:center}
+  .hudbar .hb-ttx small{display:none}
+  /* on a phone the reservation is too expensive, so the slot shares the row
+     with Tasks as a normal flex item — but it still never collapses to zero
+     when empty, or Tasks would jump here too */
+  .hudbar .hb-commit{flex:1 1 auto;justify-content:flex-end;min-width:0}
+  .hudbar .hb-commit .btn{flex:1 1 auto;text-align:center;margin-left:0}
+}
+@media (max-width:420px){
+  .hudbar .hb-lab{font-size:.76rem}
+  .hudbar .hb-stat b{font-size:.9rem}
+  .hudbar .hb-ic{width:1.26rem;height:1.26rem}
+  .hudbar .hb-ttx b{font-size:.86rem}
+}
+
+/* ==================================================================
+   THE UNDOS — the three pieces this bar replaces.
+   Each block is fenced and explained so the removal is reversible and
+   obvious. Reloading without this file restores the old behaviour.
+   ================================================================== */
+
+/* (a) the old floating action dock. js/11-dock.js still runs and still
+   mounts, so rather than deleting a working module mid-flight the bar
+   simply takes it off the screen — the module is inert but harmless, and
+   MF_DOCK stays available to the test harness. */
+html .actiondock,
+html .actiondock.show,
+html .actiondock.parked,
+html .actiondock.parked.show{
+  display:none !important;
+}
+
+/* (b) the floating Tasks bubble. The bar owns Tasks now; the bubble is
+   redundant and sat exactly where the bar is. */
+.taskfab{display:none !important}
+
+/* (c) the counters left in the top bar. topbarHTML() no longer emits them,
+   but 10-achievements.js injects .mf-streak into `.tb-stats` after every
+   paint, and `.tb-stats` no longer exists — so the streak pill is re-homed
+   into the HUD instead of erroring out. See the CSS for it below. */
+.hudbar .mf-streak{
+  display:flex;align-items:center;gap:.34rem;
+  padding:.28rem .62rem;border:1px solid var(--v-rule,#BFB29A);border-radius:3px;
+  background:linear-gradient(180deg,#FFFDF8,#F4EDDD);
+}
+/* the pill's own children are sized by 42-achievements.css for the old top
+   bar (.72rem), which is below the 16px legibility floor this project holds
+   itself to. The HUD re-sizes them rather than editing that layer, so the
+   layer stays faithful to its origin. */
+.hudbar .mf-streak > span:first-child{font-size:.86rem}
+.hudbar .mf-streak b{font-size:1.02rem}
+.hudbar .mf-streak .mf-streak-fl{font-size:.92rem}
+/* `.rec` is the pill after the streak has been BROKEN: it reports the run's
+   RECORD rather than a live count, and it must not wear the "hot" brass —
+   struck gold means "this is happening now", and nothing is happening now.
+   A plain ink frame reads as a figure that belongs to the finished run. */
+.hudbar .mf-streak.rec{
+  background:linear-gradient(180deg,#FBF7EC,#F0E9D8);
+  border-color:var(--v-rule,#BFB29A);
+}
+/* the star must clear 4.5:1 against the struck-parchment ground it sits on.
+   #A9761B measured 3.71 there; #7E5510 measures 6.4 and still reads as gold
+   rather than as plain ink. */
+.hudbar .mf-streak.rec .mf-streak-fl{color:#7E5510}
+
+/* the achievements button is injected into .hb-act by 10-achievements.js and
+   borrows .hb-cog for its frame, but it carries a glyph AND a count, so it
+   needs to size to its contents rather than to a fixed 2.1rem square */
+.hudbar .hb-cog.mf-achbtn{
+  width:auto;min-width:2.1rem;padding:0 .5rem;gap:.28rem;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.hudbar .hb-cog.mf-achbtn .mf-achbtn-ic{display:inline-flex;color:var(--v-gold,#A9761B)}
+.hudbar .hb-cog.mf-achbtn .mf-achbtn-n{
+  font-size:.74rem;font-weight:800;font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+@media (max-width:760px){
+  /* the count is the first thing to go when the action row is tight */
+  .hudbar .hb-cog.mf-achbtn .mf-achbtn-n{display:none}
+  .hudbar .hb-cog.mf-achbtn{padding:0;width:2.1rem}
+}
+
+/* the toast and the sticky decision bars have to clear the panel */
+:root{ --hud-h:3.6rem }
+.toast{bottom:calc(var(--hud-h, 3.6rem) + 1rem) !important}
+.decbar{top:calc(var(--topbar-h, 3.4rem) + .35rem)}
+
+/* and the page reserves room, so the last card is never under the bar */
+.shell{padding-bottom:calc(var(--hud-h, 3.6rem) + 2.2rem)}
+
+/* print: the panel is chrome, the sheet is the artifact */
+@media print{
+  .hudbar{display:none !important}
+  .shell{padding-bottom:0 !important}
+}
+
+/* ==MF:CSS-END== */

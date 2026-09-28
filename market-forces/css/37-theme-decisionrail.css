@@ -1,0 +1,59 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- decision rail warm surfaces ---- */
+.decrail>.ctl{background:linear-gradient(180deg,#FFFDF8,#F8F1E2);border-color:var(--line)}
+.decrail>.card.tight{background:linear-gradient(160deg,#FBF6EA,#F3EBD8);border-color:#E3D9C0}
+.decbar{background:rgba(252,249,241,.93);border-bottom-color:var(--line);
+  backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1)}
+
+/* ============================================================
+   THE FACTORY — chart-left, control-rail workspace
+   ============================================================ */
+.lab-head{margin-bottom:.85rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0) 5.2rem),var(--surface)}
+.labwork{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(18rem,.92fr);
+  gap:1.15rem;align-items:start}
+.labmain{min-width:0}
+.labrail{position:sticky;top:calc(var(--topbar-h,3.4rem) + .6rem);z-index:10;
+  display:flex;flex-direction:column;gap:.62rem;min-width:0}
+.labtabs{display:flex;flex-direction:column;gap:.42rem}
+.labtab{display:flex;align-items:center;gap:.66rem;width:100%;text-align:left;cursor:pointer;
+  font-family:inherit;border:1.5px solid var(--line);border-radius:14px;padding:.5rem .7rem;
+  background:linear-gradient(#FFFDF8,#F6EFE0);color:var(--ink2);
+  transition:border-color .14s ease,transform .14s ease,box-shadow .14s ease,background .14s ease}
+.labtab:hover{border-color:var(--brand-l);transform:translateX(2px)}
+.labtab .lt-n{flex:0 0 auto;width:1.85rem;height:1.85rem;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:.82rem;background:var(--surface2);border:1.5px solid var(--line2);color:var(--muted)}
+.labtab .lt-n svg{width:1.05rem;height:1.05rem}
+.labtab .lt-t{font-weight:800;font-size:.9rem;display:block;line-height:1.2}
+.labtab .lt-t small{display:block;font-weight:600;font-size:.67rem;color:var(--muted);margin-top:.08rem;line-height:1.25}
+.labtab.sel{border-color:var(--brand);background:linear-gradient(160deg,#F2F5FC,#E6ECF9);
+  box-shadow:0 10px 22px -16px rgba(36,56,109,.7)}
+.labtab.sel .lt-n{background:linear-gradient(180deg,var(--brand-l),var(--brand-d));border-color:var(--brand-d);color:#fff}
+.labtab.done .lt-n{background:linear-gradient(180deg,#33A17B,#1D6E4E);border-color:#1D6E4E;color:#fff}
+.labtab.done.sel .lt-n{background:linear-gradient(180deg,#33A17B,#1D6E4E)}
+.labrail-card{margin:0;background:linear-gradient(180deg,#FFFDF8,#F8F1E2);
+  border-color:var(--line);box-shadow:0 1px 2px rgba(74,60,32,.05)}
+.lab-k{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.25rem 0}
+.lab-k .opt{margin:0;padding:.46rem .55rem}
+.labrail-read{margin:0;grid-template-columns:1fr 1fr;gap:.4rem}
+.labrail-read .ro{padding:.34rem .5rem;border-radius:10px;background:var(--surface2)}
+.labrail-read .ro .rl{font-size:.55rem;letter-spacing:.05em}
+.labrail-read .ro .rv{font-size:.94rem}
+.labrail-go{display:flex;flex-direction:column;gap:.42rem}
+.labrail-go .btn{width:100%;justify-content:center}
+.lab-finish-btn{background:linear-gradient(180deg,#FDF2D2,#ECCE83);border:1.5px solid var(--gold);
+  color:#57400A;font-weight:800;box-shadow:0 9px 20px -13px rgba(122,86,4,.75),inset 0 1px 0 #fff}
+.lab-finish-btn:hover{background:linear-gradient(180deg,#FEF5DC,#E9C972);border-color:#A5740F;color:#473407}
+.labrail-hint{font-size:.73rem;line-height:1.45}
+@media (max-width:1040px){
+  .labwork{grid-template-columns:1fr}
+  .labrail{position:static;order:1}
+  .labmain{order:2}
+}
+@media (max-width:640px){
+  .labtabs{flex-direction:row}
+  .labtab{flex:1;justify-content:center}
+  .labtab .lt-t small{display:none}
+}
+
+/* ==MF:CSS-END== */

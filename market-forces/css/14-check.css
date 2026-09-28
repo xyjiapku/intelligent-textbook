@@ -1,0 +1,18 @@
+/* ==MF:CSS-BEGIN== */
+/* ---------------- check / quiz ---------------- */
+.checkopt{display:flex;align-items:center;gap:.65rem;width:100%;text-align:left;border:1.5px solid var(--line);
+  background:linear-gradient(#fff,#F9FBFE);border-radius:13px;padding:.65rem .85rem;margin:.45rem 0;cursor:pointer;
+  font-size:.9rem;font-weight:600;color:var(--ink2);font-family:inherit;transition:all .13s ease}
+.checkopt:hover{border-color:var(--brand);color:var(--ink);transform:translateX(2px)}
+.checkopt .optkey{flex:none;width:1.5rem;height:1.5rem;border-radius:9px;display:grid;place-items:center;
+  font-size:.75rem;font-weight:900;background:var(--brand-soft);color:var(--brand-d);border:1px solid #C7DCFB}
+.checkopt.ok{border-color:var(--good);background:linear-gradient(100deg,#EDFAF4,#F7FDF9);color:#0A5C40}
+.checkopt.ok .optkey{background:var(--good);color:#fff;border-color:var(--good)}
+.checkopt.no{border-color:var(--bad);background:linear-gradient(100deg,#FDEEEF,#FFF9F9);color:#A3271B}
+.checkopt.no .optkey{background:var(--bad);color:#fff;border-color:var(--bad)}
+.fb{margin-top:.65rem;padding:.7rem .9rem;border-radius:var(--r2);font-size:.87rem;line-height:1.55;display:none}
+.fb.show{display:block;animation:rise .35s ease both}
+.fb.ok{background:linear-gradient(100deg,#EDFAF4,#F7FDF9);border-left:4px solid var(--good);color:#0A5C40}
+.fb.no{background:linear-gradient(100deg,#FDEEEF,#FFF9F9);border-left:4px solid var(--bad);color:#A3271B}
+
+/* ==MF:CSS-END== */

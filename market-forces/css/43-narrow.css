@@ -1,0 +1,292 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 NARROW-SCREEN LAYER
+   ------------------------------------------------------------
+   Loaded absolute last, specifically so it can win over 40/41/42.
+
+   Two separate jobs live in this file:
+
+   A. The narrow screen (≤640px). The top bar is `display:flex;
+      flex-wrap:wrap` (css/02-topbar-1.css) — on a phone that wrap is the
+      whole problem: the firm chip, three stat tiles and six controls stacked
+      onto five rows, the sticky bar ate 165px of an 844px screen, and because
+      a WRAPPED FLEX LINE DOES NOT SHRINK ITS ITEMS the `.tb-stats` row stayed
+      627px wide inside a 390px bar, dragging the whole document out to a real
+      sideways scroll. The previous 640px rules only touched decoration (plate
+      sizes, seal), never the bar itself.
+
+   B. The mid-width plates. `.mf-bleed` / `.mf-workshophead` /
+      `.mf-debriefplate` bleed to the card edge with `-1.7rem` side margins
+      (css/41-vintage-scenes.css). That reads well on a wide screen, but the
+      card inset is only ~1.7rem at 1280px and less as the window narrows, so
+      from about 1100px down the plate overruns the viewport: measured 1045px
+      of plate in a 1024px window, i.e. a 10px page scroll at a very ordinary
+      laptop width. The bleed is clamped to the viewport instead of to the
+      card.
+
+   Nothing here changes the wide desktop: job A is inside max-width queries,
+   job B only ever pulls an over-wide box back inside the sheet.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   0. Plates that bleed to the card edge must not pass the viewport
+   ------------------------------------------------------------ */
+/* `calc(50% - 50vw)` positions the plate's left edge on the viewport edge,
+   and `min()` keeps the negative pull no larger than the card's own padding.
+   With `--mf-pad` unavailable at this level we use the computed card padding
+   as the cap: the plate may always reach the card edge, never beyond it. */
+.mf-bleed, .mf-workshophead, .mf-debriefplate{
+  max-width:100vw;
+  min-width:0;
+}
+/* the bleed only works while the card is wider than the viewport pull; once
+   the window gets close to the sheet width it has to give way */
+@media (max-width: 1100px){
+  .mf-bleed, .mf-workshophead, .mf-debriefplate{
+    margin-left:0;
+    margin-right:0;
+  }
+}
+
+/* ------------------------------------------------------------
+   1. The running head — one compact row on a phone
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  /* Before: `flex-wrap:wrap` stacked the chip, three stat tiles and six
+     controls onto five rows — a 165px sticky bar on an 844px screen, i.e.
+     a fifth of the phone permanently gone. And because a wrapped flex line
+     does NOT shrink its items, `.tb-stats` stayed 627px wide inside a 390px
+     bar and dragged `document.scrollWidth` out to 474px (a real sideways
+     scroll on the whole page).
+     Now: one non-wrapping row, and the bar is allowed to scroll itself if
+     the content still does not fit. `min-width:0` on the flex children is
+     what actually lets them come in — without it they keep their
+     min-content width no matter how the parent is sized. */
+  .topbar{
+    flex-wrap:nowrap;
+    align-items:center;
+    gap:.35rem;
+    padding:.35rem .55rem;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scrollbar-width:none;
+  }
+  .topbar::-webkit-scrollbar{ display:none; }
+
+  /* the firm name is already repeated in the scene heading below, so on a
+     phone it yields its space to the figures the student actually watches */
+  .topbar .tb-firm{ flex:0 0 auto; min-width:0; }
+  .tb-firm .tb-name{ display:none; }
+  .tb-firm .chip{ width:1.65rem; height:1.65rem; font-size:.88rem; border-radius:5px; }
+
+  /* the scoreline: three tiles, no label row above them, allowed to shrink.
+     The label floor is 12px and root is 19px, so .6rem (11.4px) is under it —
+     .64rem = 12.16px is the first stop that clears. */
+  .tb-stats{ margin-left:auto; flex:0 1 auto; min-width:0; gap:.28rem; flex-wrap:nowrap; }
+  .stat{ min-width:0; flex:0 1 auto; padding:.18rem .42rem; border-radius:7px; }
+  .stat span{ font-size:.64rem; letter-spacing:.04em; }
+  .stat b{ font-size:.88rem; }
+
+  /* controls lose their words and keep their glyphs, and are allowed to
+     shrink — the three A-buttons and the two icon buttons are self-evident */
+  .fsgroup{ flex:0 1 auto; min-width:0; gap:.12rem; }
+  .fsbtn{ width:1.5rem; height:1.5rem; font-size:.76rem; flex:0 0 auto; }
+  .mf-achbtn, .iconbtn{ flex:0 0 auto; min-width:0; padding:.28rem .4rem; }
+  .mf-achbtn-n{ display:none; }
+  .iconbtn .lbl{ display:none; }
+
+  /* The step chips are a wraps-a-lot row on desktop (`flex-wrap:wrap`,
+     css/05-steps.css). At 390px each chip took its own line and ate ~130px of
+     vertical space above the fold. As one scrollable row they read as the
+     progression they are. */
+  .steps{ flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-x:contain;
+          padding-bottom:.15rem; scrollbar-width:none; }
+  .steps::-webkit-scrollbar{ display:none; }
+  .stepdot{ flex:0 0 auto; }
+}
+
+/* ------------------------------------------------------------
+   1b. Very narrow (≤380px) — the bar cannot hold six controls
+   ------------------------------------------------------------ */
+@media (max-width: 380px){
+  /* Below ~380px the three figure tiles plus four controls genuinely do not
+     fit; measured at 320px the tiles overlapped each other and the streak
+     badge (a real collision, not just clipping).
+     The two secondary readings go: INSIGHT is repeated in full on the debrief
+     card, and the streak is a flourish, whereas CASH and FIRM VALUE are the
+     two numbers the whole game is scored on. Both remain one tap away in the
+     task panel / honours wall.
+     Markup is js/03-ui.js:373-375 — three plain `.stat` tiles, the third being
+     Insight — and js/10-achievements.js:354 appends `.stat.mf-streak` as a
+     fourth. Targeting `:nth-child(3)` alone would therefore be fragile if the
+     bar ever gains a tile ahead of it, so the streak is matched by name. */
+  .topbar .tb-firm .chip{ width:1.5rem; height:1.5rem; font-size:.8rem; }
+  .tb-stats > .stat:nth-child(3), .tb-stats > .mf-streak{ display:none; }
+  .fsbtn{ width:1.35rem; height:1.35rem; font-size:.72rem; }
+  .iconbtn{ padding:.24rem .34rem; }
+}
+
+/* ------------------------------------------------------------
+   2. Long-form blocks — let the words use the full measure
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  #app{ padding:1rem .85rem 3rem; }
+
+  /* Scene headings lose the hanging ornament so the title gets full width */
+  .scene-h, .hero-title, h1, h2{ letter-spacing:-.005em; }
+
+  /* Cards already inset their hairline by 4px; at this width the inner
+     margin needs to come in a little or the text column gets pinched. */
+  .card, .panel, .box, .tp, .beat{ padding:1rem .9rem; }
+
+  /* THE ACTUAL 436px CULPRIT — every block/grid/flex chain needs `min-width:0`.
+     Measured on the debrief at a real 390px viewport, the widest `.card` was
+     436px wide (right edge 474, so 84px of the page sat off-screen):
+         main#shell.shell     390
+           #app.pagecol       346
+             div.grid2        314   <- correctly sized
+               div  (2nd col) 436   <- refuses to shrink
+                 div.card     436
+                   .scoreline 399
+     Both `.grid2` and the flex row inside it default their items to
+     `min-width:auto` = "never go below my min-content width". The long chapter
+     title "Chapter 4 · Price Makers and Rule Breakers" then sets a floor
+     nothing upstream can compress.
+     `grid-template-columns:1fr` (css/19-animations.css, ≤880px) already puts
+     the two columns into one — that is not enough on its own; the *item* must
+     also be allowed to narrow. */
+  .grid2, .grid2.rev, .chartpair, .grid3{ grid-template-columns:minmax(0, 1fr); }
+  .grid2 > *, .grid2.rev > *, .chartpair > *, .grid3 > *,
+  .card, .panel, .box, .beat, .tp, .labcol, .maincol, .sidecol{ min-width:0; }
+  /* grid/flex rows that carry text need the same treatment */
+  .row, .hstack, .tp-row, .btnrow{ min-width:0; }
+  .btnrow > *{ min-width:0; }
+
+  /* THE 701px BUG.
+     `.scoreline` is `display:flex; justify-content:space-between` with a text
+     label on the left and a figure on the right (js/08-end.js:82). A flex item
+     defaults to `min-width:auto`, i.e. "never shrink below my min-content
+     width", so the pair refused to narrow. Measured at a real 390px viewport
+     the row stayed 627px wide, pushed `.card` to 663px and the document to
+     701px — a hard horizontal scroll for the whole page. It also dragged the
+     wide notebook table out with it: the table was fine on its own (`.scroll`
+     does have overflow:auto), it was simply being stretched by an over-wide
+     ancestor.
+     `min-width:0` lets the row come in; `flex-wrap:wrap` plus a full-width
+     basis on the label lets a long chapter title break onto its own line
+     instead of shouldering the figure off the screen. */
+  .scoreline, .tp-group, .feat, .tbrow{ min-width:0; }
+  .scoreline{ min-width:0; flex-wrap:wrap; align-items:baseline; gap:.15rem .4rem; }
+  .scoreline > span, .scoreline > .k{
+    flex:1 1 100%; min-width:0; overflow-wrap:anywhere;
+  }
+  .scoreline > b{ flex:0 0 auto; margin-left:auto; }
+
+  /* The notebook table: keep every digit, let it scroll inside its own box.
+     `table.dt` is width:100% with nowrap cells, so left alone it wants to be
+     as wide as its longest row — and a block ancestor that is merely a plain
+     <div> will happily stretch to match it, which is what pushed the document
+     to 474px after the scoreline was fixed.
+     `min-width:0` on the wrapper (plus `width:100%`, not `min-width:100%`,
+     on the table) keeps the overflow inside `.scroll` where the scrolling
+     mechanics already work. `min-width:100%` was the wrong choice: it makes
+     the table at-least-as-wide-as-its-box AND still free to grow. */
+  .scroll{ min-width:0; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .scroll > table.dt{ width:100%; }
+  /* every block between the sheet and the table needs to be allowed to
+     narrow, or the widest descendant wins */
+  .card, .panel, .box, .beat{ min-width:0; }
+
+  /* The two-up decision rail stacks under the main column */
+  .labrail, .decrail{ position:static; width:auto; }
+}
+
+/* ------------------------------------------------------------
+   3. Plates — full bleed, but captions stack instead of colliding
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  /* the framed caption is a flex row (left label · right note); on a phone
+     the two run into each other, so it becomes a stack with a rule between */
+  .mf-framed .mf-framed-cap{
+    display:block;
+    padding:.5rem .6rem .55rem;
+  }
+  .mf-framed .mf-framed-cap .c-l{ display:block; }
+  .mf-framed .mf-framed-cap .c-r{
+    display:block;
+    text-align:left;
+    margin-top:.25rem;
+    padding-top:.3rem;
+    border-top:1px solid var(--v-rule-2);
+  }
+
+  /* the big title plate: keep the wordmark inside the sheet */
+  .mf-titleplate{ padding:1.6rem 1rem; }
+  .mf-titleplate .mf-tp-meta{ flex-wrap:wrap; gap:.4rem .9rem; }
+}
+
+/* ------------------------------------------------------------
+   4. Task panel & overlays — full-screen sheets, not centred cards
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  /* `.taskoverlay` centres the panel and `.taskpanel` caps at `86vh` with
+     `overflow:auto` (css/01-taskpanel-1.css:23-28). On a phone that leaves
+     the panel's own action row below the visible area — a measured 390px shot
+     showed the primary "Jump to the next unfinished tab →" button entirely
+     off-screen, and the student has no reason to guess they must scroll
+     inside a modal to find the button that moves them on.
+     The panel therefore takes nearly the full height.
+     ROUND 11 — the footer used to be PINNED here to keep that button always
+     visible, which is what made it read as a strip floating over the sheet
+     (the same complaint as on desktop; see css/46-task-scroll.css). It is in
+     normal flow at the end of the sheet now on every width. Reachability is
+     preserved the honest way instead: the whole panel scrolls, and the primary
+     "Submit answers" action lives in the HUD bar rather than in this footer. */
+  .taskoverlay{ padding:.5rem; align-items:flex-start; }
+  .taskpanel, .tp-wrap{
+    width:100%;
+    max-width:none;
+    max-height:calc(100dvh - 1rem);
+    border-radius:8px;
+  }
+  /* no pin — but the wrapped note still needs its own breathing room, and the
+     jump button stays full-width as the sheet's last row */
+  .tp-foot{
+    display:flex; flex-direction:column-reverse; align-items:stretch; gap:.5rem;
+    padding-top:.8rem;
+  }
+  .tp-foot .btn, .tp-foot .tp-note{ width:100%; text-align:center; }
+  .tp-foot .tp-note{ text-align:left; }
+
+  /* the floating Tasks badge clears the phone's bottom gesture bar */
+  .taskfab{ bottom:.9rem; right:.9rem; }
+}
+
+/* ------------------------------------------------------------
+   5. The honours wall — single column reads better than a squeezed grid
+   (42 already drops to 1 column; this fixes the header row it left)
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  .mf-wall-head, .mf-ach-head{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.35rem;
+  }
+  .mf-wall-score{ align-self:flex-start; }
+}
+/* ------------------------------------------------------------
+   6. The sheet itself — the last-resort guard
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  /* A phone should never scroll sideways at the page level. The vignette is
+     `position:fixed; inset:0`; measured it reported a right edge of 474px on
+     a 390px viewport, which is what kept `document.scrollWidth` at 474 even
+     after every in-flow offender had been brought inside. Pinning it to the
+     viewport box rather than to the (possibly wider) document fixes that. */
+  .vignette{ width:100vw; height:100vh; right:auto; bottom:auto; overflow:hidden; }
+  html, body{ max-width:100%; overflow-x:hidden; }
+  /* nothing may bleed past the sheet; the negative-margin full-bleed plates
+     are a desktop device and have no room to work with here */
+  .mf-bleed, .mf-workshophead, .mf-debriefplate{ margin-left:0; margin-right:0; }
+}
+/* ==MF:CSS-END== */

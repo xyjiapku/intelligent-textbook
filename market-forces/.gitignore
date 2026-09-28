@@ -1,0 +1,27 @@
+# ── internal verification artefacts ──────────────────────────────────────
+# The harness scripts must write their temp page INTO the project root: the
+# page links `css/`, `js/` and `assets/` relatively, so written into a
+# subdirectory it renders blank (see the trap list at the top of
+# _tools/shoot_state.py). That is why these are ignored here rather than
+# tucked away in a subfolder.
+_shot_page.html
+_audit_page.html
+_geom_page.html
+_dom_dump.html
+.narrow.log
+_audit_run.log
+
+# screenshots captured by _tools/shoot_all.py / _tools/narrow.py — internal
+# verification only, never deliverables
+.shots/
+
+# the verification harness itself (audit.py, verify.sh, probe_*) — internal
+# only; the published game is just index.html + css/ + js/ + assets/
+_tools/
+
+# OS / editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+*~
+*.swp

@@ -1,0 +1,15 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- live readout strip: the numbers that have to stay in view while the
+   student is moving something ---- */
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.6rem,1fr));gap:.45rem;margin-top:.55rem}
+.readout .ro{background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:.4rem .55rem;min-width:0}
+.readout .ro .rl{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.readout .ro .rv{font-size:1.02rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.25;letter-spacing:-.01em}
+.readout .ro.hi{background:linear-gradient(#F2F7FF,#E8F1FF);border-color:#C7DCFB}
+.readout .ro.hi .rv{color:var(--brand-d)}
+.readout .ro.pos .rv{color:var(--good)}
+.readout .ro.neg .rv{color:var(--bad)}
+.readout .ro.warn{background:linear-gradient(#FDF8EC,#FDF2DC);border-color:#EEDBAD}
+.readout .ro.warn .rv{color:var(--warn-d)}
+
+/* ==MF:CSS-END== */

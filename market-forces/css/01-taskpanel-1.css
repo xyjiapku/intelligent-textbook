@@ -1,0 +1,77 @@
+/* ==MF:CSS-BEGIN== */
+/* ---------------- the task panel ----------------
+   A floating gold HUD, deliberately outside the page grid: it never steals width
+   from the data, the simulation, the choices or the reports, and the reading
+   column never changes size when it opens. Collapsed it is a badge; expanded it
+   is a centred card over a light scrim. */
+.taskfab{position:fixed;right:1.05rem;bottom:1.05rem;z-index:60;cursor:pointer;
+  display:flex;align-items:center;gap:.55rem;padding:.45rem .85rem .45rem .5rem;
+  border-radius:99px;border:1.5px solid var(--gold);color:#4A3200;
+  background:linear-gradient(180deg,#FDF2C4,#F0C846);
+  box-shadow:0 12px 30px -10px rgba(122,86,4,.55);font-weight:800;
+  transition:transform .14s ease,box-shadow .14s ease}
+.taskfab:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(122,86,4,.6)}
+.taskfab.quiet{border-color:var(--line2);background:var(--surface);color:var(--ink2);
+  box-shadow:0 8px 22px -12px rgba(16,42,84,.35)}
+.taskfab.quiet:hover{box-shadow:0 12px 26px -12px rgba(16,42,84,.4)}
+.taskfab.hide{display:none}
+.tf-ring{flex:0 0 auto;display:block}
+.tf-txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.12}
+.tf-txt b{font-size:.95rem;letter-spacing:-.01em}
+.tf-txt small{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.72}
+
+.taskoverlay{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+  padding:3vmin 2.2vmin;background:rgba(10,20,36,.44);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;visibility:hidden;transition:opacity .16s ease,visibility .16s ease}
+.taskoverlay.show{opacity:1;visibility:visible}
+.taskpanel{width:min(46rem,100%);max-height:86vh;overflow:auto;background:var(--surface);
+  border:1px solid var(--line2);border-top:5px solid var(--gold);border-radius:var(--r);
+  box-shadow:0 34px 90px -28px rgba(8,20,40,.55);padding:1.05rem 1.3rem 1.2rem;
+  transform:translateY(8px) scale(.985);transition:transform .18s cubic-bezier(.2,.8,.3,1)}
+.taskoverlay.show .taskpanel{transform:none}
+.tp-head{display:flex;align-items:flex-start;gap:.8rem}
+.tp-crest{flex:0 0 auto;width:2.6rem;height:2.6rem;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(160deg,#FDF2C4,#EFC542);border:1.5px solid var(--gold);color:#4A3200;font-size:1.15rem}
+.tp-title{flex:1;min-width:0}
+.tp-title h3{margin:.1rem 0 0;font-size:1.16rem}
+.tp-kick{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tp-close{border:1px solid var(--line2);background:var(--surface2);color:var(--ink2);cursor:pointer;
+  width:2rem;height:2rem;border-radius:10px;font-size:.95rem;line-height:1;display:grid;place-items:center;flex:0 0 auto}
+.tp-close:hover{background:var(--badbg);border-color:var(--bad);color:var(--bad-d)}
+.tp-bar{height:.5rem;border-radius:99px;background:var(--line);overflow:hidden;margin:.75rem 0 .25rem}
+.tp-bar i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#EFC542,#0F9D74);transition:width .25s ease}
+.tp-barlab{display:flex;justify-content:space-between;gap:1rem;font-size:.72rem;color:var(--muted);font-weight:700}
+.tp-list{margin:.8rem 0 0}
+.tp-item{display:flex;gap:.7rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px dashed var(--line)}
+.tp-item:last-child{border-bottom:none}
+.tp-num{flex:0 0 auto;width:1.75rem;height:1.75rem;border-radius:50%;display:grid;place-items:center;
+  font-size:.75rem;font-weight:800;background:var(--surface2);border:2px solid var(--line2);color:var(--muted)}
+.tp-item.ok .tp-num{background:linear-gradient(180deg,#17B384,#0B825F);border-color:#0B825F;color:#fff}
+.tp-item.armed .tp-num{background:linear-gradient(180deg,#FDF2C4,#EFC542);border-color:var(--gold);color:#4A3200;
+  animation:pulse 1.5s ease-in-out infinite}
+.tp-body{flex:1;min-width:0}
+.tp-lab{font-size:1rem;line-height:1.4;font-weight:600}
+.tp-item.ok .tp-lab{color:var(--muted);font-weight:500}
+.tp-hint{font-size:.86rem;color:var(--muted);line-height:1.45;margin-top:.15rem}
+.tp-item.armed .tp-hint{color:var(--warn-d);font-weight:700}
+.tp-tag{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  border-radius:99px;padding:.08rem .45rem;margin-left:.4rem;vertical-align:middle;white-space:nowrap}
+.tp-tag.ok{background:var(--goodbg);color:var(--good-d)}
+.tp-tag.armed{background:var(--goldbg);color:var(--warn-d)}
+.tp-tag.open{background:var(--surface2);color:var(--muted)}
+.tp-groups{margin-top:.85rem;padding-top:.7rem;border-top:1px solid var(--line)}
+.tp-group{display:flex;align-items:center;gap:.55rem;font-size:.84rem;padding:.2rem 0}
+.tp-group .tp-gn{flex:1;color:var(--ink2)}
+.tp-group .tp-gp{font-weight:800;color:var(--muted)}
+.tp-group.done .tp-gp{color:var(--good)}
+.tp-foot{margin-top:.95rem;display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.tp-note{flex:1;min-width:12rem;font-size:.82rem;color:var(--muted);line-height:1.45}
+@media (max-width:640px){
+  .taskfab{right:.7rem;bottom:.7rem}
+  .tp-lab{font-size:.86rem}
+  .taskpanel{padding:.9rem 1rem 1rem}
+}
+
+/* ==MF:CSS-END== */

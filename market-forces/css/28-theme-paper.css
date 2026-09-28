@@ -1,0 +1,33 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- paper, aurora and grain ---- */
+body{
+  background-color:#ECE4D4;
+  background-image:
+    radial-gradient(1200px 620px at 8% -14%, rgba(255,252,243,.92) 0%, rgba(255,252,243,0) 62%),
+    radial-gradient(900px 700px at 104% 0%, rgba(14,124,123,.10) 0%, rgba(14,124,123,0) 58%),
+    radial-gradient(940px 720px at 50% 118%, rgba(190,135,28,.11) 0%, rgba(190,135,28,0) 60%),
+    linear-gradient(rgba(74,60,32,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,60,32,.045) 1px, transparent 1px);
+  background-size:auto,auto,auto,30px 30px,30px 30px;
+}
+body::before{content:'';position:fixed;inset:-18%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(38rem 26rem at 18% 22%, rgba(90,116,182,.13), transparent 65%),
+    radial-gradient(34rem 24rem at 82% 16%, rgba(14,124,123,.11), transparent 65%),
+    radial-gradient(44rem 30rem at 66% 86%, rgba(190,135,28,.11), transparent 65%);
+  animation:aurora 27s ease-in-out infinite alternate;will-change:transform}
+@keyframes aurora{
+  0%{transform:translate3d(-1.4%,-1%,0) scale(1)}
+  50%{transform:translate3d(1.4%,1.1%,0) scale(1.045)}
+  100%{transform:translate3d(-1%,1.4%,0) scale(1.02)}
+}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:.055;mix-blend-mode:multiply;background-repeat:repeat;
+  background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.82'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px}
+.vignette{background:radial-gradient(132% 96% at 50% 28%, rgba(255,250,238,0) 54%, rgba(84,66,36,.11) 100%)}
+::selection{background:rgba(14,124,123,.20)}
+::-webkit-scrollbar-thumb{background:#C9BEA3;border-color:var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:#B3A582}
+
+/* ==MF:CSS-END== */

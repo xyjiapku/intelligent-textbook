@@ -1,0 +1,654 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 THE TASK SCROLL  (layer 46)
+   ------------------------------------------------------------
+   Request #1: "改进任务面板，做成羊皮纸卷轴风格且有装饰。"
+   Request (round 8): "任务面板的美化不够，要更华丽，黄铜轴杆位置
+   有问题，Find these… Jump to the next unfinished tab 所在的框也没有
+   融入任务面板而是浮在表面。"
+
+   The panel is a hand-rolled parchment scroll. Three things changed
+   in this revision, and each one fixes a real complaint:
+
+     · THE RODS SAT IN THE WRONG PLACE. They were hung at -24px, i.e.
+       entirely OUTSIDE the sheet, so they read as two brass bars
+       floating above and below a card rather than as the rollers the
+       paper is wound around. They now bite into the sheet: the rod's
+       lower third overlaps the parchment's head/fore-edge, so the
+       paper visibly clamps onto the roller. Depth is carried by a
+       cast shadow thrown DOWN onto the sheet below the rod, which is
+       what sells "the paper is behind the roller" at a glance.
+
+     · THE FOOTER LOOKED PASTED ON. It was a sticky strip with a
+       translucent → parchment gradient, which on the actual sheet
+       read as a separate frosted bar hovering over the list. It is
+       now opaque parchment, blended into the sheet's own stock with
+       a graduated warm wash at its top edge, and separated from the
+       tasks by a printed double rule — a rule the sheet would have
+       anyway, so the footer looks like the foot of a page rather
+       than a toolbar parked on top of one.
+
+     · MORE ORNAMENT. Head and foot both carry a printed double rule
+       with a centred fleuron; the sheet gets a ruled margin down the
+       fore-edge, corner rosettes, foxing, grain, and a stamped
+       progress medallion instead of a flat bar.
+
+   Additive only: every selector is scoped to .taskpanel / .tp-* and
+   sets a property the previous layers never claimed, so removing
+   this file restores the old card exactly.
+   ============================================================ */
+
+/* ---------------------------------------------------------------
+   THE SHEET — parchment instead of card
+   --------------------------------------------------------------- */
+.taskpanel{
+  position:relative;
+  /* the scroll body: warm vellum, lit from the top-left the way a
+     sheet held under a lamp would be */
+  background-color:#F3E9CF;
+  background-image:
+    radial-gradient(130% 90% at 18% 0%, rgba(255,252,238,.95) 0%, rgba(255,252,238,0) 58%),
+    radial-gradient(90% 70% at 92% 104%, rgba(168,132,72,.20) 0%, rgba(168,132,72,0) 62%),
+    linear-gradient(174deg, #F7EFDA 0%, #F1E5C6 44%, #EADCB8 100%);
+  border:0;
+  border-radius:2px;
+  /* a deckled fore-edge: the sides and foot are nibbled, the head is
+     left square because that is where the rod clamps it */
+  clip-path:polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 7px),
+    calc(100% - 5px) calc(100% - 2px),
+    calc(100% - 13px) calc(100% - 6px),
+    calc(100% - 24px) calc(100% - 1px),
+    calc(100% - 38px) calc(100% - 7px),
+    calc(100% - 56px) calc(100% - 2px),
+    calc(100% - 78px) calc(100% - 6px),
+    calc(100% - 104px) 100%,
+    104px calc(100% - 5px),
+    78px calc(100% - 1px),
+    56px calc(100% - 7px),
+    38px calc(100% - 2px),
+    24px calc(100% - 6px),
+    13px calc(100% - 1px),
+    5px calc(100% - 7px),
+    0 calc(100% - 2px)
+  );
+  /* the scroll is lit from above; the shadow is a cast shadow, and the
+     inset pair gives the sheet its slight warp */
+  box-shadow:
+    0 30px 70px -26px rgba(48,34,14,.62),
+    0 4px 14px -6px rgba(48,34,14,.34),
+    inset 0 0 60px rgba(168,132,72,.14),
+    inset 0 1px 0 rgba(255,255,255,.6);
+  /* ROUND 9 — the rollers BITE now, so the sheet has to keep clear of them.
+     Each rod is 34px and half of it (17px) lies on the parchment, so the
+     first and last rows of type would sit under brass without this inset.
+     1.55rem/1.8rem was the pre-measurement guess; both ends grow by the
+     half-rod plus a hair of breathing room. The horizontal padding is
+     untouched — the rods overhang sideways, they do not encroach. */
+  padding:calc(1.15rem + 17px) 1.9rem calc(1.15rem + 17px);
+}
+/* the page scrim is warm too — a grey scrim over a parchment board reads
+   modern; a sepia one reads like the light in the room */
+.taskoverlay{background:rgba(46,34,18,.46)}
+/* the rods now bite INTO the sheet, so the overlay only has to clear the
+   part that still hangs outside — 15px above and below */
+.taskoverlay{padding:3.2vmin 3vmin}
+
+/* ---------------------------------------------------------------
+   PUBLISHING THE PANEL'S BOX TO THE RODS
+   ------------------------------------------------------------
+   ROUND 9. The rods are children of `.taskoverlay`, but they must line
+   up with `.taskpanel` — which they no longer contain, and which is
+   centred by the overlay's own flexbox rather than by a width the rods
+   could inherit.
+
+   `.taskpanel` is `width:min(46rem,100%)` with the overlay contributing
+   3vmin of side padding, so the sheet is `min(46rem, 100vw - 6vmin)`
+   wide. Two facts have to travel from the sheet to the rod:
+
+     · WHERE IT STARTS — horizontally the sheet is centred in the
+       overlay, so a rod of the same width, centred the same way, lands
+       exactly on it. `margin-inline:auto` plus `left/right:0` does that
+       for a rod that is narrower than the overlay.
+     · HOW FAR IT OVERHANGS — a roller is longer than the paper wound
+       round it, so the rod is the sheet × 1.09, i.e. about 4.5% of the
+       paper's width proud at each end. That is the `* 1.09` below; the
+       negative inline margin keeps the overhang symmetric rather than
+       pushing the rod off-centre.
+
+   `--tp-w` is the published width and `--tp-over` the published
+   overhang. Both are set on the overlay so the rods inherit them, and
+   both are defined only here — nothing in the base layers ever set
+   them, which keeps the file safe to remove. */
+.taskoverlay{
+  --tp-w: min(46rem, 100vw - 6vmin);
+  --tp-over: calc(var(--tp-w) * 0.045);
+}
+@media (max-width:640px){
+  /* the sheet is narrower than 46rem here, so the 3.2vmin/3vmin padding
+     from the rule above is what really decides the width — the rods have
+     to follow it or they float free of the paper */
+  .taskoverlay{
+    --tp-w: 100vw - 6vmin;
+    --tp-over: calc(var(--tp-w) * 0.035);
+  }
+}
+
+/* ---------------------------------------------------------------
+   THE RODS — turned brass rollers at head and foot
+   These are real elements (.tp-rod) rather than pseudo-elements,
+   because the sheet carries a clip-path for its deckled edge and a
+   clipped box cannot paint outside its own silhouette — pseudo-element
+   rods were silently cut away.
+
+   PLACEMENT (the round-8 fix). The rod is 30px tall and is positioned so
+   that roughly the bottom third of it sits OVER the parchment:
+     · r-top  → top:-19px  ⇒ 11px of brass above the sheet, 19px on it
+     · r-bot  → bottom:-19px ⇒ the same at the foot
+   The sheet's own top edge therefore disappears behind the roller, which
+   is the whole point: it reads as clamped, not as balanced on top of a
+   bar. The cast shadow is thrown downward from the rod (y-offset, not a
+   symmetric glow) so the paper below the roller looks pressed down.
+   --------------------------------------------------------------- */
+.tp-rod{
+  /* ROUND 9 — pinned to the PANEL, but living on the OVERLAY.
+     The panel scrolls, and a scrolling box clips absolutely positioned
+     children at its padding box: a rod hanging below the sheet was being cut
+     away, so the bottom of the scroll was a bare torn edge. The overlay does
+     not scroll, so the rods sit there and are tied to the panel's box.
+
+     Two axes, two different mechanisms — and BOTH are measured, because
+     neither can be derived from CSS alone:
+
+       HORIZONTAL — the overlay is full-bleed and the sheet is centred
+       inside it by flexbox, so `left:0` on a rod means the viewport's left
+       edge, not the paper's. Centring with `left:0;right:0;margin:auto`
+       looked like the answer and is not: the rod is deliberately wider than
+       its containing block (it overhangs the paper at both ends), and CSS
+       resolves `margin:auto` to ZERO as soon as the free space goes
+       negative. The rod then fell back to the left edge and sat 203px wide
+       of the sheet — with the vertical checks all still passing. The centre
+       is therefore published as `--mf-rod-cx` by js/07-tasks.js:fitRods(),
+       and the rod is placed from it.
+
+       VERTICAL — the panel's height is `max-height:86vh` with the real
+       height decided by content, and that is not something CSS can read
+       from a sibling. The rods therefore sit in the overlay's own flex
+       line, pinned with `align-self:center` + a percentage offset from
+       the panel's box: `top:calc(50% - 43vh)` is the sheet's head and
+       `bottom:calc(50% - 43vh)` its foot, because 86vh is the panel's
+       ceiling and flexbox centres it. When the sheet is shorter than
+       86vh the rod rides slightly outside the paper — which is exactly
+       what a roller does when the sheet is not fully unrolled. */
+  position:absolute;height:34px;
+  /* no `left:0`/`right:0` here: they combined with the overhang width to
+     pin the rod to the viewport's left edge. Placement is `--mf-rod-cx`
+     (measured) with the `.mf-rod-fit` class; the rules below give the
+     un-measured fallback. */
+  z-index:3;pointer-events:none;
+  background:
+    /* finial knobs at each end — a turned ball on a short neck, with a
+       dark collar where it meets the barrel */
+    radial-gradient(circle at 17px 50%, #3A2606 0 9.5px, #F2D387 9.5px 12.5px, #7E5C20 12.5px 15.5px, rgba(0,0,0,0) 15.5px),
+    radial-gradient(circle at calc(100% - 17px) 50%, #3A2606 0 9.5px, #F2D387 9.5px 12.5px, #7E5C20 12.5px 15.5px, rgba(0,0,0,0) 15.5px),
+    /* the barrel: brass, lit from above with a bright specular band. The
+       band is at 40%, not 48%, because the lower part of the rod is now
+       hidden by the sheet — the highlight has to sit in the visible third. */
+    linear-gradient(180deg,
+      #3E2A06 0%, #6B4C14 8%, #9A7429 19%, #C9A24E 30%,
+      #EBCE85 39%, #FDF4D2 45%, #E9CE8C 54%, #C4A048 68%,
+      #8E6A24 82%, #5E420E 92%, #33220A 100%);
+  background-repeat:no-repeat;
+  background-size:auto, auto, 100% 100%;
+  border-radius:7px;
+  /* the barrel's own shading: a tube is darkest at its two edges and has a
+     hard specular line — a flat gradient reads as a painted stripe */
+  box-shadow:
+    /* the cast shadow falls DOWN onto the sheet — this is what makes the
+       paper look like it is behind the roller rather than beside it */
+    0 10px 18px -4px rgba(40,27,6,.78),
+    0 16px 30px -12px rgba(40,27,6,.55),
+    inset 0 3px 0 rgba(255,252,232,.72),
+    inset 0 -4px 4px rgba(48,32,6,.68);
+}
+/* The overhang, and the placement that goes with it.
+   `--mf-rod-cx` is the SHEET'S CENTRE measured from the overlay's left edge.
+   Placing the rod at `left:var(--mf-rod-cx)` and pulling it back by half its
+   own width with `translateX(-50%)` puts its centre exactly there, with the
+   extra `--tp-over` hanging symmetrically past both paper edges.
+
+   `translateX` is used rather than a `calc()`-ed `left` because the rod's
+   width is itself a `calc()` of two custom properties, and the second
+   variant — `calc(var(--mf-rod-cx) - (var(--tp-w) + var(--tp-over)*2)/2)` —
+   is both harder to read and easy to get subtly wrong.
+
+   The transform is applied on the same element as the bottom rod's
+   `rotate(180deg)`, so that rule is kept whole and this one is written to
+   compose with it (see the bottom-rod rule below). */
+.tp-rod{
+  width:calc(var(--tp-w, 100%) + var(--tp-over, 0px) * 2);
+  left:var(--mf-rod-cx, 50%);
+  transform:translateX(-50%);
+}
+/* without a measurement (closed sheet, print, a harness with no layout) fall
+   back to centring on the overlay, which is right whenever the sheet is
+   centred too — i.e. every case where there is no measurement because there
+   is no sheet */
+.tp-rod:not(.mf-rod-fit){
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* `mf-rod-fit` is set by js/07-tasks.js:syncRods() once it has measured the
+   real panel box. It switches the rods off the 86vh guess and onto exact
+   pixel offsets, so the roller clamps the head/fore-edge of the sheet at
+   every content height — the short "Nothing to decide here" sheet as well
+   as the tall factory checklist. */
+.tp-rod.mf-rod-fit.r-top{top:calc(50% + var(--mf-rod-y, 0px))}
+.tp-rod.mf-rod-fit.r-bot{bottom:calc(50% + var(--mf-rod-by, 0px))}
+
+/* the un-measured fallback, used only for the first frame */
+.tp-rod.r-top{top:calc(50% - 43vh)}
+/* the bottom rod carries the same half-turn as before, but `transform` is one
+   property and it also has to carry the -50% horizontal pull that centres the
+   rod on the sheet. Written out in full rather than in two rules, because the
+   later one would silently replace the earlier instead of composing with it —
+   which is precisely how a rod ends up half a width to the right of the
+   paper it is supposed to be clamping. */
+.tp-rod.r-bot{bottom:calc(50% - 43vh);transform:translateX(-50%) rotate(180deg)}
+/* a fitted bottom rod must keep that half-turn: the finial knobs are painted
+   into the background gradients, so the bar only reads as a roller if the
+   highlight runs the same way at both ends of the sheet */
+.tp-rod.mf-rod-fit.r-bot{transform:translateX(-50%) rotate(180deg)}
+
+/* ---------------------------------------------------------------
+   GRAIN & FOXING — the sheet is not new
+   The turbulence is the same generator the board uses, at a much lower
+   opacity so the type stays crisp. The stains are placed off the text
+   column (top-right and bottom-left) on purpose.
+   --------------------------------------------------------------- */
+.taskpanel{
+  background-blend-mode:multiply, normal, normal;
+}
+.taskpanel>*{position:relative;z-index:2}
+/* the decoration spans must not push the layout — they are absolutely
+   placed, but a bare inline element still occupies a line box */
+.taskpanel>.tp-rod,.taskpanel>.tp-grain,.taskpanel>.tp-fox,.taskpanel>.tp-rosettes,.taskpanel>.tp-margin{
+  position:absolute;
+}
+
+.tp-grain{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  opacity:.34;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>\
+<filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.62' numOctaves='5' stitchTiles='stitch'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='200' height='200' filter='url(%23p)' opacity='.34'/></svg>");
+  background-size:200px 200px;
+}
+/* two foxing blooms — the rust-coloured spots that appear on old paper */
+.tp-fox{
+  position:absolute;z-index:1;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle, rgba(150,104,44,.20) 0%, rgba(150,104,44,.10) 42%, rgba(150,104,44,0) 70%);
+  filter:blur(1px);
+}
+.tp-fox.a{width:120px;height:96px;top:6px;right:26px}
+.tp-fox.b{width:96px;height:120px;bottom:18px;left:14px}
+.tp-fox.c{width:64px;height:64px;bottom:38%;right:12%}
+
+/* ---------------------------------------------------------------
+   RULED MARGIN — a faint red rule down the fore-edge
+   Every ruled ledger sheet of the period has one. It is drawn as a
+   single 1px gradient line inset from the right edge, so it reads as a
+   printing rule rather than a border.
+   --------------------------------------------------------------- */
+.tp-margin{
+  position:absolute;top:70px;bottom:64px;right:1.05rem;width:1px;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(150,60,50,0) 0%, rgba(150,60,50,.26) 8%,
+    rgba(150,60,50,.26) 92%, rgba(150,60,50,0) 100%);
+}
+
+/* ---------------------------------------------------------------
+   THE HEAD — printed masthead
+   --------------------------------------------------------------- */
+.taskpanel .tp-head{gap:.95rem;align-items:center}
+.taskpanel .tp-crest{
+  width:2.9rem;height:2.9rem;border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 28%, #FBF3DA 0%, #E4CE96 46%, #C6A55E 100%);
+  border:1.6px solid #8E6A22;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.8),
+    inset 0 -2px 5px rgba(120,88,26,.30),
+    0 3px 8px -4px rgba(70,50,14,.6);
+  color:#5A3E0C;font-size:1.25rem;
+}
+.taskpanel .tp-title h3{
+  font-family:var(--v-serif);font-size:1.32rem;font-weight:700;
+  letter-spacing:-.015em;color:#33291A;
+  text-shadow:0 1px 0 rgba(255,252,240,.7);
+}
+.taskpanel .tp-kick{
+  font-size:.74rem;letter-spacing:.14em;color:#6E5A34;
+}
+/* The masthead rule. Two hairlines with a gap — the "double rule" a
+   Victorian printed sheet uses under its running head — with a fleuron
+   centred in the gap. Drawn with border + box-shadow so the weight can
+   differ between the two lines, which is what makes it read as printed
+   rather than as a 2px border. */
+.taskpanel .tp-head{
+  position:relative;padding-bottom:1.15rem;
+  border-bottom:1px solid rgba(150,118,58,.44);
+  box-shadow:0 3px 0 -2px rgba(150,118,58,.22);
+}
+.taskpanel .tp-head::after{
+  content:"\2766";
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:-.72rem;
+  color:#B08C46;font-size:1.1rem;line-height:1;
+  padding:0 .55rem;
+  background:#F5EBD4;
+  text-shadow:0 1px 0 rgba(255,252,240,.9);
+}
+.taskpanel .tp-close{
+  border-radius:50%;border:1.4px solid #937A44;
+  background:radial-gradient(circle at 36% 30%, #FBF6E6, #E6D7B4);
+  color:#5C4A24;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 2px 5px -3px rgba(70,50,14,.55);
+}
+.taskpanel .tp-close:hover{
+  background:radial-gradient(circle at 36% 30%, #FBEFE6, #E9C9BC);
+  border-color:#9B3B32;color:#8A2E26;
+}
+
+/* ---------------------------------------------------------------
+   PROGRESS — engraved rule with a brass fill
+   --------------------------------------------------------------- */
+.taskpanel .tp-bar{
+  height:.62rem;border-radius:0;
+  background:#E0D2AE;
+  border:1px solid rgba(150,118,58,.40);
+  box-shadow:inset 0 1px 3px rgba(120,92,36,.28);
+  margin:.95rem 0 .3rem;
+}
+.taskpanel .tp-bar i{
+  border-radius:0;
+  background:linear-gradient(180deg,#E9CE84 0%, #C79B3C 52%, #A87C2E 100%);
+  box-shadow:inset 0 1px 0 rgba(255,248,225,.7);
+  position:relative;
+}
+/* a fine engraved hatch across the filled portion */
+.taskpanel .tp-bar i::after{
+  content:"";position:absolute;inset:0;
+  background-image:repeating-linear-gradient(90deg,
+    rgba(80,56,12,.20) 0 1px, rgba(0,0,0,0) 1px 5px);
+}
+.taskpanel .tp-barlab{
+  /* .86rem, not .78rem: at the v4 board's 19px root this lands on 16.3px,
+     which is the project's floor for on-screen type. .78rem computed to
+     14.8px and tripped the audit — the label is read at the back of a room. */
+  font-size:.86rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#7A6640;font-weight:700;
+}
+
+/* ---------------------------------------------------------------
+   SECTIONS — letterpress dividers
+   ------------------------------------------------------------
+   Round-8 follow-up. The notebook block used to be a light panel on
+   the parchment: a near-white fill, a 1px border and a soft radius. On
+   a sheet that is already cream it read as a CARD LAID ON TOP — the
+   same "浮在表面" complaint the footer had, one row up.
+
+   A printed sheet has no panels. It has rules and tints. So this block
+   is now built the way a Victorian ledger builds a sub-total: a tinted
+   band the colour of the stock one shade deeper, ruled top and bottom,
+   square corners, no cast shadow. It sits IN the paper instead of on
+   it.
+   --------------------------------------------------------------- */
+.taskpanel .tp-book{
+  border-radius:0;
+  background:
+    linear-gradient(180deg, rgba(196,164,102,.16), rgba(196,164,102,.10));
+  border:0;
+  border-top:1px solid rgba(150,118,58,.40);
+  border-bottom:1px solid rgba(150,118,58,.40);
+  box-shadow:none;
+}
+.taskpanel .tp-book .tbrow{
+  letter-spacing:.02em;
+}
+.taskpanel .tp-book .tbrow b{
+  color:#6B4A0A;
+  font-variant-numeric:tabular-nums;
+}
+.taskpanel .tp-book .tbnote{
+  color:#5E4A22;
+}
+.taskpanel .tp-groups{
+  border-top:1px solid rgba(150,118,58,.30);
+  /* There used to be a `margin-bottom: var(--mf-foot-h)` here, reserving room
+     for a `position:sticky` footer that would otherwise be painted over the
+     last row. Round 11 removed the pin itself (see .tp-foot below) — the
+     footer is the sheet's last block in normal flow now, so there is nothing
+     to reserve room FROM. The published `--mf-foot-h` went with it. */
+}
+/* the notebook's own hairline gauge: brass on recessed stock, not a grey
+   pill on white */
+.taskpanel .tp-book .tp-bar{
+  background:rgba(150,118,58,.16);
+  box-shadow:inset 0 1px 2px rgba(58,40,10,.22);
+  height:.42rem;
+}
+.taskpanel .tp-book .tp-bar i{
+  background:linear-gradient(90deg,#C79B3C,#8A6A22);
+}
+/* "Reveal the whole table" is a secondary action printed on the sheet, so
+   it gets the sheet's own treatment — ruled, not a filled box */
+.taskpanel .tp-book .btn{
+  border-radius:2px;
+  background:transparent;
+  border:1px solid rgba(150,118,58,.55);
+  color:#5A3F0C;
+  box-shadow:0 1px 0 rgba(255,252,240,.65);
+}
+.taskpanel .tp-book .btn:hover{
+  background:rgba(196,164,102,.18);
+  border-color:#8A6A22;
+}
+
+/* ---------------------------------------------------------------
+   THE FOOTER — the sheet's LAST PRINTED ROW, not a bar parked on it
+   ------------------------------------------------------------
+   This is the round-8/9/10/11 complaint, and it took four passes to
+   find because every earlier pass fixed the PAINT while the problem
+   was the STRUCTURE.
+
+   The complaint, in the user's words each time: the note-and-jump box
+   "浮在表面" / "浮在表面的" — floats on the surface instead of
+   belonging to the sheet. What was tried and did NOT work:
+
+     · round 8 — replaced the translucent→opaque gradient with solid
+       parchment, and swapped the 1px top edge for the head's double
+       rule, so head and foot answer each other.  Still floated.
+     · round 9 — re-pinned it a hair above the panel's padding box so
+       the bottom roller stopped crossing the note.  Still floated.
+     · round 11 — measured the fill against the paper: a `probe_footer_paint`
+       pass sampled the pixels and found the fill within 0.0095 luminance of
+       the stock it covers, i.e. the colour match was never the problem.
+
+   Because it is `position:sticky`, it genuinely IS on top of the sheet:
+   the content above is laid out as if the footer were absent and the
+   footer is then painted over it. Measured at scrollTop=0, 1280x900, the
+   footer's top edge lands at y=592.6 — straight through the middle of the
+   "Production — YOU ARE HERE" row in the tab list. A box that visibly
+   beheads the text above it reads as a card laid on the sheet, no matter
+   how well its fill matches.
+
+   So it is no longer pinned. It is the last block in normal flow, under
+   the list, exactly where the last row of a printed form goes. Nothing
+   can be trapped underneath it, because nothing is underneath it. The
+   scroll then ends on the footer, which is what "part of the sheet" means.
+
+   The two consequences, both deliberate:
+     · the `--mf-foot-h` reserve on `.tp-groups` is gone — it existed only
+       to buy clearance from a pinned box that no longer exists;
+     · the wipe shadows are gone — they existed only to soften the moment
+       content slid under the pinned strip, and nothing slides under it now.
+   Reachability on a phone was the original reason for the pin (round 8:
+   the jump button sat below the fold). It is a scroll to the end of the
+   sheet now, which is the same place the eye already goes after reading
+   the list — and the primary "Submit answers" action lives in the HUD bar,
+   not here, so nothing is lost if the student never scrolls.
+   --------------------------------------------------------------- */
+.taskpanel .tp-foot{
+  margin-top:1.35rem;
+  padding:1rem .2rem .5rem;
+  background:transparent;
+  /* the sheet's own rule, doubled — same treatment as the masthead */
+  border-top:1px solid rgba(150,118,58,.44);
+  box-shadow:
+    /* the secondary hairline, 3px below the first */
+    0 -3px 0 -2px rgba(150,118,58,.22);
+}
+/* A centred fleuron on the footer rule, matching the head's device, so the
+   two rules are visibly the same printed mark at both ends of the sheet. */
+.taskpanel .tp-foot::before{
+  content:"\2766";
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:-.74rem;
+  color:#B08C46;font-size:1.05rem;line-height:1;
+  padding:0 .55rem;
+  /* No opaque mask behind the ornament. The head can afford one (`#F5EBD4`)
+     because it sits at the top of the sheet where the stock is near its
+     lightest and a flat patch is invisible. The foot cannot: it sits wherever
+     the list happens to end, on a 174deg gradient running #F7EFDA → #F1E5C6 →
+     #EADCB8, so any fixed colour is wrong somewhere. An ornament laid straight
+     over the hairline is the ordinary printed treatment and needs no mask. */
+  background:transparent;
+  text-shadow:0 1px 0 rgba(255,252,240,.9);
+}
+.taskpanel .tp-note{
+  color:#5E4E2C;font-size:.88rem;line-height:1.5;
+}
+.taskpanel .tp-foot .btn{flex:0 0 auto}
+/* the footer wraps to two or three lines on the narrow sheets */
+@media (max-width:640px){
+  .taskpanel .tp-foot{padding-bottom:.6rem;row-gap:.55rem}
+}
+
+/* ---------------------------------------------------------------
+   ITEMS — a printed checklist, numbered in the margin
+   --------------------------------------------------------------- */
+.taskpanel .tp-num{
+  border-radius:50%;
+  background:radial-gradient(circle at 38% 30%, #FBF6E6, #E9DBBB);
+  border:1.5px solid #BFA871;color:#6E5A34;
+  font-family:var(--v-serif);font-weight:700;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+}
+.taskpanel .tp-item.ok .tp-num{
+  background:radial-gradient(circle at 38% 30%, #C6E7D8, #6FB79A);
+  border-color:#3E8A6C;color:#04402D;
+}
+.taskpanel .tp-item.armed .tp-num{
+  background:radial-gradient(circle at 38% 30%, #FBEFC2, #DCB347);
+  border-color:#8E6A22;color:#4A3200;
+}
+.taskpanel .tp-item{
+  border-bottom:1px dotted rgba(150,118,58,.42);
+}
+.taskpanel .tp-lab{color:#33291A;font-weight:600}
+.taskpanel .tp-item.ok .tp-lab{color:#7A6A4C}
+.taskpanel .tp-hint{color:#6E5A34}
+.taskpanel .tp-item.armed .tp-hint{color:#8A5A08}
+.taskpanel .tp-tag{
+  border-radius:2px;letter-spacing:.10em;
+  box-shadow:none;
+}
+/* The chips are printed on the sheet, so they are INK tints rather than
+   filled stickers: a ruled box with a wash of colour inside, so the paper
+   still shows through and they stop reading as labels stuck on top. */
+.taskpanel .tp-tag.ok{
+  background:rgba(62,138,108,.16);color:#07543A;border:1px solid rgba(62,138,108,.55)
+}
+.taskpanel .tp-tag.armed{
+  background:rgba(196,148,32,.20);color:#6B4600;border:1px solid rgba(142,106,34,.62)
+}
+.taskpanel .tp-tag.open{
+  background:rgba(150,118,58,.13);color:#5E4A22;border:1px solid rgba(150,118,58,.48)
+}
+
+/* ---------------------------------------------------------------
+   CORNER ROSETTES — four printed ornaments, drawn with one element
+   Drawn at 30px and inset far enough in that they clear the rods and
+   the type. They sit on the margin, like the corner flourishes on a
+   Victorian certificate.
+   --------------------------------------------------------------- */
+.tp-rosettes{
+  position:absolute;inset:16px;z-index:1;pointer-events:none;
+  --rosette:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'>\
+<g fill='none' stroke='%23A2833F' stroke-width='1.15' stroke-linecap='round'>\
+<path d='M15 4.2c3.6 0 6.5 2.9 6.5 6.5 0 1.2-.3 2.3-.9 3.3'/>\
+<path d='M15 4.2c-3.6 0-6.5 2.9-6.5 6.5 0 1.2.3 2.3.9 3.3'/>\
+<path d='M7.6 14c-.7 1.4-.6 3.1.4 4.4 1 1.3 2.6 1.9 4.2 1.7'/>\
+<path d='M22.4 14c.7 1.4.6 3.1-.4 4.4-1 1.3-2.6 1.9-4.2 1.7'/>\
+<path d='M12.2 20.1c.8.5 1.8.8 2.8.8s2-.3 2.8-.8'/>\
+<circle cx='15' cy='15' r='3.1'/>\
+<circle cx='15' cy='15' r='1.05' fill='%23A2833F' stroke='none'/>\
+<path d='M15 1.6v2.4M15 26v2.4M1.6 15h2.4M26 15h2.4'/>\
+</g></svg>");
+  background-image:var(--rosette),var(--rosette),var(--rosette),var(--rosette);
+  background-repeat:no-repeat;
+  background-position:left top, right top, left bottom, right bottom;
+  background-size:30px 30px;
+  opacity:.8;
+}
+
+/* ---------------------------------------------------------------
+   RESPECT THE PROJECT'S TYPE FLOOR
+   The v4 board sets html font-size 19px and the audit suite enforces a
+   minimum computed size. These panels are read at the back of a room,
+   so nothing here is allowed to shrink below the base card sizes.
+   --------------------------------------------------------------- */
+@media (max-width:640px){
+  .taskpanel{padding:1.15rem 1.35rem 1.35rem}
+  .tp-rosettes{inset:6px}
+  .tp-margin{right:.7rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .taskpanel{transition:none}
+}
+/* the scroll unrolls rather than scaling — a sheet of vellum does not
+   grow, it is let down from the roller */
+@keyframes mf-unroll{
+  from{transform:translateY(-10px) scaleY(.94);opacity:0}
+  to{transform:none;opacity:1}
+}
+.taskoverlay.show .taskpanel{animation:mf-unroll .24s cubic-bezier(.2,.8,.3,1) both}
+@media (prefers-reduced-motion:reduce){
+  .taskoverlay.show .taskpanel{animation:none}
+}
+
+/* ---------------------------------------------------------------
+   THE FOOTER STAYS PUT
+   `.taskpanel` is `max-height:86vh; overflow:auto` (01-taskpanel-1.css),
+   which is fine for the list but wrong for the commit button: on a phone
+   the lab's checklist is taller than the sheet, so `.tp-foot` — being in
+   flow — sat at the very bottom of the scrollbox. Measured before this
+   rule: at 390px the CTA was 147px below the visible edge, at 320px it was
+   590px below, i.e. the student had to discover that the modal itself
+   scrolls before they could finish a task. The dock (44-action-dock.css)
+   only mirrors VISIBLE buttons, so it could not rescue it either.
+
+   Sticking the footer to the bottom of the scrollport fixes it at every
+   size without touching the list: the tasks scroll, the commit button
+   does not. `position:sticky` inside an `overflow:auto` box pins to that
+   box, which is exactly the behaviour wanted here.
+   --------------------------------------------------------------- */
+
+/* ==MF:CSS-END== */

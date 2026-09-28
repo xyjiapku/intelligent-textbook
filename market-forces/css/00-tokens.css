@@ -1,0 +1,46 @@
+/* ==MF:CSS-BEGIN== */
+:root{
+  --bg:#E9EEF6; --bg2:#F4F7FC; --surface:#FFFFFF; --surface2:#F6F9FD;
+  --ink:#122036; --ink2:#334155; --muted:#64748B; --faint:#94A3B8;
+  --line:#E3E8F1; --line2:#C7D2E3;
+  --brand:#2563EB; --brand-d:#1D4ED8; --brand-l:#3B82F6; --brand-soft:#EEF3FF;
+  --good:#0F9D74; --goodbg:#E7F6F0; --good-d:#0B7A59;
+  --bad:#E0494D; --badbg:#FDEEEF; --bad-d:#B42318;
+  --warn:#C97A13; --warnbg:#FDF4E4; --warn-d:#9A5C0A;
+  --gold:#D9A106; --goldbg:#FBF1D6;
+  --violet:#7C5CFC;
+  --r:18px; --r2:13px;
+  --font-sans:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+  --font-display:Georgia,"Times New Roman","Songti SC","SimSun",serif;
+  --sh:0 1px 2px rgba(16,24,40,.04), 0 14px 34px -14px rgba(16,42,84,.14);
+  --sh2:0 2px 8px rgba(16,24,40,.06), 0 22px 52px -16px rgba(16,42,84,.20);
+}
+html{font-size:19px}
+html[data-fs="s"]{font-size:16.5px}
+html[data-fs="l"]{font-size:21.5px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(1100px 560px at 6% -12%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(940px 540px at 102% -8%, rgba(37,99,235,.10) 0%, rgba(37,99,235,0) 56%),
+    radial-gradient(820px 620px at 50% 118%, rgba(15,157,116,.07) 0%, rgba(15,157,116,0) 60%),
+    linear-gradient(rgba(18,32,54,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18,32,54,.04) 1px, transparent 1px);
+  background-size:auto,auto,auto,28px 28px,28px 28px;
+  color:var(--ink);
+  font:1rem/1.55 var(--font-sans);
+  min-height:100vh; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(37,99,235,.18)}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-thumb{background:#C4D0E2;border:3px solid var(--bg);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#A9BBD4}
+::-webkit-scrollbar-track{background:transparent}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(130% 95% at 50% 35%, rgba(255,255,255,0) 52%, rgba(18,32,54,.06) 100%)}
+.shell{max-width:1180px;margin:0 auto;padding:1.15rem 1.15rem 4.2rem}
+.pagecol{position:relative;z-index:1;min-width:0}
+
+/* ==MF:CSS-END== */

@@ -1,0 +1,60 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- decision workspace: chart leads, controls live in a rail ---- */
+.decwork{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(18.5rem,.9fr);
+  gap:1.15rem;align-items:start;margin-top:1.05rem}
+.decchart{min-width:0}
+.decchart .chartcard{margin:.15rem 0}
+.decrail{align-self:start;position:sticky;top:calc(var(--topbar-h,3.4rem) + .6rem);
+  display:flex;flex-direction:column;gap:.58rem;min-width:0;z-index:10}
+/* TWO OPTION BLOCKS SIDE BY SIDE ON A WIDE SCREEN.
+   The rail is a stack, and a stack of three or four control blocks is taller
+   than a laptop window — which is how a control ends up below the fold with the
+   rail pinned to the top. Option rows are short (a label and two or three
+   buttons), so pairing them halves the height of the stack and the whole panel
+   fits. Measured with _tools/probe_controls.py. */
+.ctlpair{display:grid;grid-template-columns:1fr 1fr;gap:.58rem;align-items:start}
+@media (max-width:1120px){
+  /* stacked below this: there is no width for two columns */
+  .ctlpair{grid-template-columns:1fr}
+}
+/* Tighter than the default control block, and deliberately scoped to the rail.
+   The rail is a stack of three or four controls plus the readout, and every
+   one of them has to fit above the fold: it is `position:sticky`, so when it is
+   taller than the window it pins at the top and its lower half can only be
+   reached by scrolling the whole page — which is how the worker slider became
+   unfindable. Measured with _tools/_probe_controls.py across five viewports;
+   the padding below buys about 30px, which is the difference between the last
+   control sitting on the fold and sitting clear of it on a 1366x768 laptop. */
+.decrail>.ctl,.decrail .ctlpair>.ctl{margin:0;background:linear-gradient(180deg,#fff,#FAFCFF);
+  border:1px solid var(--line);border-radius:15px;padding:.7rem .9rem .66rem;
+  box-shadow:0 1px 2px rgba(16,24,40,.05)}
+/* a wider rail where the pair needs room for two option columns, taken from the
+   chart — which is still over 750px at 1366 and does not need the extra */
+@media (min-width:1180px){
+  .decwork{grid-template-columns:minmax(0,1.5fr) minmax(21rem,1fr)}
+}
+.decrail .ctl .clab{margin-bottom:.28rem}
+.decrail .ctl .clab .t{font-size:.82rem}
+.decrail .ctl .clab .v{font-size:1.06rem}
+.decrail .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem;margin:.05rem 0 0}
+.decrail .readout{grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin:.05rem 0 0}
+.decrail .readout .ro{padding:.36rem .5rem;border-radius:10px}
+.decrail .readout .ro .rl{font-size:.55rem;letter-spacing:.05em}
+.decrail .readout .ro .rv{font-size:.94rem}
+.decrail .btnrow{margin:.1rem 0 0}
+.decrail .btnrow .btn{flex:1 1 auto;justify-content:center}
+.decrail .tile{padding:.46rem .5rem .44rem .62rem;border-radius:11px}
+.decrail .tile .tl{font-size:.56rem;letter-spacing:.055em}
+.decrail .tile .tv{font-size:1.02rem}
+.decrail .tile .ts{font-size:.6rem}
+.decrail>.card.tight{margin:0;background:linear-gradient(160deg,#F8FBFF,#F1F6FD);
+  border-color:#D8E4F5;padding:.78rem .9rem;border-radius:15px}
+.decrail>.card.tight h3{margin:0 0 .3rem;font-size:.8rem}
+.decrail .scoreline{font-size:.82rem;padding:.34rem .05rem}
+.declock{margin:.05rem 0 0}
+.declock .btn{width:100%;justify-content:center;padding:.72rem 1rem}
+.decwork-nc{grid-template-columns:minmax(0,1.4fr) minmax(18.5rem,.92fr)}
+.decmatrix{min-width:0}
+.decmatrix .card{margin-bottom:0}
+
+/* ==MF:CSS-END== */

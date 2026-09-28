@@ -1,0 +1,25 @@
+/* ==MF:CSS-BEGIN== */
+/* ---------------- chart ---------------- */
+.chartcard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:.55rem .4rem .2rem;margin:.75rem 0;
+  box-shadow:0 1px 2px rgba(16,24,40,.04),inset 0 1px 0 #fff}
+.labctl{position:sticky;top:3.6rem;z-index:20;box-shadow:var(--sh2);margin-bottom:.95rem}
+.chartcard svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:.75rem;flex-wrap:wrap;font-size:.72rem;color:var(--ink2);font-weight:700;
+  padding:.15rem .6rem .45rem}
+.legend i{display:inline-block;width:.9rem;height:.25rem;border-radius:2px;margin-right:.3rem;vertical-align:middle}
+.legend i.dot{width:.55rem;height:.55rem;border-radius:50%}
+svg text{font-family:inherit}
+.ct{fill:var(--faint);font-size:.68rem}
+.cl{fill:var(--ink2);font-size:.76rem;font-weight:800}
+.cn{fill:var(--ink);font-size:.78rem;font-weight:800}
+.ca{fill:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.04em}
+.cw{fill:#fff;font-size:.75rem;font-weight:900}
+.ax{stroke:#B9C6D9;stroke-width:1.6;fill:none}
+.gr{stroke:#E8EEF6;stroke-width:1;stroke-dasharray:3 5}
+.bar-axis{stroke:var(--ink2);stroke-width:1.6}
+rect.zone-good{fill:#0F9D74;opacity:.13}
+rect.zone-bad{fill:#E0494D;opacity:.13}
+polygon.dwl{fill:#E0494D;opacity:.2;stroke:#E0494D;stroke-width:1.2}
+.line-profit{stroke:#D9A106;stroke-width:1.4;stroke-dasharray:4 3}
+
+/* ==MF:CSS-END== */

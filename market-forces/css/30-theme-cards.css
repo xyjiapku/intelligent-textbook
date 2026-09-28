@@ -1,0 +1,16 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- cards: paper with a hairline sheen ---- */
+.card{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0) 5.4rem),
+    var(--surface);
+  border-color:rgba(208,198,173,.85);
+  box-shadow:var(--sh);
+}
+.kicker{color:var(--teal-d)}
+.kicker::before{background:linear-gradient(var(--teal),var(--gold))}
+
+.chartcard{background:linear-gradient(180deg,#FFFDF7,#FAF3E4);border-color:#E6DECA}
+.chartcard.fac{background:linear-gradient(180deg,#FFFDF8,#F7F0E0)}
+
+/* ==MF:CSS-END== */

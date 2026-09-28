@@ -1,0 +1,65 @@
+{
+  "ch_pc": {
+    "file": "ch_pc.jpg",
+    "w": 1400,
+    "h": 525,
+    "bytes": 196405,
+    "avg": "#B09D86"
+  },
+  "ch_mono": {
+    "file": "ch_mono.jpg",
+    "w": 1400,
+    "h": 525,
+    "bytes": 236664,
+    "avg": "#75615F"
+  },
+  "ch_mc": {
+    "file": "ch_mc.jpg",
+    "w": 1400,
+    "h": 525,
+    "bytes": 237443,
+    "avg": "#B19C7D"
+  },
+  "ch_oligo": {
+    "file": "ch_oligo.jpg",
+    "w": 1400,
+    "h": 525,
+    "bytes": 225984,
+    "avg": "#A5967C"
+  },
+  "title": {
+    "file": "title.jpg",
+    "w": 1600,
+    "h": 620,
+    "bytes": 266968,
+    "avg": "#7B6A52"
+  },
+  "workshop": {
+    "file": "workshop.jpg",
+    "w": 1280,
+    "h": 480,
+    "bytes": 206693,
+    "avg": "#8C7F66"
+  },
+  "street": {
+    "file": "street.jpg",
+    "w": 1600,
+    "h": 320,
+    "bytes": 142309,
+    "avg": "#AB9B83"
+  },
+  "shopfront": {
+    "file": "shopfront.jpg",
+    "w": 520,
+    "h": 520,
+    "bytes": 93187,
+    "avg": "#887B6B"
+  },
+  "debrief": {
+    "file": "debrief.jpg",
+    "w": 1400,
+    "h": 525,
+    "bytes": 254950,
+    "avg": "#9D9581"
+  }
+}

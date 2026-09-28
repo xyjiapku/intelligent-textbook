@@ -1,0 +1,352 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 RUNNING HEAD  (layer 47)
+   ------------------------------------------------------------
+   This layer began life as "top-bar counter icons" (request #6). Round 8
+   moved the three counters down to the bottom HUD, so what was their icon
+   layer is now the layer that styles the bar they left behind.
+
+   Request #8: "顶栏进行功能上的简化和装饰的增加。"
+   The bar lost its counters, its text-size group and its always-on Teacher
+   button. What is left — the firm's identity on the left, the chapter ladder
+   on the right — now carries the ornament that a printed running head would
+   have had:
+
+     · a printed double rule under the head, with a centred fleuron
+     · a small upright-leaf finial either side of the firm name
+     · the chapter ladder as ruled brass rungs rather than flat chips, with
+       the current rung inked in and completed rungs struck through
+
+   Everything is scoped to .topbar / .tb-* and sets properties the earlier
+   layers never claimed.
+   ============================================================ */
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;gap:.55rem;
+  /* 02-topbar-1.css sets flex-wrap:wrap, which was needed when the bar carried
+     a wrapped row of stat tiles and six controls. The bar is now one line by
+     design, so the wrap is turned off here: a wrapped line would silently make
+     the sticky head taller and push the reading column down. */
+  flex-wrap:nowrap;
+  padding:.5rem 1.15rem .62rem;
+  /* the head is a printed band: it needs to be a touch lighter than the
+     page stock so the rule under it reads */
+  background:linear-gradient(180deg, var(--v-paper-3,#F6F0E1) 0%, var(--v-paper,#EFE6D3) 100%);
+  border-bottom:1px solid var(--v-rule,#BFB29A);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 -2px 0 -1px rgba(191,178,154,.5) inset,
+    0 8px 18px -16px rgba(58,44,24,.55);
+}
+
+/* ---------------------------------------------------------------
+   THE HEAD RULE + FLEURON
+   A single absolutely-placed rule spanning the bar, with the device
+   centred on it. It sits ON the bottom border rather than being a second
+   border, so the two hairline weights read as printed rather than as a
+   2px box edge.
+   --------------------------------------------------------------- */
+.topbar .tb-rule{
+  position:absolute;left:0;right:0;bottom:0;height:0;
+  pointer-events:none;
+}
+.topbar .tb-rule::before{
+  content:"";position:absolute;left:0;right:0;bottom:3px;height:1px;
+  background:linear-gradient(90deg,
+    rgba(191,178,154,0) 0%, rgba(191,178,154,.85) 6%,
+    rgba(191,178,154,.85) 94%, rgba(191,178,154,0) 100%);
+}
+.topbar .tb-fl{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:-.62rem;
+  font-size:1rem;line-height:1;color:#B08C46;
+  background:var(--v-paper,#EFE6D3);
+  padding:0 .55rem;
+  text-shadow:0 1px 0 rgba(255,255,255,.75);
+}
+.topbar .tb-fl::before{content:"\2766"}
+
+/* ---------------------------------------------------------------
+   THE FIRM — identity, with a leaf finial either side
+   --------------------------------------------------------------- */
+.topbar .tb-firm{
+  display:flex;align-items:center;gap:.5rem;font-weight:700;
+  font-family:var(--v-serif);letter-spacing:-.01em;min-width:0;
+}
+.topbar .tb-firm::before,
+.topbar .tb-firm::after{
+  content:"\2767";  /* rotated floral heart — reads as a leaf at this size */
+  font-size:.82rem;color:#B08C46;opacity:.72;line-height:1;
+  flex:0 0 auto;
+}
+.topbar .tb-firm::after{color:#B08C46;opacity:.5}
+.topbar .tb-name{
+  font-size:1.02rem;color:var(--v-ink,#2A2620);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:22rem;
+}
+
+/* ---------------------------------------------------------------
+   THE CHAPTER LADDER
+   Ruled rungs, not chips. The chapter number is set in a small brass
+   square, so the ladder scans as 1·2·3·4 down the row regardless of how
+   long the market names are.
+   --------------------------------------------------------------- */
+.topbar .tb-steps{
+  /* nowrap, not wrap: see the note on the breakpoints below — a wrapped
+     ladder doubles the sticky head's height and shoves the reading column
+     down. The rungs are allowed to lose their tails instead.
+
+     `flex:0 0 auto` matters as much as the nowrap. With the default
+     `flex-shrink:1` the ladder was itself being squeezed below its content
+     width by the surrounding firm/tools blocks, so the rung ceilings never
+     came into play — the row just got shorter and the shared slack was
+     divided by the flex algorithm rather than by the ceilings written here.
+     Measured at 1024px: the ladder took 704.5px where 728px was free, and
+     every label came up short. Refusing to shrink hands the size decision
+     back to the ceilings, which is where the intent is written down. */
+  display:flex;align-items:center;gap:.3rem;flex-wrap:nowrap;
+  margin-left:auto;min-width:0;flex:0 0 auto;
+}
+.topbar .stepdot{
+  display:inline-flex;align-items:center;gap:.34rem;
+  padding:.16rem .56rem .16rem .2rem;
+  border:1px solid var(--v-rule-2,#D6CAB2);border-radius:2px;
+  background:linear-gradient(180deg, rgba(255,253,246,.9), rgba(240,232,214,.9));
+  color:var(--v-ink-2,#4A443A);
+  font-size:.88rem;font-weight:700;white-space:nowrap;
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.topbar .stepdot .sd-n{
+  display:grid;place-items:center;width:1.16rem;height:1.16rem;
+  flex:0 0 auto;font-style:normal;font-size:.9rem;font-weight:800;
+  border-radius:1px;
+  background:linear-gradient(180deg,#F3E7C6,#DCC79A);
+  border:1px solid #9C8248;color:#302407;
+  font-variant-numeric:tabular-nums;
+}
+/* done — struck through in ink, the way a printed list is ticked off */
+.topbar .stepdot.done{
+  color:var(--v-ink-2,#4A443A);
+  border-color:var(--v-rule,#BFB29A);
+  background:linear-gradient(180deg, rgba(246,240,225,.95), rgba(233,224,204,.95));
+}
+.topbar .stepdot.done .sd-n{
+  background:linear-gradient(180deg,#CFE3D6,#9FC4AC);
+  border-color:#5C8A6E;color:#0C4A32;
+}
+/* on — the rung the student is standing on */
+.topbar .stepdot.on{
+  color:#4A3200;border-color:var(--v-gold,#A9761B);
+  background:linear-gradient(180deg,#FDF2C4,#EFC542);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 3px 8px -5px rgba(122,86,4,.7);
+}
+.topbar .stepdot.on .sd-n{
+  /* The cream glyph on struck brass must clear 4.5:1 against the FIRST
+     gradient stop (#6E4F16), which is the light end and therefore the worst
+     case. #8E6A22 measured 4.47 — a hair under. Darkened one notch. */
+  background:linear-gradient(180deg,#6E4F16,#452F09);
+  border-color:#3D2806;color:#FDF6E4;
+}
+
+/* ---------------------------------------------------------------
+   THE PRE-MARKET RUNG (round 9)
+   The ladder now opens with a "Your Firm" rung, so that on the first
+   frame the student sees the stage they are actually in rather than
+   chapter 1 already lit ("一开始就显示 1 Perfect Competition，其实不对").
+   It is a STAGE, not a market, so it is set apart three ways: no digit
+   (the HOUSE mark instead, the same glyph the firm chip wears), a
+   slimmer body, and a hairline divider between it and the chapter
+   rungs — the ladder reads "your firm ┊ 1 2 3 4".
+
+   The mark was a gear (`\u2699`) for one round, which was wrong twice
+   over: a gear means "settings" everywhere else in software, and set
+   against the words "Your Firm" it read as a chapter number that had
+   failed to render. The house says the same thing the words do.
+
+   Adding a fifth rung broke the single line at 1280px, so the whole
+   ladder also gets a tighter measure here: the gap drops from .3rem to
+   .22rem, the rung padding is trimmed, and the LONG market names are
+   allowed to lose their tail on the narrowest desktops. `nowrap` stays
+   on: a wrapped ladder silently doubles the sticky head's height and
+   pushes the reading column down, which is worse than an ellipsis. */
+.topbar .stepdot.pre{
+  padding-right:.5rem;
+  font-style:normal;
+  letter-spacing:0;
+}
+.topbar .stepdot.pre .sd-t{
+  font-weight:600;
+}
+.topbar .stepdot.pre .sd-n{
+  /* the mark is a drawn house, not a counted number, so it comes off the
+     tabular figure grid. An SVG in a grid cell with `place-items:center`
+     stretches to the cell; the explicit width/height and `flex:none` from
+     `.uic` keep it square and inside the brass plate rather than filling it
+     edge to edge, which on a 22px plate looked like a solid colour chip. */
+  font-variant-numeric:normal;
+}
+.topbar .stepdot.pre .sd-n .uic{
+  width:.82rem;height:.82rem;
+}
+/* the pre rung is a STAGE, so its mark wears the plain ink of a label rather
+   than the dark plate a counted chapter gets — the house is a caption, not a
+   number, and the smaller glyph needs the lighter ground to stay legible */
+.topbar .stepdot.pre.done .sd-n,
+.topbar .stepdot.pre .sd-n{
+  color:#4A443A;
+}
+/* the divider: printed on the gap, invisible while the rung is still
+   ahead of the player so it never reads as a broken border */
+.topbar .stepdot.pre + .stepdot{
+  margin-left:.5rem;
+  position:relative;
+}
+.topbar .stepdot.pre + .stepdot::before{
+  content:"";position:absolute;left:-.32rem;top:14%;bottom:14%;width:1px;
+  background:var(--v-rule,#BFB29A);opacity:.75;
+}
+/* `done` / `on` need no override: the .stepdot.done and .stepdot.on rules
+   above already paint the pre rung, which is the point of keeping it in the
+   same class family rather than giving it a look of its own. */
+
+/* ---------------------------------------------------------------
+   FIVE RUNGS ON ONE LINE
+   The ladder has to fit "⚙ Your Firm | 1 Perfect Competition |
+   2 Monopoly | 3 Monopolistic Competition | 4 Oligopoly" into the space
+   the running head leaves after the firm's identity block. Measured at
+   1280px that is about 980px, and the five rungs wanted 1010px, so the
+   row wrapped and the head grew a second line.
+   The trims below recover the difference without touching the type
+   scale — the ladder is a map, and shrinking its lettering to fit would
+   make it unreadable from the back of a room.
+   --------------------------------------------------------------- */
+.topbar .tb-steps{gap:.42rem}
+.topbar .stepdot{padding:.16rem .5rem .16rem .22rem}
+.topbar .stepdot .sd-n{width:1.1rem;height:1.1rem}
+/* the two long names are the ones with slack to give: `Monopolistic
+   Competition` and `Perfect Competition` both read fine truncated at this
+   size, and the rung's own number still says which market it is.
+   The ellipsis has to be declared on the LABEL span, not on the rung: the
+   rung is an inline-flex box and `text-overflow` does not apply to a flex
+   container's anonymous text child, so putting it there clipped the words
+   mid-letter instead of ending them with an ellipsis.
+
+   `min-width:0` IS LOAD-BEARING. A flex item's default `min-width:auto`
+   resolves to its min-content width, and CSS lets that beat `max-width` —
+   so with the ceiling set and no floor override, both long names measured
+   256.5px (their own natural width) instead of the 216px ceiling, the row
+   came to 877px, and the rungs sat four pixels apart reading as one smear.
+   Clearing the floor lets the ceiling actually bite. Probed, not assumed:
+   see _tools/probe_topbar.py, which prints each rung's used max-width. */
+.topbar .stepdot .sd-t{
+  display:block;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;
+}
+.topbar .stepdot{min-width:0;max-width:12.6rem}
+/* the pre rung carries a short label, so its ceiling is set apart from the
+   market rungs' — declared AFTER the generic rule so it is the one that
+   wins on the cascade (same specificity, later wins) */
+.topbar .stepdot.pre{max-width:9.4rem}
+/* Nowrap is on the ladder, not the rung: a WRAPPED ladder silently doubles
+   the sticky head's height and pushes the whole reading column down (the
+   head grew 34px -> 75.9px when this was last probed), which is worse than
+   any ellipsis. Wrapping is the failure mode to design out, so the rungs
+   step down through more, tighter breakpoints instead. Measured avail
+   widths against the ceiling that fits: 1280px fits 12.6rem, 1180px fits
+   8.6rem, 1100px needs ~7.2rem. Probed with _tools/probe_topbar.py, whose
+   `gaps` line turns negative the moment a rung drops to a second row. */
+@media (max-width:1300px){
+  .topbar .stepdot{max-width:10.4rem}
+  .topbar .stepdot.pre{max-width:7.6rem}
+}
+@media (max-width:1180px){
+  .topbar .stepdot{max-width:8.6rem}
+  .topbar .stepdot.pre{max-width:6.8rem}
+}
+@media (max-width:1100px){
+  /* At 1024px the ladder has 728px between the firm block and the tools. The
+     binding constraint is the SHORT names: MONOPOLY and OLIGOPOLY need
+     109-110px of label, which with the number square, the gap and the padding
+     means a rung of ~150px. The long names carry an ellipsis and can give as
+     much as they like.
+     Two levers, in order: widen the rung to 7.9rem, then — only at the very
+     bottom — drop the type a notch to .84rem, which brings OLIGOPOLY's 110px
+     down to 105px and so under the 107px the rung can actually give. The
+     pre rung is the one allowed to clip here: "Your Firm" is repeated
+     verbatim in the running head to its left, whereas the market names are
+     the map the student is actually reading. */
+  /* .84rem measured 15.96px and tripped the body floor (BODY_MIN = 16.0) —
+     and the floor is right: a chapter name is read from the back of a room,
+     not glanced at like a control label. Held at .86rem (16.34px) and the
+     space made up with the ceiling instead. */
+  .topbar .stepdot{max-width:7.9rem;font-size:.86rem}
+  .topbar .stepdot.pre{max-width:4.6rem}
+  .topbar .tb-steps{gap:.26rem}
+}
+@media (max-width:1000px){
+  /* same floor holds here: the type stays at .86rem and only the ceilings
+     come in. A rung that clips is recoverable; a rung nobody can read is not. */
+  .topbar .stepdot{max-width:7rem;font-size:.86rem}
+  .topbar .stepdot.pre{max-width:4.4rem}
+}
+
+/* ---------------------------------------------------------------
+   THE TOOLS — what is left of them
+   --------------------------------------------------------------- */
+.topbar .tb-tools{
+  display:flex;align-items:center;gap:.35rem;flex:0 0 auto;
+}
+.topbar .tb-tools:empty{display:none}
+
+/* ---------------------------------------------------------------
+   THE PROGRESS RULE — the chapter bar under the head
+   --------------------------------------------------------------- */
+.topbar .tb-progress{
+  position:absolute;left:0;right:0;bottom:0;height:2px;overflow:hidden;
+  background:rgba(191,178,154,.42);
+}
+.topbar .tb-progress i{
+  display:block;height:100%;
+  background:linear-gradient(90deg,#B8913F,#E8CE8E 55%,#A9761B);
+  box-shadow:0 0 6px rgba(169,118,27,.55);
+  transition:width .3s ease;
+}
+
+/* ---------------------------------------------------------------
+   NARROW — the head keeps one row and scrolls itself
+   The old rule lived in 43-narrow.css and targeted `.tb-stats`, which no
+   longer exists. The replacements here do the same job for the ladder.
+   --------------------------------------------------------------- */
+@media (max-width:760px){
+  .topbar{
+    flex-wrap:nowrap;align-items:center;gap:.3rem;
+    padding:.4rem .6rem .54rem;
+    overflow-x:auto;overscroll-behavior-x:contain;
+    scrollbar-width:none;
+  }
+  .topbar::-webkit-scrollbar{display:none}
+  .topbar .tb-firm{flex:0 0 auto;min-width:0}
+  .topbar .tb-firm::before,
+  .topbar .tb-firm::after{display:none}
+  .topbar .tb-name{display:none}
+  .topbar .tb-firm .chip{width:1.65rem;height:1.65rem;font-size:.88rem;border-radius:5px}
+  .topbar .tb-steps{flex:0 0 auto;flex-wrap:nowrap;margin-left:auto}
+  .topbar .stepdot{font-size:.74rem;padding:.14rem .46rem .14rem .18rem}
+  .topbar .stepdot .sd-n{width:1.06rem;height:1.06rem;font-size:.8rem}
+  .topbar .tb-tools{flex:0 0 auto}
+}
+@media (max-width:420px){
+  /* the market names are the first thing to go: the rung numbers still
+     show the student where they are in the campaign.
+     The label is now its own span (see .sd-t above), so hiding it is done
+     there — `font-size:0` on the rung would no longer reach the text, and
+     would collide with the .sd-n size set further up. */
+  .topbar .stepdot{gap:0;padding:.14rem .2rem;max-width:none}
+  .topbar .stepdot .sd-t{display:none}
+  .topbar .stepdot .sd-n{font-size:.8rem}
+}
+
+/* ==MF:CSS-END== */

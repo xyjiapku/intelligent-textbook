@@ -1,0 +1,20 @@
+/* ==MF:CSS-BEGIN== */
+   v3 ATELIER THEME LAYER
+   Warm paper, ink, teal and gold — texture, depth and motion
+   layered over the v2 polish without touching the chart palette.
+   ============================================================ */
+:root{
+  --bg:#EAE2D1; --bg2:#F4EEE0; --surface:#FCF9F1; --surface2:#F5EEE0;
+  --ink:#22283A; --ink2:#3E4456; --muted:#6E695C; --faint:#A29B87;
+  --line:#E4DCC8; --line2:#D0C6AD;
+  --brand:#334A8B; --brand-d:#24386D; --brand-l:#5A74B6; --brand-soft:#ECEEF8;
+  --teal:#0E7C7B; --teal-d:#0A5B5C; --tealbg:#E1EFED;
+  --good:#277A54; --goodbg:#E3F1E8; --good-d:#1A5B3D;
+  --bad:#BD5443; --badbg:#F8EAE5; --bad-d:#923629;
+  --warn:#B0751B; --warnbg:#F7ECD7; --warn-d:#865612;
+  --gold:#BE871C; --goldbg:#F5E8C5;
+  --sh:0 1px 2px rgba(74,60,32,.05), 0 16px 38px -18px rgba(74,60,32,.24);
+  --sh2:0 2px 10px rgba(74,60,32,.07), 0 28px 60px -22px rgba(52,44,24,.30);
+}
+
+/* ==MF:CSS-END== */

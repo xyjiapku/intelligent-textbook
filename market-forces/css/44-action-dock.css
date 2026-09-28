@@ -1,0 +1,116 @@
+/* ==MF:CSS-BEGIN== */
+/* ==========================================================================
+   44-action-dock.css — the floating commit bar
+   --------------------------------------------------------------------------
+   The decision cards put "Lock in the decision" at the FOOT of the card, which
+   on a long card (or a phone) means the student has to scroll to reach the one
+   button the whole page exists to collect. The lab's "Submit answers" has the
+   same problem on a tall rail.
+
+   Rather than duplicate the handlers, the primary action is MIRRORED into a
+   fixed bar in the thumb zone: bottom-centre on wide screens, sitting just
+   above the Tasks button. The bar never covers the real button (it is a copy,
+   not a move) and hides itself the moment the real one is on screen and
+   clickable.
+
+   Layering: the Tasks FAB is z-index 60, the task overlay 70. The dock sits at
+   55 so the overlay still wins when the panel is open, and 44-action-dock is
+   imported after 43-narrow so these rules can override the narrow tweaks.
+   ========================================================================== */
+
+.actiondock {
+  position: fixed;
+  left: 50%;
+  bottom: 1.05rem;
+  transform: translate(-50%, calc(100% + 2rem));
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .42rem .5rem .42rem .8rem;
+  max-width: min(46rem, calc(100vw - 2rem));
+  background: linear-gradient(180deg, #FFFDF6, #F7EBD3);
+  border: 1px solid var(--v-rule, #C9AD7C);
+  border-radius: 999px;
+  box-shadow: 0 18px 38px -12px rgba(58, 36, 4, .45), 0 2px 0 rgba(255, 255, 255, .6) inset;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .28s cubic-bezier(.2, .8, .3, 1), opacity .22s ease;
+}
+.actiondock.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+/* when the pencil is in the tray, stay clear of the Tasks button */
+.actiondock.parked {
+  left: auto;
+  right: 1.05rem;
+  transform: translate(0, calc(100% + 2rem));
+}
+.actiondock.parked.show {
+  transform: translate(0, 0);
+}
+
+.actiondock .ad-txt {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+.actiondock .ad-k {
+  font-size: .6rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--v-ink-3, #7A6A4E);
+}
+.actiondock .ad-t {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--v-ink, #2B2110);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.actiondock .btn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+/* a plain white notch would read as a seam on parchment; use the warm rule */
+.actiondock .ad-x {
+  flex: 0 0 auto;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--v-rule, #C9AD7C);
+  background: transparent;
+  color: var(--v-ink-3, #7A6A4E);
+  font-size: .82rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.actiondock .ad-x:hover { background: rgba(122, 86, 4, .1); }
+
+/* --------------------------------------------------------------------------
+   Narrow screens: the dock becomes the primary affordance. A phone has no
+   thumb-zone room for both a pill and the Tasks bubble side by side, so the
+   dock spans the width and the Tasks button lifts above it.
+   -------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .actiondock {
+    left: .6rem;
+    right: .6rem;
+    bottom: .6rem;
+    max-width: none;
+    transform: translate(0, calc(100% + 2rem));
+    justify-content: space-between;
+    border-radius: 18px;
+  }
+  .actiondock.show { transform: translate(0, 0); }
+  .actiondock.parked { left: .6rem; right: .6rem; }
+  .actiondock .ad-t { font-size: .82rem; }
+  /* the Tasks bubble would sit under the dock — lift it clear */
+  html.mf-dockup .taskfab { bottom: 4.6rem; }
+}
+
+/* ==MF:CSS-END== */

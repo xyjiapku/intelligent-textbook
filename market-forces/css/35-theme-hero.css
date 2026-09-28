@@ -1,0 +1,18 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- hero ---- */
+.wordmark{background:linear-gradient(112deg,#22305E 6%,#385093 45%,#0E7C7B 94%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.herorule::before{background:linear-gradient(90deg,transparent,rgba(190,135,28,.6))}
+.herorule::after{background:linear-gradient(90deg,rgba(190,135,28,.6),transparent)}
+.feat .fnum{background:linear-gradient(160deg,#EEF1F9,#DDE5F5);border-color:#C8D2EE;color:var(--brand-d)}
+.jpanel{
+  background:
+    radial-gradient(420px 250px at 100% -4%, rgba(14,124,123,.32), transparent 62%),
+    radial-gradient(380px 260px at -8% 108%, rgba(190,135,28,.20), transparent 60%),
+    linear-gradient(165deg,#232D4E 0%,#182138 56%,#102A31 132%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07), 0 28px 54px -24px rgba(20,30,60,.78)}
+.jpanel .tagline{color:#EAC780}
+.stepdot.on{background:linear-gradient(#F2F5FC,#E7EDF9);border-color:#C2CEEC}
+.stepdot.done{background:linear-gradient(#EAF3ED,#DFEEE4);border-color:#B7D9C4}
+
+/* ==MF:CSS-END== */

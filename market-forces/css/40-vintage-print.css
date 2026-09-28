@@ -1,0 +1,523 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 VINTAGE PRINT LAYER
+   ------------------------------------------------------------
+   A 19th-century letterpress / copperplate edition of the game.
+
+   Everything here is additive: it re-skins the existing v2/v3 markup,
+   it never changes layout contracts or JS behaviour. The board is
+   warm laid paper, type is set in an old-style serif, rules are
+   printed hairlines, and the chapter plates are real engravings.
+
+   Loaded last, so it wins over v2 polish and the v3 atelier layer
+   wherever the same property is set.
+   ============================================================ */
+
+:root{
+  /* --- paper & ink ------------------------------------------------ */
+  --v-paper:#EFE6D3;          /* the laid stock the whole book is printed on */
+  --v-paper-2:#E7DCC5;        /* a slightly darker sheet, for insets */
+  --v-paper-3:#F6F0E1;        /* the lightest sheet, for lifted cards */
+  --v-ink:#2A2620;            /* warm black — never pure #000 on paper */
+  --v-ink-2:#4A443A;
+  --v-ink-3:#6E6555;
+  --v-rule:#BFB29A;           /* printed hairline */
+  --v-rule-2:#D6CAB2;
+
+  /* --- the three plates' accent washes --------------------------- */
+  --v-indigo:#33477E;
+  --v-teal:#1F6A63;
+  --v-gold:#A9761B;
+  --v-crimson:#9B3B32;
+
+  /* --- engraving shadow ------------------------------------------- */
+  --v-plate-sh:0 1px 0 rgba(255,255,255,.55) inset,
+               0 10px 24px -14px rgba(58,44,24,.42);
+  --v-plate-sh-2:0 1px 0 rgba(255,255,255,.5) inset,
+                 0 18px 40px -18px rgba(58,44,24,.5);
+
+  /* --- display faces --------------------------------------------- */
+  --v-serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",
+            Georgia,"Songti SC",serif;
+  --v-fat:"Playbill","Bodoni 72",Didot,"Times New Roman",serif;
+}
+
+/* Override the v2/v3 token set so every existing rule inherits the
+   new paper stock automatically. */
+:root{
+  --bg:var(--v-paper);
+  --bg2:var(--v-paper-3);
+  --surface:var(--v-paper-3);
+  --surface2:var(--v-paper-2);
+  --ink:var(--v-ink);
+  --ink2:var(--v-ink-2);
+  --muted:var(--v-ink-3);
+  --faint:#8C8271;
+  --line:var(--v-rule-2);
+  --line2:var(--v-rule);
+  --brand:var(--v-indigo);
+  --brand-d:#28376A;
+  --brand-l:#4A5F9C;
+  --brand-soft:#E4E2D2;
+  --gold:var(--v-gold);
+  --goldbg:#F1E4C4;
+  --r:10px;  --r2:7px;
+  --sh:var(--v-plate-sh);
+  --sh2:var(--v-plate-sh-2);
+  --font-sans:var(--v-serif);
+  --font-display:var(--v-serif);
+}
+
+/* ---------------------------------------------------------------
+   THE SHEET
+   Two layers of grain: a fine fibre noise (the paper) and a faint
+   horizontal laid line every 28px (the mould), plus a vignette that
+   darkens toward the fore-edge the way a real book block does.
+   --------------------------------------------------------------- */
+html{font-size:19px}
+body{
+  background-color:var(--v-paper);
+  background-image:
+    radial-gradient(1200px 620px at 50% -18%, rgba(255,252,240,.75) 0%, rgba(255,252,240,0) 62%),
+    radial-gradient(900px 700px at 50% 118%, rgba(120,96,58,.10) 0%, rgba(120,96,58,0) 60%),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.035) 0 1px, rgba(0,0,0,0) 1px 28px),
+    linear-gradient(90deg, rgba(120,96,58,.045) 0, rgba(0,0,0,0) 14%,
+                            rgba(0,0,0,0) 86%, rgba(120,96,58,.045) 100%);
+  background-attachment:fixed;
+}
+/* fibre noise, drawn once and tiled */
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='220' height='220' filter='url(%23n)' opacity='.30'/></svg>");
+}
+.vignette{background:radial-gradient(128% 92% at 50% 34%,
+  rgba(255,252,240,0) 54%, rgba(74,58,32,.14) 100%)}
+
+/* ---------------------------------------------------------------
+   TYPE
+   --------------------------------------------------------------- */
+body{font-family:var(--v-serif);color:var(--v-ink)}
+h1,h2,h3,h4,.display,.scene-h,.hero-title{
+  font-family:var(--v-serif);font-weight:700;letter-spacing:-.012em;
+}
+/* small caps for every kicker / label / eyebrow */
+.kicker,.eyebrow,.tp-kick,.lab-k,.ca,.cl,.tile .k,.metric .k,.s-head .en{
+  font-family:var(--v-serif);
+  font-variant-caps:small-caps;
+  letter-spacing:.11em;
+}
+
+/* ---------------------------------------------------------------
+   THE TOP BAR — a printed running head, not frosted glass
+   --------------------------------------------------------------- */
+.topbar{
+  background:linear-gradient(180deg, var(--v-paper-3) 0%, var(--v-paper) 100%);
+  border-bottom:1px solid var(--v-rule);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 6px 14px -12px rgba(58,44,24,.5);
+  backdrop-filter:none;
+}
+.topbar .tb-firm{font-family:var(--v-serif);font-weight:700}
+.tb-firm .chip,.chip{
+  border-radius:6px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.4), 0 3px 8px -4px rgba(58,44,24,.5);
+}
+/* the scoreline reads like a printed table of figures */
+.tp-score,.scorelines,.stat{font-variant-numeric:tabular-nums}
+
+/* ---------------------------------------------------------------
+   PLATES — every card is a printed plate with a hairline frame
+   --------------------------------------------------------------- */
+.card,.panel,.box,.tp,.tile,.beat,.scene-card{
+  background:var(--v-paper-3);
+  border:1px solid var(--v-rule);
+  border-radius:var(--r);
+  box-shadow:var(--v-plate-sh);
+  position:relative;
+}
+/* a second, inset hairline — the way engravers frame a plate */
+.card::before,.panel::before,.scene-card::before{
+  content:"";position:absolute;inset:4px;border:1px solid rgba(191,178,154,.45);
+  border-radius:calc(var(--r) - 3px);pointer-events:none;
+}
+
+/* ---------------------------------------------------------------
+   THE CHAPTER PLATE — full-bleed engraving with a printed caption
+   --------------------------------------------------------------- */
+.mf-plate{
+  position:relative;margin:0 0 1.15rem;border:1px solid var(--v-rule);
+  border-radius:6px;overflow:hidden;background:var(--v-paper-2);
+  box-shadow:var(--v-plate-sh-2);
+}
+/* When the plate carries the chapter heading, the small heading card below it
+   would simply say the same thing twice. On the plate beat only we fold that
+   card's title away and keep its progress dots, which still earn their place.
+   `plate-beat` is set on <html> by js/09-plates.js — deliberately a class and
+   not :has(), so this also works on older school browsers. */
+html.plate-beat #app > .card:first-of-type .ch-icon,
+html.plate-beat #app > .card:first-of-type .kicker,
+html.plate-beat #app > .card:first-of-type h2{
+  display:none;
+}
+html.plate-beat #app > .card:first-of-type{
+  background:none;border:0;box-shadow:none;padding:.1rem .2rem .9rem;
+  justify-content:flex-end;
+}
+html.plate-beat #app > .card:first-of-type::before{display:none}
+.mf-plate img{display:block;width:100%;height:auto}
+/* A paper wash across the top so the caption always reads, whatever the
+   engraving's sky happens to be doing underneath. The plate keeps a visible
+   fade so it still looks printed-on rather than pasted-on. */
+.mf-plate::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(246,240,225,.97) 0%,
+    rgba(246,240,225,.90) 13%,
+    rgba(246,240,225,.58) 26%,
+    rgba(246,240,225,.14) 40%,
+    rgba(246,240,225,0) 52%);
+}
+.mf-plate::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(0deg, rgba(74,58,32,.22) 0%, rgba(74,58,32,0) 26%);
+}
+.mf-plate .mf-plate-cap{
+  position:absolute;left:0;right:0;top:0;padding:1.05rem 1.4rem .6rem;z-index:2;
+}
+.mf-plate .mf-plate-kick{
+  font-variant-caps:small-caps;letter-spacing:.18em;font-size:.76rem;
+  color:var(--v-wash,#33477E);font-weight:700;
+}
+.mf-plate .mf-plate-title{
+  font-family:var(--v-serif);font-weight:700;font-size:1.72rem;line-height:1.08;
+  color:var(--v-ink);margin:.14rem 0 0;
+}
+/* the plate number, printed like a fault in the corner */
+.mf-plate .mf-plate-no{
+  position:absolute;right:1.1rem;top:1.15rem;z-index:2;
+  font-family:var(--v-serif);font-size:.78rem;letter-spacing:.16em;
+  color:var(--v-ink-2);font-variant-caps:small-caps;
+  padding:.14rem .56rem;border:1px solid var(--v-rule-2);border-radius:3px;
+  /* opaque, not .72 — the plate behind it is a photograph of a building and
+     the number has to hold up over whatever tone lands underneath. */
+  background:var(--v-paper-3);
+}
+
+/* ---------------------------------------------------------------
+   BUTTONS — letterpress blocks
+   --------------------------------------------------------------- */
+.btn{
+  font-family:var(--v-serif);
+  border-radius:6px;
+  border:1px solid var(--v-rule);
+  background:linear-gradient(180deg,var(--v-paper-3),var(--v-paper-2));
+  color:var(--v-ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 2px 0 rgba(140,120,86,.35);
+  transition:transform .09s ease, box-shadow .12s ease, background .12s ease;
+  letter-spacing:.005em;
+}
+.btn:hover{background:linear-gradient(180deg,#FBF6E9,var(--v-paper-3))}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 1px 3px rgba(74,58,32,.3)}
+.btn.primary{
+  background:linear-gradient(180deg,#3E5590,var(--v-indigo));
+  border-color:#28376A;color:#F7F2E4;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24), 0 2px 0 #1D2A52;
+}
+.btn.primary:hover{background:linear-gradient(180deg,#4A629F,#3A4F88)}
+.btn.gold{
+  background:linear-gradient(180deg,#C79A3E,var(--v-gold));
+  border-color:#8A5F12;color:#2A2109;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 2px 0 #7A5410;
+}
+
+/* ---------------------------------------------------------------
+   TILES / READOUTS — figures set in a printed table
+   --------------------------------------------------------------- */
+.tile,.metric,.readout{
+  background:var(--v-paper-3);
+  border:1px solid var(--v-rule);
+  border-radius:5px;
+}
+.tile .v,.metric .v,.readout .v{
+  font-variant-numeric:tabular-nums;font-family:var(--v-serif);font-weight:700;
+}
+/* a ruled line under each figure, like an accounts book */
+.metric,.tile{border-bottom-width:2px;border-bottom-color:var(--v-rule)}
+
+/* ---------------------------------------------------------------
+   TABLES — real printed rule work
+   --------------------------------------------------------------- */
+table{border-collapse:collapse}
+th{
+  font-variant-caps:small-caps;letter-spacing:.09em;font-weight:700;
+  border-bottom:1.5px solid var(--v-ink-3);
+}
+td{border-bottom:1px solid var(--v-rule-2)}
+
+/* ---------------------------------------------------------------
+   PROGRESS — a printed rule that fills with ink
+   --------------------------------------------------------------- */
+.prog,.bar,.tp-bar{border-radius:0!important;background:#DDD2BA!important}
+.prog .fill,.bar .fill,.tp-bar .fill{background:var(--v-indigo)!important;border-radius:0!important}
+
+/* ---------------------------------------------------------------
+   THE JOURNEY ROUTE — four plates down the margin
+   --------------------------------------------------------------- */
+.journey{background:
+  linear-gradient(180deg, rgba(42,38,32,.03), rgba(42,38,32,.06));
+  border:1px solid var(--v-rule);border-radius:6px;
+}
+.journey .jr{
+  border-bottom:1px dotted var(--v-rule);
+}
+.journey .jr:last-child{border-bottom:0}
+
+/* ---------------------------------------------------------------
+   THE TASK HUD — a gold printed seal
+   --------------------------------------------------------------- */
+.taskfab{
+  border-radius:4px;border:1.5px solid #8A5F12;color:#2A2109;
+  background:linear-gradient(180deg,#D9AE52,#B8892A);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px -8px rgba(90,62,10,.7);
+}
+.taskfab.quiet{border-color:var(--v-rule);background:var(--v-paper-3);color:var(--v-ink-2)}
+.taskpanel{
+  background:var(--v-paper-3);border:1px solid var(--v-rule);
+  box-shadow:var(--v-plate-sh-2);
+}
+
+/* ---------------------------------------------------------------
+   SLIDERS — brass rules with an engraved knob
+   --------------------------------------------------------------- */
+input[type=range]{
+  -webkit-appearance:none;appearance:none;height:2px;background:var(--v-rule);
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #FBF6E9, #C9B489 62%, #9C8759);
+  border:1px solid #8A7550;box-shadow:0 1px 3px rgba(58,44,24,.5);
+}
+input[type=range]::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;border:1px solid #8A7550;
+  background:radial-gradient(circle at 35% 30%, #FBF6E9, #C9B489 62%, #9C8759);
+}
+.sbtn{
+  border-radius:4px;border:1px solid var(--v-rule);
+  background:var(--v-paper-3);color:var(--v-ink-2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 1px 0 rgba(140,120,86,.35);
+}
+
+/* ---------------------------------------------------------------
+   TOAST & SHEET — a slip of paper laid on the page
+   --------------------------------------------------------------- */
+.toast{
+  background:var(--v-ink);color:#F3EADA;border-radius:4px;
+  box-shadow:0 12px 30px -14px rgba(30,22,10,.8);
+}
+.sheet{
+  background:var(--v-paper-3);border:1px solid var(--v-rule);
+  box-shadow:var(--v-plate-sh-2);
+}
+
+/* ---------------------------------------------------------------
+   THE ENDPAPER — the hero's engraved rule work
+   --------------------------------------------------------------- */
+.mf-rule{
+  height:1px;background:var(--v-rule);position:relative;margin:1rem 0;
+}
+.mf-rule::after{
+  content:"\2766";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:var(--v-paper-3);padding:0 .5rem;color:var(--v-rule);
+  font-size:.8rem;line-height:1;
+}
+/* an ornamental initial for the opening paragraph */
+.mf-open::first-letter{
+  float:left;font-family:var(--v-fat);font-size:3.1em;line-height:.82;
+  padding:.06em .12em 0 0;color:var(--v-indigo);
+}
+
+/* ---------------------------------------------------------------
+   VINTAGE ANIMATION — paper-friendly, restrained
+   --------------------------------------------------------------- */
+@keyframes mfInkIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes mfPress{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.fade,.reveal{animation:mfInkIn .42s cubic-bezier(.22,.9,.3,1) both}
+.mf-plate{animation:mfPress .5s cubic-bezier(.22,.9,.3,1) both}
+/* page turn between chapters */
+@keyframes mfTurn{0%{opacity:0;transform:translateX(14px) rotateY(-6deg)}
+                  100%{opacity:1;transform:none}}
+#app{animation:mfTurn .38s cubic-bezier(.22,.9,.3,1) both;transform-origin:left center}
+
+/* ---------------------------------------------------------------
+   LEGIBILITY — one notch up on the labels students read at a glance
+   ---------------------------------------------------------------
+   The v2 build set its small caps tiny (.55–.6rem ≈ 9–10px). That is fine
+   on a laptop at arm's length but poor on a projector, where the top bar
+   and the readout rails are the strips the whole room is looking at.
+   These are the labels worth raising; body copy and the chart axes keep
+   their own scale so the information density of the screens is unchanged.
+
+   NB: several of these were written in v2 as long descendant selectors
+   (.labbar .readout .ro .rl and friends). A bare `.rl{…}` here loses the
+   specificity war and silently does nothing — hence the matched-depth
+   selectors below. Verified by _tools/audit.py reading computed px. */
+.stat span{ font-size:.72rem; letter-spacing:.07em; }
+.stat b{ font-size:1.05rem; }
+.tb-firm .tb-name{ font-size:1.02rem; }
+.stepdot{ font-size:.78rem; }
+
+/* The lab tab's number badge. The live rule is `.labtab .lt-n`
+   (css/37-theme-decisionrail.css), so a bare `.lt-n` here is a no-op —
+   same trap as the readout below. */
+.labtab .lt-n, .lt-n{ font-size:1.08rem; }
+/* The idle badge sits at var(--muted) on var(--surface2) — 4.22:1, just under
+   the line. The sel/done states are already white on a brand gradient, so only
+   the resting state needs ink. */
+.labtab .lt-n{ color:var(--v-ink-2); }
+
+/* The readout in the lab / decision rails. Two traps in one block:
+     a) the value node is `.rv`, NOT `.v` — an earlier pass wrote `.ro .v`
+        and it matched nothing at all, silently;
+     b) the rails bind `.labbar .readout .ro .rl` / `.labrail-read .ro .rl`,
+        which outrank `.readout .ro .rl`. All depths are restated here so the
+        classroom-facing numbers actually move. */
+.labbar .readout .ro .rl,
+.decrail .readout .ro .rl,
+.labrail-read .ro .rl,
+.readout .ro .rl{ font-size:.68rem; letter-spacing:.05em; color:var(--v-ink-2); }
+
+.labbar .readout .ro .rv,
+.decrail .readout .ro .rv,
+.labrail-read .ro .rv,
+.readout .ro .rv{ font-size:1.06rem; }
+
+/* The slider tick labels (0 / 3 / 6 / 9 …). Declared `.66rem` with a faint
+   ink in css/09-controls.css — the numerals were the smallest thing on the
+   lab screen and the palest. Both raised. */
+.ticks{ font-size:.78rem; }
+.ticks span{ color:var(--v-ink-2); }
+
+/* the ink-on-paper pairs that sat just under the contrast line.
+   `.good`/`.bad` looked like a one-class fix but the real rules are
+   `table.dt td.good` — three levels deep — so a bare class loses. Matched
+   here, and darkened to clear 4.5:1 against the paper ground.
+   NB: the first pass only gave the top-bar figures a text-shadow and left
+   their colour alone, so `.stat.pos b` stayed on the raw v2 `--good:#0F9D74`
+   and measured 3.39:1 on the paper tile (the tile is a near-white gradient,
+   so this is a straight ink-on-paper case). Same two inks as the table cells
+   below, so the scoreline and the ledger finally agree. */
+.stat b, .stat.pos b, .stat.neg b{ text-shadow:0 1px 0 rgba(255,255,255,.55); }
+.stat.pos b{ color:#14634A; }
+.stat.neg b{ color:#9E2C18; }
+.good, table.dt td.good, table.dt th.good, .scoreline .good{ color:#14634A; }
+.bad, table.dt td.bad, table.dt th.bad, .scoreline .bad{ color:#9E2C18; }
+.ts, small, .small{ color:var(--v-ink-2); }
+/* `.small` is not a footnote class in this build — the debrief prose runs
+   through it. .82rem measured 15.6px, just under the floor; .86rem = 16.3px. */
+.small{ font-size:.86rem; }
+/* …but `.preview` is a DARK card (brand gradient) with light type. The ink
+   override above would repaint its caption near-black on navy — invisible.
+   Restore the light ink wherever `.small`/`.tagline` sit inside the preview. */
+.preview .small, .preview .pv-nm, .preview .pv-tag, .preview .tagline,
+.mf-shopfront .small{ color:#F3F6FC; }
+.preview .pv-tag{ color:#E4EAF6; }
+/* the hint paragraph at the foot of the task panel */
+.tp-note{ font-size:.86rem; color:var(--v-ink-2); }
+/* the "Your notebook · Production  3 / 10" row — .84rem measured 16.0px,
+   i.e. exactly on the boundary and failing by float rounding. */
+.tp-book .tbrow{ font-size:.88rem; }
+/* The task-panel group rows ("Production — you are here · 1/2"). These are the
+   lines that tell a student what is left, so they go to reading size too. */
+.tp-group{ font-size:.88rem; }
+.tp-group .tp-gn{ font-size:.88rem; }
+.tp-wrap .tp-gp, .tp-group .tp-gp{ font-size:.88rem; }
+.tp-hint{ font-size:.86rem; }
+/* the lab rail's own hint paragraph */
+.labrail-hint{ font-size:.86rem; color:var(--v-ink-2); }
+/* setup-screen product names and the price tag on the shop card */
+.prod .nm{ font-size:.88rem; }
+.preview .pv-tag{ font-size:.82rem; }
+/* the task panel's status chips are read across a classroom */
+.tp-tag{ font-size:.72rem; letter-spacing:.05em; padding:.14rem .46rem; }
+
+/* ---------------------------------------------------------------
+   CHART TYPE — sized against the real rendered pixels
+   ---------------------------------------------------------------
+   Traps worth writing down, both measured with _tools/svg_geom.py rather
+   than read off the source:
+
+     1. SVG text does NOT render at the font-size you declare. The chart is
+        `viewBox="0 0 695 431"` drawn into a ~694px card, so everything is
+        multiplied by the scale factor (0.92–1.0 depending on the panel).
+     2. `.ct` was declared 10.9px → really 11.8–12.9px on screen, which is
+        too small for a projector.
+
+   So these are raised roughly a third, and the geometric audit is what
+   decides whether the change landed. Do not "fix" these by reading CSS. */
+.ct{ font-size:.82rem; }
+.cl{ font-size:.9rem; }
+.cn{ font-size:.92rem; }
+.ca{ font-size:.86rem; }
+.cw{ font-size:.88rem; }
+.legend{ font-size:.82rem; }
+.tf-txt small{ font-size:.76rem; }
+.tf-txt b{ font-size:1.02rem; }
+/* the step dots are small round chips; at --muted they slipped under 4.5:1 */
+.stepdot{ color:var(--v-ink-2); }
+.stepdot.on{ color:#233A6E; }
+.stepdot.done{ color:#14634A; }
+/* table headers and the feature-list numerals. In the v2 build these were
+   print-size (.67rem / .8rem) rather than projector-size. */
+table.dt th{ font-size:.76rem; color:var(--v-ink-2); }
+table.dt td{ font-size:.92rem; }
+.feat .fnum{ font-size:.92rem; }
+
+/* Tiles readouts. --faint (#94A3B8) is a cool screen grey that goes milky on
+   warm paper: 3.3:1. Restated in ink at matched depth — the real rules are
+   `.tile .ts` and `.decrail .tile .ts`, so a bare `.ts` would do nothing. */
+.tile .ts, .decrail .tile .ts, .labtile .ts{ color:var(--v-ink-2); }
+.tile .tl, .decrail .tile .tl{ color:var(--v-ink-2); font-size:.7rem; }
+.tile .ts, .decrail .tile .ts{ font-size:.76rem; }
+.pill{ font-size:.74rem; }
+.pill.b{ color:#233A6E; }
+/* option sub-labels (the mode cards on the opening screen).
+   `.opt.sel small{color:#5B7FCF}` in the v3 layer is a screen-blue that sits
+   at 3.7:1 on warm paper, and it out-ranks a bare `.opt small`. Both are
+   restated so the selected card keeps its accent without losing legibility. */
+.opt small{ font-size:.76rem; color:var(--v-ink-2); }
+.opt.sel small{ color:#2E4A86; }
+.js{ font-size:.78rem; }
+.jrow .js{ font-size:.78rem; }
+.tf-txt small{ opacity:1; color:var(--v-ink-2); }
+
+/* The last of the glance-labels: top-bar chips, text-size buttons, plate
+   kickers. All were 12.5–13.7px on screen.
+   `.tile .tl` needs the rail depth restated — css/22-decision-2.css binds
+   `.decrail .tile .tl`, which outranks the two-level form. And the task tag
+   has four colour variants (ok/armed/open); `.tp-tag.open` carries its own
+   rule, so the base class alone leaves that one at .62rem. */
+.tile .tl, .decrail .tile .tl{ font-size:.76rem; }
+.fsbtn{ font-size:.86rem; }
+.mf-plate-kick, .mf-wp-kick{ font-size:.8rem; }
+
+/* task-panel chips. Size is set above; the two chips that carried an open
+   status colour (open / armed) sat at 4.22 and 4.26 — both just under the
+   line on the paper ground. Darkened rather than resized. */
+.tp-kick{ font-size:.76rem; }
+.tp-num{ font-size:1rem; }
+.tp-tag, .tp-tag.ok, .tp-tag.armed, .tp-tag.open{ font-size:.72rem; letter-spacing:.05em; }
+.tp-tag.open{ color:var(--v-ink-2); }
+.tp-tag.armed{ color:#7A5400; }
+.tp-tag.ok{ color:#0A6B4E; }
+/* the "In progress · 40%" strip under the panel bar.
+   Measured root size on this page is exactly 19px, so .86rem = 16.3px is the
+   first stop that clears the 16px floor. */
+.tp-barlab{ font-size:.86rem; color:var(--v-ink-2); }
+/* the note under the teacher-guide block inside the task panel — a real
+   instruction line, not an ornament, so it goes to body size */
+.tp-book .tbnote{ font-size:.88rem; color:#7A5A18; line-height:1.4; }
+/* ==MF:CSS-END== */

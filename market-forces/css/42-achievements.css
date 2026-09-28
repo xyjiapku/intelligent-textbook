@@ -1,0 +1,433 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 achievements, streaks and the honours board
+   Pairs with js/10-achievements.js. Loaded last.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Streak pill in the top bar
+   ------------------------------------------------------------ */
+.mf-streak{
+  position:relative; display:flex; align-items:center; gap:.3rem;
+  border:1px solid var(--v-rule-2); border-radius:3px;
+  background:var(--v-paper-3); padding:.16rem .5rem .16rem .55rem;
+}
+.mf-streak > span:first-child{
+  display:flex; flex-direction:column; line-height:1.05;
+  font-size:.72rem; letter-spacing:.08em; font-variant-caps:small-caps;
+  color:var(--v-ink-3); font-weight:700;
+}
+.mf-streak b{
+  font-family:var(--v-serif); font-size:.92rem; color:var(--v-ink);
+  font-weight:700; letter-spacing:.01em;
+}
+.mf-streak .mf-streak-fl{
+  /* var(--v-rule) is the hairline colour — fine for a 1px divider, far too
+     pale for a glyph. Set it in ink so the marker actually reads. */
+  font-size:.78rem; color:var(--v-ink-3); line-height:1;
+}
+.mf-streak.hot .mf-streak-fl{ color:var(--v-gold); }
+.mf-streak.hot{
+  border-color:var(--v-gold);
+  background:linear-gradient(180deg, #FBF3E1, #F3E7CB);
+  box-shadow:0 0 0 1px rgba(169,118,27,.28), 0 1px 0 rgba(140,120,86,.3);
+}
+.mf-streak.hot b{ color:#8A5A0B; }
+.mf-streak.hot .mf-streak-fl{ color:var(--v-gold); animation:mfFlame 1.5s ease-in-out infinite; }
+@keyframes mfFlame{
+  0%,100%{ transform:translateY(0); opacity:.85 }
+  50%    { transform:translateY(-1.5px); opacity:1 }
+}
+
+/* ------------------------------------------------------------
+   2. Badge button in the top bar
+   ------------------------------------------------------------ */
+.mf-achbtn{ gap:.3rem; }
+.mf-achbtn-ic{ display:inline-flex; color:var(--v-gold); }
+.mf-achbtn-n{
+  font-variant-caps:small-caps; letter-spacing:.08em; font-weight:700;
+  /* this file loads AFTER 40-vintage-print.css, so a same-depth rule there
+     loses. .72rem ≈ 11.5px was too small for a projector. Fixed here. */
+  font-size:.86rem;
+}
+
+/* ------------------------------------------------------------
+   3. Unlock toast
+   ------------------------------------------------------------
+   WHERE IT LIVES, AND WHY IT MOVED.
+   This used to be appended to `#toast`, the game's own message bar — the idea
+   being that it would "live alongside any game toast". It could not: `#toast`
+   is `opacity:0; visibility:hidden` until it carries `.show`, and both of those
+   apply to children, so an unlock was never visible; it also inherited the
+   bar's `translateY(220%)`. So the unlock has its own fixed layer, and nothing
+   about the game's toasts can hide it or hold it open.
+
+   NON-BLOCKING. The layer and the toast body are `pointer-events:none`; only
+   the ✕ accepts a click. A badge that appears while the student is mid-decision
+   therefore cannot swallow a press on the controls behind it, and it leaves by
+   itself after a few seconds if ignored. `--mf-hud-h` is set from the real
+   bottom bar's height at show time, so the toast clears it on every screen
+   size and when the bar's flyout is open. */
+#mf-unlock-host{
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:calc(var(--mf-hud-h, 3.4rem) + .9rem + env(safe-area-inset-bottom, 0px));
+  z-index:62;
+  display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  pointer-events:none;
+  max-width:min(92vw, 23rem);
+}
+/* ID-qualified on purpose: the base `.mf-unlock` block further down this file
+   also sets `margin-top`, and at equal specificity the later rule wins. Naming
+   the host makes these two declarations order-independent. */
+#mf-unlock-host .mf-unlock{ pointer-events:none; margin-top:0; }
+.mf-unlock-x{
+  flex:0 0 auto; pointer-events:auto;
+  width:1.9rem; height:1.9rem; margin:-.15rem -.2rem 0 0;
+  display:grid; place-items:center;
+  border:1px solid var(--v-rule); border-radius:50%;
+  background:rgba(255,255,255,.72); color:var(--v-ink-2);
+  /* the root font is ~19px here, so .82rem measured 15.6px and `audit.py`
+     graded the glyph as body copy against the 16px floor. It is a control, not
+     prose, but the cheapest honest fix is also the better one: a ✕ you can hit
+     on a projector should not be the smallest thing on screen. */
+  font-size:.9rem; line-height:1; cursor:pointer; padding:0;
+  font-family:inherit;
+}
+.mf-unlock-x:hover{ color:var(--v-ink); border-color:var(--v-gold); }
+@media (max-width:640px){
+  #mf-unlock-host{ max-width:94vw; }
+  .mf-unlock{ max-width:100%; }
+}
+.mf-unlock{
+  display:flex; align-items:flex-start; gap:.7rem;
+  margin-top:.5rem; padding:.7rem .85rem .75rem;
+  border:1px solid var(--v-rule);
+  border-left:4px solid var(--v-gold);
+  border-radius:3px;
+  background:
+    linear-gradient(rgba(246,240,225,.95), rgba(246,240,225,.95)),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.14) 0 1px, rgba(0,0,0,0) 1px 22px);
+  box-shadow:0 8px 24px -10px rgba(48,38,22,.5);
+  max-width:23rem; text-align:left;
+  animation:mfUnlockIn .5s cubic-bezier(.2,.9,.25,1.05) both;
+}
+.mf-unlock.mf-out{ animation:mfUnlockOut .55s ease-in both; }
+@keyframes mfUnlockIn{
+  from{ opacity:0; transform:translateY(14px) scale(.96) }
+  to  { opacity:1; transform:none }
+}
+@keyframes mfUnlockOut{
+  from{ opacity:1; transform:none }
+  to  { opacity:0; transform:translateY(-8px) scale(.98) }
+}
+.mf-unlock-art{
+  flex:0 0 auto; display:grid; place-items:center;
+  width:2.5rem; height:2.5rem; border-radius:50%;
+  border:1px solid var(--v-rule);
+  background:radial-gradient(circle at 38% 32%, #FBF3E1, #EDE2C9);
+  color:var(--v-gold);
+}
+.mf-unlock-tx{ display:block; min-width:0; }
+.mf-unlock-k{
+  display:block; font-variant-caps:small-caps; letter-spacing:.18em;
+  font-size:.76rem; font-weight:700; color:var(--v-ink-3);
+}
+.mf-unlock-t{
+  display:block; font-family:var(--v-serif); font-weight:700;
+  font-size:1.08rem; color:var(--v-ink); line-height:1.15; margin-top:.05rem;
+}
+.mf-unlock-d{
+  display:block; font-size:.86rem; color:var(--v-ink-2);
+  line-height:1.35; margin-top:.12rem;
+}
+/* tone accents */
+.mf-unlock.tone-indigo { border-left-color:var(--v-indigo); }
+.mf-unlock.tone-indigo .mf-unlock-art{ color:var(--v-indigo); }
+.mf-unlock.tone-teal   { border-left-color:var(--v-teal); }
+.mf-unlock.tone-teal .mf-unlock-art{ color:var(--v-teal); }
+.mf-unlock.tone-violet { border-left-color:#6B4A7A; }
+.mf-unlock.tone-violet .mf-unlock-art{ color:#6B4A7A; }
+.mf-unlock.tone-crimson{ border-left-color:var(--v-crimson); }
+.mf-unlock.tone-crimson .mf-unlock-art{ color:var(--v-crimson); }
+.mf-unlock.tone-ink    { border-left-color:var(--v-ink-2); }
+.mf-unlock.tone-ink .mf-unlock-art{ color:var(--v-ink-2); }
+
+/* ------------------------------------------------------------
+   4. The cabinet (sheet contents)
+   ------------------------------------------------------------ */
+.mf-ach-head{
+  display:flex; align-items:center; gap:.9rem; margin:.75rem 0 .1rem;
+  flex-wrap:wrap;
+}
+.mf-ach-cnt{
+  font-variant-caps:small-caps; letter-spacing:.1em; font-weight:700;
+  color:var(--v-ink-2); font-size:.88rem;
+}
+.mf-ach-cnt b{ font-family:var(--v-serif); font-size:1.35rem; color:var(--v-ink); }
+.mf-ach-track{
+  flex:1 1 10rem; height:8px; border:1px solid var(--v-rule-2);
+  border-radius:2px; background:var(--v-paper-2); overflow:hidden;
+}
+.mf-ach-track i{
+  display:block; height:100%;
+  background:linear-gradient(90deg, var(--v-gold), #C79A3A);
+}
+.mf-ach-note{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap:.5rem; margin:.9rem 0 1.1rem;
+}
+.mf-ach-note > div{
+  border:1px solid var(--v-rule-2); border-radius:3px;
+  background:var(--v-paper-3); padding:.5rem .6rem;
+  display:flex; flex-direction:column; gap:.05rem;
+}
+.mf-ach-note .k{
+  font-variant-caps:small-caps; letter-spacing:.1em; font-weight:700;
+  font-size:.76rem; color:var(--v-ink-3);
+}
+.mf-ach-note b{
+  font-family:var(--v-serif); font-size:1.12rem; color:var(--v-ink);
+  font-weight:700;
+}
+
+/* ------------------------------------------------------------
+   5. Badge grids — shared by the cabinet and the debrief wall
+   ------------------------------------------------------------ */
+.mf-badgegrid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr));
+  gap:.55rem;
+}
+.mf-badge{
+  position:relative; display:flex; align-items:flex-start; gap:.65rem;
+  border:1px solid var(--v-rule-2); border-radius:3px;
+  background:var(--v-paper-3); padding:.62rem .7rem .66rem;
+  transition:box-shadow .2s ease, transform .2s ease;
+}
+.mf-badge.on{
+  box-shadow:0 1px 0 rgba(74,60,36,.24), inset 0 0 0 1px rgba(169,118,27,.2);
+  border-color:var(--v-rule);
+  background:linear-gradient(180deg, #FBF5E6, var(--v-paper-3));
+}
+.mf-badge.on:hover{ transform:translateY(-1px); box-shadow:0 3px 0 rgba(74,60,36,.22); }
+.mf-badge.on .mf-badge-art{
+  border-color:rgba(169,118,27,.55);
+  box-shadow:0 0 0 3px rgba(169,118,27,.09);
+}
+.mf-badge.off{
+  background:var(--v-paper-2); border-style:dashed;
+}
+.mf-badge.off .mf-badge-art{
+  filter:grayscale(1); opacity:.42;
+  border-color:var(--v-rule-2); background:var(--v-paper); box-shadow:none;
+}
+/* Same call as the honours wall: the dashed frame and the greyed medallion say
+   "not yet", and the wording stays legible. Fading the text to 4.2:1 turned the
+   badges a student has NOT got into the hardest ones to read — which is the
+   wrong way round, since those carry the condition they still have to meet. */
+.mf-badge.off .mf-badge-t{ color:var(--v-ink-2); }
+.mf-badge.off .mf-badge-d{ color:var(--v-ink-2); }
+.mf-badge-art{
+  flex:0 0 auto; display:grid; place-items:center;
+  width:2.35rem; height:2.35rem; border-radius:50%;
+  border:1px solid var(--v-rule); color:var(--v-ink-2);
+  background:radial-gradient(circle at 38% 32%, #FBF3E1, #EDE2C9);
+}
+.mf-badge-tx{ display:block; min-width:0; }
+.mf-badge-t{
+  display:block; font-family:var(--v-serif); font-weight:700;
+  font-size:.95rem; color:var(--v-ink); line-height:1.15;
+}
+.mf-badge-d{
+  display:block; font-size:.86rem; color:var(--v-ink-2);
+  line-height:1.35; margin-top:.1rem;
+}
+.mf-badge-tick{
+  position:absolute; right:.5rem; top:.45rem;
+  color:var(--v-teal); font-weight:700; font-size:.9rem;
+}
+/* tone colours for the badge art */
+.mf-badge.on.tone-gold    .mf-badge-art{ color:var(--v-gold);   border-color:rgba(169,118,27,.5); }
+.mf-badge.on.tone-indigo  .mf-badge-art{ color:var(--v-indigo); border-color:rgba(51,71,126,.5); }
+.mf-badge.on.tone-teal    .mf-badge-art{ color:var(--v-teal);   border-color:rgba(31,106,99,.5); }
+.mf-badge.on.tone-violet  .mf-badge-art{ color:#6B4A7A;         border-color:rgba(107,74,122,.5); }
+.mf-badge.on.tone-crimson .mf-badge-art{ color:var(--v-crimson);border-color:rgba(155,59,50,.5); }
+.mf-badge.on.tone-ink     .mf-badge-art{ color:var(--v-ink-2);  border-color:rgba(74,68,58,.5); }
+
+/* ------------------------------------------------------------
+   6. The debrief honours wall
+   ------------------------------------------------------------ */
+.mf-wall{
+  margin-top:1rem;
+  background:
+    linear-gradient(rgba(246,240,225,.92), rgba(246,240,225,.92)),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.11) 0 1px, rgba(0,0,0,0) 1px 26px),
+    var(--v-paper-3);
+  border:1px solid var(--v-rule);
+}
+.mf-wall-head{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:1rem; flex-wrap:wrap;
+}
+.mf-wall-head h3{ font-family:var(--v-serif); font-size:1.35rem; }
+.mf-wall-score{
+  display:flex; align-items:baseline; gap:.35rem;
+  font-variant-caps:small-caps; letter-spacing:.08em; color:var(--v-ink-2);
+  font-weight:700; font-size:.88rem;
+}
+.mf-wall-score b{
+  font-family:var(--v-serif); font-size:1.9rem; color:var(--v-ink);
+  letter-spacing:0; font-variant-caps:normal;
+}
+.mf-wall-meta{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(8rem, 1fr));
+  gap:.5rem; margin:.85rem 0 1rem;
+  border-top:1px solid var(--v-rule-2); border-bottom:1px solid var(--v-rule-2);
+  padding:.7rem 0;
+}
+.mf-wall-meta > div{ display:flex; flex-direction:column; gap:.05rem; }
+.mf-wall-meta .k{
+  font-variant-caps:small-caps; letter-spacing:.1em; font-weight:700;
+  font-size:.76rem; color:var(--v-ink-3);
+}
+.mf-wall-meta b{
+  font-family:var(--v-serif); font-size:1.15rem; color:var(--v-ink);
+}
+.mf-wallgrid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap:.5rem;
+}
+.mf-wall-badge{
+  position:relative; border:1px solid var(--v-rule-2); border-radius:3px;
+  background:var(--v-paper-3); padding:.7rem .5rem .6rem; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:.3rem;
+}
+/* Earned vs not has to read at a glance across a classroom. The un-earned
+   state is now clearly drained (flat ground, grey ring, no shadow) and the
+   earned state carries an inked border and a gilt ring, rather than relying on
+   a small opacity difference that disappeared on a projector. */
+.mf-wall-badge.on{
+  box-shadow:0 1px 0 rgba(74,60,36,.24), inset 0 0 0 1px rgba(169,118,27,.22);
+  border-color:var(--v-rule);
+  background:linear-gradient(180deg, #FBF5E6, var(--v-paper-3));
+}
+.mf-wall-badge.on .mf-wb-art{
+  border-color:rgba(169,118,27,.55);
+  box-shadow:0 0 0 3px rgba(169,118,27,.10);
+}
+.mf-wall-badge.off{
+  opacity:1; background:var(--v-paper-2);
+  border-style:dashed; border-color:var(--v-rule-2);
+}
+.mf-wall-badge.off .mf-wb-art{
+  filter:grayscale(1); opacity:.42;
+  border-color:var(--v-rule-2); background:var(--v-paper);
+  box-shadow:none;
+}
+/* "not yet earned" is carried by the dashed frame and the greyed medallion —
+   not by washing out the words. Fading the title to 4.2:1 made a badge a
+   student has not won yet effectively unreadable, which is backwards: those
+   are exactly the ones they need to read to know what to go and do. */
+.mf-wall-badge.off .mf-wb-t{ color:var(--v-ink-2); }
+.mf-wall-badge.off .mf-wb-d{ color:var(--v-ink-2); }
+.mf-wall-badge.off .mf-wb-art{ opacity:.55; }
+.mf-wall-badge.on::after{
+  content:'\2713'; position:absolute; right:.4rem; top:.32rem;
+  font-size:.82rem; font-weight:700; color:var(--v-teal);
+}
+.mf-wb-art{
+  display:grid; place-items:center; width:2.6rem; height:2.6rem;
+  border-radius:50%; border:1px solid var(--v-rule);
+  background:radial-gradient(circle at 38% 32%, #FBF3E1, #EDE2C9);
+  color:var(--v-ink-2);
+}
+.mf-wb-t{
+  font-family:var(--v-serif); font-weight:700; font-size:.86rem;
+  color:var(--v-ink); line-height:1.15;
+}
+.mf-wb-d{
+  font-size:.78rem; color:var(--v-ink-3); line-height:1.3;
+}
+.mf-wall-badge.on.tone-gold    .mf-wb-art{ color:var(--v-gold); }
+.mf-wall-badge.on.tone-indigo  .mf-wb-art{ color:var(--v-indigo); }
+.mf-wall-badge.on.tone-teal    .mf-wb-art{ color:var(--v-teal); }
+.mf-wall-badge.on.tone-violet  .mf-wb-art{ color:#6B4A7A; }
+.mf-wall-badge.on.tone-crimson .mf-wb-art{ color:var(--v-crimson); }
+.mf-wall-badge.on.tone-ink     .mf-wb-art{ color:var(--v-ink-2); }
+.mf-wall-foot{
+  margin-top:.85rem; padding-top:.55rem;
+  border-top:1px dashed var(--v-rule-2);
+}
+
+/* ------------------------------------------------------------
+   6b. The shortfall note — "you could have done better"
+   Same mechanics as the unlock toast: appended to #toast, owns its
+   own life, and never replaces a game message. Deliberately quieter
+   than a badge — amber rather than gold — because it is a nudge,
+   not a reward. Font sizes stay at or above the 22px classroom
+   floor for the toast line, and the panel below uses rem sizes
+   that resolve well above it on a projector.
+   ------------------------------------------------------------ */
+.mf-shortfall{
+  display:flex; align-items:flex-start; gap:.7rem;
+  margin-top:.5rem; padding:.7rem .85rem .75rem;
+  border:1px solid var(--v-rule);
+  border-left:4px solid var(--v-gold);
+  border-radius:3px;
+  background:
+    linear-gradient(rgba(250,243,226,.96), rgba(250,243,226,.96)),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.14) 0 1px, rgba(0,0,0,0) 1px 22px);
+  box-shadow:0 8px 24px -10px rgba(48,38,22,.5);
+  max-width:23rem; text-align:left;
+  animation:mfUnlockIn .5s cubic-bezier(.2,.9,.25,1.05) both;
+}
+.mf-shortfall.mf-out{ animation:mfUnlockOut .55s ease-in both; }
+.mf-sf-art{
+  flex:0 0 auto; display:grid; place-items:center;
+  width:2.5rem; height:2.5rem; border-radius:50%;
+  border:1px solid var(--v-rule);
+  background:radial-gradient(circle at 38% 32%, #FBF3E1, #EDE2C9);
+  color:var(--v-gold);
+}
+.mf-sf-tx{ display:block; min-width:0; }
+.mf-sf-k{
+  display:block; font-variant-caps:small-caps; letter-spacing:.18em;
+  font-size:.76rem; font-weight:700; color:var(--v-ink-3);
+}
+.mf-sf-t{
+  display:block; font-family:var(--v-serif); font-weight:700;
+  font-size:1.32rem; color:var(--v-ink); line-height:1.15; margin-top:.05rem;
+}
+.mf-sf-d{
+  display:block; font-size:1.02rem; color:var(--v-ink-2);
+  line-height:1.4; margin-top:.16rem;
+}
+
+/* the debrief panel that collects them */
+.mf-gap .scoreline{ margin:.1rem 0; }
+.mf-gap .scoreline > span{ flex:1 1 auto; min-width:0; }
+.mf-gap .scoreline > b{ flex:0 0 auto; }
+
+/* ------------------------------------------------------------
+   7. Small screens
+   ------------------------------------------------------------ */
+@media (max-width: 640px){
+  .mf-badgegrid{ grid-template-columns:1fr; }
+  .mf-wallgrid{ grid-template-columns:repeat(auto-fill, minmax(7.5rem, 1fr)); }
+  .mf-unlock{ max-width:min(23rem, 88vw); }
+  .mf-shortfall{ max-width:min(23rem, 88vw); }
+  .mf-achbtn-n{ display:none; }
+}
+
+/* ------------------------------------------------------------
+   8. Print — the honours wall belongs on the handed-in page
+   ------------------------------------------------------------ */
+@media print{
+  .mf-unlock{ display:none !important; }
+  .mf-shortfall{ display:none !important; }
+  .mf-wall{ box-shadow:none !important; }
+  .mf-gap{ break-inside:avoid; }
+  .mf-wall-badge, .mf-badge{ break-inside:avoid; }
+  /* no opacity wash on the printed sheet either — the wall is handed in */
+  .mf-badge.off .mf-badge-art, .mf-wall-badge.off .mf-wb-art{ opacity:.6; }
+}
+/* ==MF:CSS-END== */

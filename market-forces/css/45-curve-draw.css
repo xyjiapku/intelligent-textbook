@@ -1,0 +1,57 @@
+/* ==========================================================================
+   45-curve-draw.css — "watch the curve appear"
+   --------------------------------------------------------------------------
+   When the student presses "Reveal the whole table" the point of the button is
+   to SEE the cost curves get drawn, not to find them already there. The chart
+   is static SVG, so the draw is done the cheap way: every series path is given
+   a dash pattern as long as itself and a matching offset, then the offset is
+   animated to zero. No JS per frame, no layout thrash.
+
+   `.mf-draw` is put on the chart wrapper by revealChart(); the nth-child stagger
+   makes the curves come in one after another, which is what turns a redraw into
+   a demonstration. Prefers-reduced-motion gets the finished chart immediately —
+   the information must never depend on the animation playing.
+   ========================================================================== */
+
+/* ==MF:CSS-BEGIN== */
+
+/* The dash run needs the path length, which only JS can measure, so the
+   variables are set inline per path. Everything else is here. */
+.mf-draw .mf-curve {
+  stroke-dasharray: var(--mf-len);
+  stroke-dashoffset: var(--mf-len);
+  animation: mf-draw-in var(--mf-dur, 1.15s) cubic-bezier(.33, .02, .24, 1) forwards;
+  animation-delay: calc(var(--mf-i, 0) * 260ms);
+}
+/* the filled areas arrive just behind their own line */
+.mf-draw .mf-area {
+  opacity: 0;
+  animation: mf-area-in .5s ease forwards;
+  animation-delay: calc(var(--mf-i, 0) * 260ms + 700ms);
+}
+/* dots and the moving labels land last, once their curve is on the page */
+.mf-draw .mf-dot,
+.mf-draw .mf-clab {
+  opacity: 0;
+  animation: mf-area-in .34s ease forwards;
+  animation-delay: calc(var(--mf-i, 0) * 260ms + 1050ms);
+}
+
+@keyframes mf-draw-in { to { stroke-dashoffset: 0; } }
+@keyframes mf-area-in { to { opacity: 1; } }
+
+/* A chart that was mid-draw when the student navigated away must not come back
+   half-finished — the class is removed on the next render, and this is the
+   safety net if a frame is missed. */
+@media (prefers-reduced-motion: reduce) {
+  .mf-draw .mf-curve,
+  .mf-draw .mf-area,
+  .mf-draw .mf-dot,
+  .mf-draw .mf-clab {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* ==MF:CSS-END== */

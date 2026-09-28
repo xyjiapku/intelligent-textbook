@@ -1,0 +1,119 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — THE FACTORY'S ACTION STAYS IN REACH  (layer 49)
+   ------------------------------------------------------------
+   Round 9, request #2:
+     "任务面板的按钮在一开始没有显示，我按了check answer之后才出现。"
+
+   The complaint is precise and so is the bug. `.labrail` is
+   `position:sticky` (37-theme-decisionrail.css) and holds, in one
+   column, the two tab buttons, the whole control card, the readout and
+   only THEN `.labrail-go` — the "Submit answers" button.
+
+   Measured in a real 1280x900 browser on first arrival at the factory:
+
+       rail   top=298   bottom=1103.8   height=805.8
+       Submit top=997.6                  (viewport is 900)
+
+   So the button was painted 98px BELOW the fold, and neither scrolling
+   nor waiting revealed it: the rail is sticky, so the page scrolls its
+   contents past a block that never moves. The button only "appeared"
+   after Check answers was pressed, because submitting collapses the
+   readout, the rail gets shorter, and the button rises into view. The
+   action the student needs first was being hidden by the information
+   they had not produced yet.
+
+   A sticky sibling cannot be pinned to the viewport from inside a
+   sticky column. The fix therefore stops the rail from being a single
+   tall column:
+
+     · the rail's height is capped to the space the viewport actually
+       has below the top bar;
+     · the CONTROLS become the part that scrolls, so a long control card
+       is still fully usable;
+     · `.labrail-go` is lifted out of that flow by making it sticky at
+       the rail's own foot, so the primary action is always on screen.
+
+   This is additive: every selector is `.labrail`-scoped and the two
+   properties it claims (`max-height` on the column, `position`/`bottom`
+   on the go-block) were never set by an earlier layer — the module
+   defines no `max-height` on `.labrail` and leaves `.labrail-go` static.
+   Removing the file restores the old rail exactly.
+
+   NB the narrow branch in 37-theme-decisionrail.css already makes the
+   rail `position:static` and stacks it above the main column; a capped
+   height there would trap the controls in a short window, so this file
+   hands the capped-height treatment back at the same breakpoint.
+   ============================================================ */
+
+@media (min-width:1041px){
+  .labrail{
+    /* HOW TALL MAY THE RAIL BE?
+       Not `100vh - topbar - hud`: that measures from the top of the SCREEN,
+       but the rail starts lower down — below the "The Factory" head card.
+       Using the screen-based figure made the rail 536px tall starting at
+       y=298, so its foot landed at 834 with the button at 784 and the
+       viewport ending at 746. The action was still 38px under the edge.
+
+       The rail's start offset is not a constant (the head wraps at some
+       widths, the firm name is a variable length), so it cannot be written
+       into a calc() honestly. It is measured instead — `js/04-lab.js:fitRail()`
+       writes `--rail-top` (on :root) as the distance from the viewport top to
+       where the rail's own box begins, and the cap is the remaining space
+       less the HUD, less a small breathing gap. Until the first measurement
+       lands there is no cap at all, which is the right default: an uncapped
+       rail is merely inconvenient, a wrongly capped one hides the button. */
+    max-height:calc(100vh - var(--rail-top, 0px) - var(--hud-h,3.6rem) - .9rem);
+    /* `min-height:0` is load-bearing: a flex child defaults to
+       `min-height:auto`, which refuses to shrink below its content and
+       would make the cap do nothing at all */
+    min-height:0;
+    /* the column is already `display:flex; flex-direction:column` in
+       37-theme-decisionrail.css; the two properties below only pin down how
+       the leftover space is shared out */
+    overflow:hidden;
+  }
+  /* THE SCROLL REGION OWNS THE LEFTOVER SPACE.
+     This is the part that was wrong on the first attempt. `.labrail-scroll`
+     had no `flex` at all, so it sized to its CONTENT (664px of tabs + card +
+     readout) while the capped rail could only give it 463px — the overflow
+     simply spilled, pushing `.labrail-go` down past the fold again.
+     `flex:1 1 auto` + `min-height:0` makes it absorb exactly what is left
+     over, so the pinned button below it never moves. */
+  .labrail > .labrail-scroll{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    /* room for the shadow the go-block casts upward */
+    padding-bottom:.35rem;
+    scrollbar-width:thin;
+    scrollbar-color:#C3B189 transparent;
+  }
+  .labrail > .labrail-scroll::-webkit-scrollbar{width:8px}
+  .labrail > .labrail-scroll::-webkit-scrollbar-thumb{
+    background:#C3B189;border-radius:4px;
+  }
+  /* THE ACTION. Sticky at the rail's foot: the scroll region above it can
+     be any height and the button does not move. The parchment-coloured
+     backing is what stops the scrolling controls from showing through the
+     gap the list leaves when it runs out — without it the button would
+     appear to float over the card behind it. */
+  .labrail .labrail-go{
+    position:sticky;
+    bottom:0;
+    z-index:2;
+    flex:0 0 auto;
+    margin-top:0;
+    padding:.6rem 0 .15rem;
+    background:linear-gradient(180deg,
+      rgba(239,230,211,0) 0%,
+      rgba(239,230,211,.92) 26%,
+      var(--v-paper,#EFE6D3) 62%,
+      var(--v-paper,#EFE6D3) 100%);
+  }
+  /* the hint travels with the reference material, inside the scroll region:
+     only the ACTION is pinned, so the pinned strip stays one button tall */
+}
+
+/* ==MF:CSS-END== */

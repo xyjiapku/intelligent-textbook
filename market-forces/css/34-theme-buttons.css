@@ -1,0 +1,19 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- buttons ---- */
+.btn{background:linear-gradient(180deg,#FFFDF9,#F1E9D6);border-color:var(--line2);color:var(--ink2);
+  box-shadow:0 2px 7px -3px rgba(74,60,32,.42), inset 0 1px 0 #fff}
+.btn:hover{border-color:var(--brand);color:var(--brand-d)}
+.btn.primary{position:relative;overflow:hidden;color:#fff;border-color:#1E3160;
+  text-shadow:0 1px 1px rgba(10,20,45,.38);
+  background:linear-gradient(165deg,#5F79BC 0%,#385093 48%,#24386D 100%);
+  box-shadow:0 13px 27px -12px rgba(28,46,96,.78), inset 0 1px 0 rgba(255,255,255,.30)}
+.btn.primary:hover{color:#fff;border-color:#1E3160;
+  background:linear-gradient(165deg,#6A84C6,#3F589E 50%,#283E78);
+  box-shadow:0 17px 32px -12px rgba(28,46,96,.85), inset 0 1px 0 rgba(255,255,255,.32)}
+.btn.primary::after{content:'';position:absolute;top:0;bottom:0;width:42%;left:-70%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.30),transparent);
+  transform:skewX(-18deg);pointer-events:none}
+.btn.primary:hover::after{animation:sheen .9s ease}
+@keyframes sheen{to{left:135%}}
+
+/* ==MF:CSS-END== */

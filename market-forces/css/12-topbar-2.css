@@ -1,0 +1,11 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- sticky decision bar: controls AND numbers pinned under the top bar, so
+   the chart below can be watched while something is being dragged ---- */
+.decbar{position:sticky;top:calc(var(--topbar-h, 3.4rem) + .35rem);z-index:26;background:var(--surface);
+  margin:.35rem -1.25rem .7rem;padding:.65rem 1.25rem .7rem;
+  border-bottom:1px solid var(--line);box-shadow:0 10px 20px -18px rgba(16,42,84,.45)}
+.decbar .ctl{margin:0}
+.decbar .readout{margin-top:.5rem}
+.decbar .ctl+.ctl{margin-top:.6rem}
+
+/* ==MF:CSS-END== */

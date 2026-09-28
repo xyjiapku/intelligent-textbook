@@ -1,0 +1,27 @@
+/* ==MF:CSS-BEGIN== */
+/* ---------------- event / narrative ---------------- */
+.event{border-left:5px solid var(--brand);background:linear-gradient(105deg,#F3F9FF,#FFFFFF 45%);overflow:hidden}
+.event.warn{border-left-color:var(--warn);background:linear-gradient(105deg,#FEF7E8,#FFFFFF 45%)}
+.event.bad{border-left-color:var(--bad);background:linear-gradient(105deg,#FDEEEF,#FFFFFF 45%)}
+.event.good{border-left-color:var(--good);background:linear-gradient(105deg,#ECFAF3,#FFFFFF 45%)}
+.event::after{content:'\25C6';position:absolute;right:1rem;top:1.4rem;font-size:5.5rem;line-height:1;
+  font-weight:900;opacity:.06;pointer-events:none}
+.event.warn::after{content:'!'}
+.event.bad::after{content:'\2715'}
+.event.good::after{content:'\2713'}
+.evt-tag{display:inline-block;font-size:.62rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;
+  padding:.2rem .6rem;border-radius:99px;background:linear-gradient(180deg,#26364F,#122036);color:#fff;
+  box-shadow:0 4px 10px -4px rgba(16,42,84,.5)}
+.evt-tag.warn{background:linear-gradient(180deg,#D98A26,#B7680B)}
+.evt-tag.bad{background:linear-gradient(180deg,#E96063,#C93337)}
+.evt-tag.good{background:linear-gradient(180deg,#17B384,#0B825F)}
+.pricetag{display:inline-flex;align-items:baseline;gap:.4rem;border-radius:11px;padding:.35rem .8rem;font-weight:800;
+  color:#fff;background:linear-gradient(180deg,#26364F,#0E1828);box-shadow:0 8px 18px -10px rgba(16,42,84,.6),inset 0 1px 0 rgba(255,255,255,.18)}
+.pricetag .old{font-size:.8rem;opacity:.55;text-decoration:line-through}
+.pricetag .new{font-size:1.28rem;font-variant-numeric:tabular-nums}
+.delta{font-weight:800;font-size:.85rem}
+.delta.up{color:var(--good)} .delta.down{color:var(--bad)}
+.delta.up::before{content:'\25B2\00a0';font-size:.7em}
+.delta.down::before{content:'\25BC\00a0';font-size:.7em}
+
+/* ==MF:CSS-END== */

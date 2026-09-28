@@ -1,0 +1,11 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- gold HUD warmer ---- */
+.taskfab{background:linear-gradient(180deg,#FCEFC2,#EFC542)}
+.tp-crest{background:linear-gradient(160deg,#FCEFC2,#EDC23E)}
+
+@media (prefers-reduced-motion:reduce){
+  body::before{animation:none}
+  .btn.primary:hover::after{animation:none}
+}
+
+/* ==MF:CSS-END== */

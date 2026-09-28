@@ -1,0 +1,505 @@
+/* ==MF:CSS-BEGIN== */
+/* ============================================================
+   MARKET FORCES — v4 vintage plates, part 2: the remaining scenes
+   Title / factory tour / lab / debrief / street.
+
+   Loaded last, so anything here wins over the v2/v3 theme layers.
+   Nothing in this file changes game state, beats or tasks — it only
+   dresses the frames the engine already draws.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Shared plate furniture
+   ------------------------------------------------------------ */
+.mf-fig{ margin:0; position:relative; }
+
+/* The plate layer hides art that the engraving now replaces. Kept as a class
+   (not display:none in the JS) so the harness can assert what was hidden
+   and so a future scene can bring the live art back with one line. */
+.mf-hidden{ display:none !important; }
+
+/* a big engraved image bleeding to the edges of its card */
+.mf-bleed{
+  position:relative; margin:1.05rem -1.7rem .35rem;
+  border-top:1px solid var(--v-rule);
+  border-bottom:1px solid var(--v-rule);
+  background:var(--v-paper-2);
+  overflow:hidden;
+}
+.mf-bleed img{ display:block; width:100%; height:auto; }
+/* the engraving sits inside the paper: a warm wash + a soft inner shadow */
+.mf-bleed::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  box-shadow:inset 0 0 46px rgba(74,60,36,.30), inset 0 0 0 1px rgba(74,60,36,.10);
+  mix-blend-mode:multiply;
+}
+.mf-bleed .mf-bleed-cap{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  padding:1.6rem 1.5rem .65rem;
+  background:linear-gradient(0deg, rgba(239,230,211,.96), rgba(239,230,211,.72) 52%, rgba(239,230,211,0));
+}
+.mf-bleed .mf-bleed-cap .k{
+  font-variant-caps:small-caps; letter-spacing:.2em; font-size:.72rem;
+  color:var(--v-ink-3); font-weight:700;
+}
+.mf-bleed .mf-bleed-cap .t{
+  font-family:var(--v-serif); font-size:1.02rem; font-weight:700;
+  color:var(--v-ink); line-height:1.25;
+}
+
+/* a framed plate that does NOT bleed — keeps its own margins */
+.mf-framed{
+  margin:1rem 0; border:1px solid var(--v-rule); border-radius:5px;
+  background:var(--v-paper-3); padding:7px; overflow:hidden; position:relative;
+}
+.mf-framed img{ display:block; width:100%; height:auto; border:1px solid rgba(74,60,36,.16); }
+.mf-framed::after{
+  content:''; position:absolute; inset:7px; pointer-events:none;
+  box-shadow:inset 0 0 34px rgba(74,60,36,.24);
+  mix-blend-mode:multiply;
+}
+.mf-framed .mf-framed-cap{
+  padding:.42rem .2rem .1rem; display:flex; justify-content:space-between;
+  align-items:baseline; gap:.6rem 1.2rem; flex-wrap:wrap;
+}
+.mf-framed .mf-framed-cap .c-l{
+  font-variant-caps:small-caps; letter-spacing:.14em; font-weight:700;
+  font-size:.76rem; color:var(--v-ink-2); flex:0 0 auto;
+}
+.mf-framed .mf-framed-cap .c-r{
+  /* italic caption under a plate — raised off .72rem and given the darker of
+     the two inks, since it is a sentence students read, not an ornament. */
+  font-size:.86rem; color:var(--v-ink-2); font-style:italic;
+  flex:1 1 12rem; min-width:0; text-align:right; line-height:1.35;
+}
+
+/* engraved corner rules — a printer's ornament, drawn in CSS */
+.mf-ornament{
+  display:flex; align-items:center; gap:.7rem; margin:.85rem 0 .1rem;
+  color:var(--v-rule); font-size:.7rem; letter-spacing:.3em;
+}
+.mf-ornament::before, .mf-ornament::after{
+  content:''; height:1px; flex:1; background:
+    repeating-linear-gradient(90deg, var(--v-rule) 0 5px, rgba(0,0,0,0) 5px 9px);
+}
+.mf-ornament span{ font-variant-caps:small-caps; color:var(--v-ink-3); letter-spacing:.24em; white-space:nowrap; }
+
+/* ------------------------------------------------------------
+   1. TITLE SCREEN
+   The wordmark is set over the engraved balance-and-ledger plate.
+   ------------------------------------------------------------ */
+.mf-titleplate{
+  position:relative; overflow:hidden;
+  border:1px solid var(--v-rule); border-radius:6px;
+  /* The plate is an <img>, so nothing here paints a background the type can
+     fall back on — if the engraving is missing (slow connection, print, a
+     browser that blocks images) the gold masthead would sit on bare paper.
+     A dark ground under the image keeps the lettering readable either way. */
+  background:#2F2617;
+}
+.mf-titleplate > img{ display:block; width:100%; height:auto; }
+/* darkening veil so the wordmark always reads, whatever the sky does */
+.mf-titleplate::before{
+  content:''; position:absolute; inset:0; z-index:1;
+  background:
+    radial-gradient(120% 82% at 50% 42%, rgba(239,230,211,.10) 0%, rgba(48,38,22,.30) 62%, rgba(38,30,17,.58) 100%),
+    linear-gradient(0deg, rgba(38,30,17,.52), rgba(38,30,17,0) 46%);
+}
+.mf-titleplate .mf-tp-in{
+  position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; padding:2rem 1.6rem;
+}
+.mf-titleplate .mf-tp-kick{
+  font-variant-caps:small-caps; letter-spacing:.42em; font-size:.82rem; font-weight:700;
+  color:#F3E7CB; text-shadow:0 1px 0 rgba(30,22,10,.75), 0 2px 10px rgba(30,22,10,.5);
+  padding-left:.42em;
+}
+.mf-titleplate .mf-tp-word{
+  font-family:var(--v-serif); font-weight:700; line-height:.94;
+  font-size:clamp(2.5rem, 7.4vw, 5.2rem); letter-spacing:.055em;
+  color:#FBF3E1; margin:.35rem 0 .1rem;
+  text-shadow:
+    0 1px 0 rgba(46,34,16,.9), 0 3px 0 rgba(46,34,16,.45),
+    0 6px 26px rgba(24,17,8,.65);
+}
+.mf-titleplate .mf-tp-sub{
+  font-family:var(--v-serif); font-style:italic; font-size:1.06rem;
+  color:#EFE2C6; text-shadow:0 1px 6px rgba(24,17,8,.7); max-width:34rem;
+}
+.mf-titleplate .mf-tp-rule{
+  width:min(360px, 62%); height:0; margin:.85rem 0 .2rem;
+  border-top:1px solid rgba(243,231,203,.55); position:relative;
+}
+.mf-titleplate .mf-tp-rule::before{
+  content:'\2756'; position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%); font-size:.8rem; color:rgba(243,231,203,.8);
+  background:rgba(38,30,17,.0); padding:0 .5rem;
+}
+.mf-titleplate .mf-tp-meta{
+  font-size:.74rem; letter-spacing:.16em; font-variant-caps:small-caps;
+  color:rgba(243,231,203,.86); font-weight:700;
+}
+
+/* the title card itself becomes a plain mount around the plate */
+html.mf-have-title #app > .card.pop{
+  background:var(--v-paper-3);
+  box-shadow:0 1px 0 rgba(74,60,36,.18), 0 14px 34px rgba(74,60,36,.16);
+}
+html.mf-have-title #app > .card.pop > .herorule,
+html.mf-have-title #app > .card.pop > h1.wordmark{ display:none; }
+
+/* the four "what you will do" rows get engraved numerals */
+html.mf-have-title .featlist .feat .fnum{
+  font-family:var(--v-serif); font-weight:700;
+  background:var(--v-ink); color:var(--v-paper-3);
+  border:1px solid var(--v-ink); border-radius:50%;
+  box-shadow:inset 0 0 0 2px var(--v-paper-3);
+}
+
+/* the journey panel reads as a printed table of contents.
+   The v2/v3 build of .jpanel was a dark slab with light type; on paper the
+   inherited colours would leave near-white text on near-white ground, so the
+   whole panel is restated here rather than just its background. */
+html.mf-have-title .jpanel{
+  background:
+    repeating-linear-gradient(0deg, rgba(120,96,58,.055) 0 1px, rgba(0,0,0,0) 1px 30px),
+    var(--v-paper-3);
+  border:1px solid var(--v-rule); border-radius:5px;
+  box-shadow:0 1px 0 rgba(74,60,36,.16);
+  color:var(--v-ink);
+}
+html.mf-have-title .jpanel .tagline{
+  color:var(--v-ink-3); border-bottom:0;
+}
+html.mf-have-title .jpanel .jrow{
+  border-bottom:1px dotted var(--v-rule-2);
+  color:var(--v-ink);
+  background:none;
+}
+html.mf-have-title .jpanel .jrow:last-child{ border-bottom:0; }
+html.mf-have-title .jpanel .jrow.off{ opacity:.4; filter:grayscale(.72); }
+html.mf-have-title .jpanel .jt{
+  font-family:var(--v-serif); color:var(--v-ink); font-weight:700;
+}
+html.mf-have-title .jpanel .js{
+  color:var(--v-ink-3); font-variant-caps:small-caps; letter-spacing:.1em;
+}
+html.mf-have-title .jpanel .jdisc{
+  background:var(--v-paper); border:1px solid var(--v-rule);
+  box-shadow:none; filter:saturate(.7) contrast(1.05);
+}
+html.mf-have-title .jpanel .jrow:not(.off) .jt::after{
+  content:none;
+}
+
+/* ------------------------------------------------------------
+   2. FACTORY TOUR + LAB
+   The workshop engraving heads the tour, and becomes the easel the
+   factory SVG is pinned to inside the lab.
+   ------------------------------------------------------------ */
+.mf-workshophead{
+  position:relative; margin:.9rem -1.7rem 1rem;
+  border-top:1px solid var(--v-rule); border-bottom:1px solid var(--v-rule);
+  background:var(--v-paper-2); overflow:hidden;
+}
+.mf-workshophead img{ display:block; width:100%; height:auto; }
+.mf-workshophead::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  box-shadow:inset 0 0 52px rgba(74,60,36,.34);
+}
+.mf-workshophead .mf-wh-cap{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  padding:1.9rem 1.5rem .62rem;
+  background:linear-gradient(0deg, rgba(239,230,211,.975), rgba(239,230,211,.78) 48%, rgba(239,230,211,0));
+  display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap;
+  border-bottom:0;
+}
+.mf-workshophead .mf-wh-cap::after{
+  content:''; position:absolute; left:1.5rem; right:1.5rem; bottom:.34rem;
+  height:0; border-top:1px solid var(--v-rule);
+}
+.mf-workshophead .mf-wh-cap .l .k{
+  font-variant-caps:small-caps; letter-spacing:.22em; font-size:.72rem;
+  font-weight:700; color:var(--v-ink-3); display:block;
+}
+.mf-workshophead .mf-wh-cap .l .t{
+  font-family:var(--v-serif); font-weight:700; font-size:1.08rem; color:var(--v-ink);
+  display:block; margin-top:.05rem;
+}
+.mf-workshophead .mf-wh-cap .r{
+  font-size:.72rem; color:var(--v-ink-3); font-style:italic; text-align:right;
+  max-width:19rem; padding-bottom:.05rem;
+}
+
+/* the lab's main column: the live SVG sits on an engraved drawing board */
+html.mf-lab .labmain .chartcard[data-view="lab-factory"]{
+  padding:1.15rem 1.1rem 1rem;
+  background:
+    linear-gradient(rgba(246,240,225,.86), rgba(240,232,214,.86)),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.16) 0 1px, rgba(0,0,0,0) 1px 22px),
+    repeating-linear-gradient(90deg, rgba(120,96,58,.16) 0 1px, rgba(0,0,0,0) 1px 22px),
+    var(--v-paper-3);
+  border:1px solid var(--v-rule); border-radius:5px;
+  box-shadow:inset 0 0 0 3px var(--v-paper-3), inset 0 0 0 4px var(--v-rule-2);
+}
+/* the rest of the lab's charts just get paper, not graph paper */
+html.mf-lab .labmain .chartcard[data-view="lab-factory"] svg{ filter:contrast(1.02) saturate(.94); }
+
+/* the lab rail reads as a side column of a printed pamphlet */
+html.mf-lab .labrail .labtabs .labtab{
+  border:1px solid var(--v-rule-2); background:var(--v-paper-3);
+}
+html.mf-lab .labrail .labtabs .labtab.sel{
+  background:var(--v-ink); border-color:var(--v-ink);
+}
+html.mf-lab .labrail .labtabs .labtab.sel .lt-t,
+html.mf-lab .labrail .labtabs .labtab.sel .lt-t small{ color:#F3E7CD; }
+html.mf-lab .labrail-card{ background:var(--v-paper-3); border-color:var(--v-rule-2); }
+
+/* the two hand-drawn worker benches become halftone-blended engravings */
+html.mf-lab .mf-fig img{ filter:saturate(.72) contrast(1.04); }
+
+/* ------------------------------------------------------------
+   3. STREET / HIGH STREET
+   Rival shops get an engraved awning and a hatched shadow.
+   The base .shop rule lives in 17-misc.css as a soft rounded card; the whole
+   thing is restated here so the shop row reads as a printed strip of
+   premises rather than a row of app tiles.
+   NOTE: `html.mf-street` is only set on the title/setup scenes. The chapter
+   beat that draws the same rival row does NOT get it, so the size lift has to
+   be unscoped — see the `.shoprow .shop` block just below this section.
+   ------------------------------------------------------------ */
+html.mf-street .shoprow{
+  gap:.45rem; align-items:stretch;
+}
+
+/* The rival shopfront row, for every scene that draws it.
+   The base card is .6rem (≈9.6px) on a screen-tile metric. On the chapter beat
+   this row is the main evidence a student reads — names and trades — so both
+   lines are lifted to real reading size. */
+.shoprow .shop{ font-size:.86rem; }
+.shoprow .shop > div{ line-height:1.25; }
+.shoprow .shop > div + div{ font-size:.86rem; color:var(--v-ink-2); }
+html.mf-street .shoprow .shop{
+  border:1px solid var(--v-rule-2);
+  border-radius:3px;
+  background:var(--v-paper-3);
+  color:var(--v-ink);
+  box-shadow:0 1px 0 rgba(74,60,36,.22);
+  padding-top:1.55rem;
+  /* the base card is .6rem (≈9.6px) — a screen-tile size, not something a
+     student can read off a printed strip at the back of the room. The name
+     row and the trade under it are the only two lines here, so both go up. */
+  font-size:.86rem;
+}
+html.mf-street .shoprow .shop > div{ line-height:1.25; }
+html.mf-street .shoprow .shop > div + div{ color:var(--v-ink-2); font-size:.76rem; }
+/* the awning: fine printer's stripes, muted, under an inked edge.
+   Fallback first (plain --shop stripes under a wash), then the richer
+   color-mix version for browsers that have it. color-mix is Chromium 111+
+   so it cannot be the only rule on a school machine. */
+html.mf-street .shoprow .shop::before{
+  height:15px;
+  border-radius:2px 2px 0 0;
+  background:
+    repeating-linear-gradient(90deg, var(--shop) 0 3px, var(--v-paper-3) 3px 9px),
+    var(--v-paper-2);
+  border-bottom:1px solid rgba(58,50,38,.45);
+  box-shadow:none;
+  opacity:.82;
+}
+@supports (background: color-mix(in srgb, red 50%, blue)) {
+  html.mf-street .shoprow .shop::before{
+    background: repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--shop) 78%, #3A3226) 0 3px,
+      var(--v-paper-3) 3px 9px);
+    opacity:1;
+  }
+}
+html.mf-street .shoprow .shop .e{
+  border-radius:2px;
+  background:var(--v-paper);
+  border:1px solid var(--v-rule);
+  box-shadow:none;
+  filter:saturate(.72) contrast(1.04);
+}
+html.mf-street .shoprow .shop > div + div{ color:var(--v-ink-3); }
+html.mf-street .shoprow .shop.closed{
+  filter:grayscale(1) contrast(1.08); opacity:.42;
+}
+html.mf-street .shoprow .shop.mine{
+  border-color:var(--v-ink-2);
+  box-shadow:0 0 0 1px var(--v-ink-2), 0 2px 0 rgba(74,60,36,.3);
+}
+html.mf-street .shoprow .shop.mine::after{
+  border-radius:2px;
+  font-variant-caps:small-caps; letter-spacing:.12em;
+  background:var(--v-crimson);
+  color:#FBF3E1;
+}
+
+/* the street engraving strip, if the scene asks for it */
+.mf-streetplate{
+  position:relative; margin:.2rem 0 .8rem; overflow:hidden;
+  border:1px solid var(--v-rule); border-radius:4px; background:var(--v-paper-2);
+}
+.mf-streetplate img{ display:block; width:100%; height:auto; }
+.mf-streetplate::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  box-shadow:inset 0 0 30px rgba(74,60,36,.34), inset 0 12px 20px -12px rgba(74,60,36,.5);
+  mix-blend-mode:multiply;
+}
+
+/* one shopfront plate, used for the firm's own premises */
+.mf-shopfront{
+  float:right; width:min(180px, 40%); margin:.1rem 0 .7rem 1rem;
+  border:1px solid var(--v-rule); border-radius:5px; padding:5px;
+  background:var(--v-paper-3); position:relative;
+}
+.mf-shopfront img{ display:block; width:100%; height:auto; border:1px solid rgba(74,60,36,.16); }
+.mf-shopfront::after{
+  content:''; position:absolute; inset:5px; pointer-events:none;
+  box-shadow:inset 0 0 26px rgba(74,60,36,.28); mix-blend-mode:multiply;
+}
+.mf-shopfront .c{
+  padding:.3rem .15rem .05rem; text-align:center;
+  font-variant-caps:small-caps; letter-spacing:.14em; font-size:.72rem;
+  font-weight:700; color:var(--v-ink-2);
+}
+
+/* ------------------------------------------------------------
+   4. DEBRIEF
+   The final result is presented as a printed broadsheet with a seal.
+   ------------------------------------------------------------ */
+.mf-debriefplate{
+  position:relative; margin:.9rem -1.7rem 1.1rem;
+  border-top:1px solid var(--v-rule); border-bottom:1px solid var(--v-rule);
+  /* same reasoning as .mf-titleplate: the ranking words sit on the engraving,
+     so the ground has to survive without the image. */
+  background:#2C2416; overflow:hidden;
+}
+.mf-debriefplate img{ display:block; width:100%; height:auto; }
+.mf-debriefplate::before{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(0deg, rgba(34,26,14,.60), rgba(34,26,14,.06) 58%, rgba(34,26,14,.26)),
+             radial-gradient(120% 90% at 50% 30%, rgba(0,0,0,0) 40%, rgba(34,26,14,.42) 100%);
+}
+.mf-debriefplate .mf-db-cap{
+  position:absolute; inset:auto 0 0 0; z-index:2; padding:2rem 1.6rem .9rem; text-align:center;
+}
+.mf-debriefplate .mf-db-cap .k{
+  font-variant-caps:small-caps; letter-spacing:.34em; font-size:.78rem; font-weight:700;
+  color:rgba(243,231,203,.9); text-shadow:0 1px 4px rgba(20,14,6,.8);
+}
+.mf-debriefplate .mf-db-cap .t{
+  font-family:var(--v-serif); font-weight:700; font-size:clamp(1.5rem, 3.4vw, 2.3rem);
+  color:#FBF3E1; text-shadow:0 2px 0 rgba(40,30,14,.7), 0 6px 20px rgba(20,14,6,.6);
+  line-height:1.05; margin-top:.1rem;
+}
+
+/* the score panel: a printed reckoning, and a wax-seal style rank stamp */
+html.mf-debrief .rankcard{
+  position:relative;
+  background:
+    repeating-linear-gradient(0deg, rgba(120,96,58,.06) 0 1px, rgba(0,0,0,0) 1px 30px),
+    var(--v-paper-3);
+  border:1px solid var(--v-rule);
+  box-shadow:0 1px 0 rgba(74,60,36,.2), 0 12px 28px rgba(74,60,36,.14);
+  color:var(--v-ink);
+}
+html.mf-debrief .rankcard .tagline{ color:var(--v-ink-3); }
+html.mf-debrief .rankcard h2{ font-family:var(--v-serif); color:var(--v-ink); }
+html.mf-debrief .rankcard .bigscore{
+  font-family:var(--v-serif); color:var(--v-crimson);
+  text-shadow:0 1px 0 rgba(255,255,255,.5);
+}
+html.mf-debrief .rankcard .small{ color:var(--v-ink-2); }
+
+/* the seal — rotated double ring, sits in the corner of the rank card */
+.mf-seal{
+  position:absolute; right:-10px; top:-10px; width:104px; height:104px;
+  transform:rotate(-11deg); opacity:.9; pointer-events:none; z-index:3;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--v-crimson);
+  box-shadow:inset 0 0 0 3px rgba(155,59,50,.0), inset 0 0 0 4px var(--v-crimson), 0 1px 4px rgba(74,60,36,.3);
+  color:var(--v-crimson);
+  background:radial-gradient(circle at 38% 32%, rgba(255,255,255,.34), rgba(255,255,255,0) 62%);
+}
+.mf-seal .s-in{ text-align:center; line-height:1.05; padding:0 .35rem; }
+/* THE INNER TYPE MUST NOT BE ABLE TO ESCAPE THE DISC.
+   `.s-t` holds a rank title of up to thirteen characters ("STEADY OPERA…"), and
+   sealfHTML truncates at thirteen — but thirteen characters at .92rem is about
+   140px wide inside a 104px circle, so the text simply pushed out of both sides.
+   Measured by `audit.py` on the debrief at 1024x768: `.s-in` 148px wide, right
+   edge 1033 against a 1024 viewport, and `.s-s` at 1026. The seal hangs off the
+   rank card's outer edge, so anything spilling out of the disc spills out of
+   the page.
+   It went unnoticed because it only bites when the rank title is long: a student
+   whose firm value lands in a short-title band ("SURVIVOR", eight characters)
+   never sees it, and the chapter-2 change that moved the value into the
+   "STEADY OPERATOR" band is what finally surfaced it.
+   Pinning the inner block to the disc's own width makes the type wrap instead. */
+.mf-seal .s-in{ width:100%; }
+.mf-seal .s-t{ overflow-wrap:anywhere; }
+.mf-seal .s-t{
+  font-family:var(--v-serif); font-weight:700; font-size:.92rem;
+  display:block; letter-spacing:.04em;
+}
+.mf-seal .s-s{
+  font-variant-caps:small-caps; letter-spacing:.11em; font-size:.68rem;
+  font-weight:700; display:block; margin-top:.14rem;
+}
+.mf-seal .s-d{
+  position:absolute; inset:8px; border-radius:50%;
+  border:1px dotted var(--v-crimson); opacity:.7;
+}
+
+/* scorelines / tables in the debrief get rules, not boxes */
+html.mf-debrief .scoreline{
+  border-bottom:1px dotted var(--v-rule-2);
+  font-family:var(--v-serif);
+}
+html.mf-debrief .scoreline b{ font-family:var(--v-serif); }
+html.mf-debrief .card{ background:var(--v-paper-3); border-color:var(--v-rule-2); }
+
+/* "Write it up" is set like a printed question paper */
+html.mf-debrief .card[data-note="amber"]{
+  background:
+    linear-gradient(rgba(246,240,225,.9), rgba(246,240,225,.9)),
+    repeating-linear-gradient(0deg, rgba(120,96,58,.14) 0 1px, rgba(0,0,0,0) 1px 26px),
+    var(--v-paper-3);
+  border-left:4px solid var(--v-crimson);
+}
+html.mf-debrief .card h3{ font-family:var(--v-serif); }
+html.mf-debrief ol.clean li::marker{ color:var(--v-crimson); font-weight:700; }
+
+/* ------------------------------------------------------------
+   5. Print — the debrief is the page students hand in
+   ------------------------------------------------------------ */
+@media print{
+  .topbar, .taskfab, .taskoverlay, .toast, .modal, .btnrow, .labrail{ display:none !important; }
+  body{ background:#fff !important; }
+  body::after{ display:none !important; }
+  .card, .rankcard, .chartcard{ box-shadow:none !important; page-break-inside:avoid; }
+  .mf-debriefplate{ margin-left:0; margin-right:0; }
+  .mf-debriefplate::before{ background:none; }
+  .mf-debriefplate .mf-db-cap .k, .mf-debriefplate .mf-db-cap .t{ color:#241a0c; text-shadow:none; }
+  .mf-seal{ opacity:1; }
+}
+
+/* ------------------------------------------------------------
+   6. Reduced data — drop the heavy textures, keep the layout
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce){
+  #app{ animation:none !important; }
+}
+@media (max-width: 640px){
+  .mf-titleplate .mf-tp-word{ font-size:2.1rem; letter-spacing:.03em; }
+  .mf-titleplate .mf-tp-sub{ font-size:.92rem; }
+  .mf-bleed, .mf-workshophead, .mf-debriefplate{ margin-left:-1.05rem; margin-right:-1.05rem; }
+  .mf-shopfront{ float:none; width:100%; margin:.6rem 0; }
+  .mf-seal{ width:84px; height:84px; right:-4px; top:-6px; }
+  .mf-seal .s-t{ font-size:.76rem; }
+  .mf-seal .s-s{ font-size:.58rem; letter-spacing:.08em; }
+}
+/* ==MF:CSS-END== */

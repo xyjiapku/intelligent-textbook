@@ -1,0 +1,22 @@
+/* ==MF:CSS-BEGIN== */
+/* ---- lab: compact two-zone control toolbar ---- */
+.labbar{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  gap:.85rem 1.15rem;align-items:start}
+.labbar-main{min-width:0}
+.labbar .clab{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.35rem}
+.labbar .clab .t{font-size:.85rem;font-weight:800;color:var(--ink)}
+.labbar .clab .v{font-size:1.15rem;font-weight:800;color:var(--brand-d);font-variant-numeric:tabular-nums}
+.labbar-side{min-width:0;display:flex;flex-direction:column;gap:.6rem}
+.labbar .readout{margin-top:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem}
+.labbar .readout .ro{padding:.34rem .52rem;border-radius:10px}
+.labbar .readout .ro .rl{font-size:.55rem;letter-spacing:.05em}
+.labbar .readout .ro .rv{font-size:.94rem}
+.labbar-go{display:flex;justify-content:flex-end;margin-top:auto}
+.labbar-go .btn{min-width:12.5rem}
+@media (max-width:920px){
+  .labbar{grid-template-columns:1fr}
+  .labbar-go{justify-content:stretch}
+  .labbar-go .btn{min-width:0;width:100%}
+}
+
+/* ==MF:CSS-END== */

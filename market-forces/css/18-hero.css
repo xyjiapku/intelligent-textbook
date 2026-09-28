@@ -1,0 +1,33 @@
+/* ==MF:CSS-BEGIN== */
+/* ---------------- title hero ---------------- */
+.wordmark{font-family:var(--font-display);font-size:3.1rem;line-height:1.02;font-weight:700;letter-spacing:-.025em;margin:.25rem 0;
+  background:linear-gradient(115deg,#122036 10%,#1D4ED8 58%,#0EA5E9 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.herorule{display:flex;align-items:center;gap:.7rem}
+.herorule::before,.herorule::after{content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,transparent,#C7D2E3);border-radius:1px}
+.herorule::after{background:linear-gradient(90deg,#C7D2E3,transparent)}
+.featlist{list-style:none;margin:.5rem 0;padding:0}
+.feat{display:flex;gap:.7rem;align-items:flex-start;margin:.6rem 0}
+.feat .fnum{flex:none;width:1.75rem;height:1.75rem;border-radius:11px;display:grid;place-items:center;
+  font-size:.8rem;font-weight:900;color:var(--brand-d);background:linear-gradient(160deg,#F4F8FF,#E3EDFF);
+  border:1px solid #C7DCFB;box-shadow:inset 0 1px 0 #fff}
+.feat .ftxt{font-size:.93rem;color:var(--ink2);line-height:1.5;padding-top:.15rem}
+.feat .ftxt b{color:var(--ink)}
+.jpanel{border-radius:18px;padding:1.2rem 1.2rem .9rem;color:#E8EEFB;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1B2C49,#0E1A2F);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 22px 44px -20px rgba(10,22,48,.7)}
+.jpanel::before{content:'';position:absolute;inset:0;opacity:.22;
+  background-image:radial-gradient(rgba(255,255,255,.8) 1.3px,transparent 1.4px);background-size:17px 17px}
+.jpanel>*{position:relative;z-index:1}
+.jrow{display:flex;align-items:center;gap:.7rem;padding:.32rem 0;position:relative}
+.jrow .jdisc{flex:none;width:2.4rem;height:2.4rem;border-radius:12px;display:grid;place-items:center;font-size:1.18rem;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.jrow .jt{font-weight:800;font-size:.92rem}
+.jrow .js{font-size:.68rem;color:rgba(232,238,251,.62);font-weight:600;letter-spacing:.02em}
+.jrow:not(:first-child)::before{content:'';position:absolute;left:1.18rem;top:-.34rem;width:2px;height:.68rem;
+  background:rgba(255,255,255,.18)}
+.jrow.off{opacity:.35}
+.jpanel hr.sep{border-color:rgba(255,255,255,.12)}
+
+/* ==MF:CSS-END== */
