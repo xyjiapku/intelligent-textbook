@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" font-family="'Microsoft YaHei','PingFang SC','Noto Sans CJK SC',sans-serif">
+  <defs>
+    <pattern id="hatch" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#F3C4C1"/>
+      <rect width="4" height="10" fill="#E2605C"/>
+    </pattern>
+    <clipPath id="s1"><rect x="340" y="104" width="524" height="34" rx="7"/></clipPath>
+    <clipPath id="s2"><rect x="340" y="256" width="524" height="34" rx="7"/></clipPath>
+  </defs>
+  <rect width="900" height="480" fill="#FBFAF7"/>
+
+  <rect x="36" y="18" width="18" height="14" rx="3" fill="#3D6FD8"/>
+  <text x="62" y="30" font-size="14" fill="#3A3A55">雄蜂（父亲）给的整套</text>
+  <rect x="252" y="18" width="18" height="14" rx="3" fill="url(#hatch)"/>
+  <text x="278" y="30" font-size="14" fill="#3A3A55">蜂王（母亲）随机给的一套</text>
+
+  <rect x="36" y="60" width="270" height="150" rx="12" fill="#FFFFFF" stroke="#DEDEE8"/>
+  <text x="56" y="88" font-size="17" font-weight="700" fill="#2A2A45">雄蜂 · 爸爸</text>
+  <rect x="56" y="102" width="230" height="26" rx="6" fill="#3D6FD8"/>
+  <text x="56" y="152" font-size="13" fill="#5A5A78">未受精的卵发育，只有一套染色体</text>
+  <text x="56" y="174" font-size="13" fill="#5A5A78">没有爸爸，精子全都一模一样</text>
+  <text x="56" y="196" font-size="13" font-weight="700" fill="#3D6FD8">每个女儿拿到的都是这同一套</text>
+
+  <rect x="36" y="230" width="270" height="150" rx="12" fill="#FFFFFF" stroke="#DEDEE8"/>
+  <text x="56" y="258" font-size="17" font-weight="700" fill="#2A2A45">蜂王 · 妈妈</text>
+  <rect x="56" y="272" width="230" height="13" rx="4" fill="#E2605C"/>
+  <rect x="56" y="289" width="230" height="13" rx="4" fill="#F3C4C1"/>
+  <text x="56" y="330" font-size="13" fill="#5A5A78">受精卵发育，有两套染色体</text>
+  <text x="56" y="352" font-size="13" fill="#5A5A78">卵子随机传出其中一套</text>
+  <text x="56" y="374" font-size="13" font-weight="700" fill="#C04A46">两个女儿有一半机会拿到同一套</text>
+
+  <rect x="326" y="60" width="538" height="160" rx="12" fill="#FFFFFF" stroke="#DEDEE8"/>
+  <text x="340" y="88" font-size="16" font-weight="700" fill="#2A2A45">工蜂妹妹甲</text>
+  <g clip-path="url(#s1)">
+    <rect x="340" y="104" width="262" height="34" fill="#3D6FD8"/>
+    <rect x="602" y="104" width="262" height="34" fill="url(#hatch)"/>
+  </g>
+  <text x="340" y="162" font-size="13" font-weight="700" fill="#3D6FD8">左半：来自爸爸，整套完全相同</text>
+  <text x="602" y="162" font-size="13" fill="#C04A46">右半：来自妈妈</text>
+  <text x="340" y="194" font-size="14" fill="#5A5A78">占 1/2，必定重复 → 0.5</text>
+  <text x="602" y="194" font-size="14" fill="#5A5A78">占 1/2，平均重复一半 → 0.25</text>
+
+  <rect x="326" y="230" width="538" height="150" rx="12" fill="#FFFFFF" stroke="#DEDEE8"/>
+  <text x="340" y="258" font-size="16" font-weight="700" fill="#2A2A45">工蜂妹妹乙</text>
+  <g clip-path="url(#s2)">
+    <rect x="340" y="272" width="262" height="34" fill="#3D6FD8"/>
+    <rect x="602" y="272" width="262" height="34" fill="url(#hatch)"/>
+  </g>
+  <text x="340" y="330" font-size="13" font-weight="700" fill="#3D6FD8">蓝色这一段，和姐姐的一模一样</text>
+  <text x="602" y="330" font-size="13" fill="#C04A46">斜纹这段，平均只有一半对得上</text>
+  <text x="340" y="360" font-size="14" fill="#5A5A78">父亲那一整套只有一份，没有第二种可能</text>
+
+  <rect x="36" y="402" width="828" height="60" rx="10" fill="#EEF1FB"/>
+  <text x="56" y="430" font-size="15" fill="#3A4A8A">父方：1/2 × 1 = 0.5　　母方：1/2 × 1/2 = 0.25</text>
+  <text x="56" y="452" font-size="17" font-weight="700" fill="#2A3A7A">姐妹合计 r = 0.75　＞　自己生女儿的 0.5</text>
+</svg>
