@@ -613,6 +613,43 @@ body.dark .page-controls button:hover{background:#2A2A50}
 .ch-card.summary-card .bar{background:rgba(255,255,255,.18)}
 .ch-card.summary-card .pct{color:rgba(255,255,255,.62)}
 .ch-card.summary-card:hover{border-color:transparent;box-shadow:0 10px 32px rgba(30,27,75,.28)}
+
+/* ═══════════ 行为偏差小游戏 · Bias Lab ═══════════ */
+.bias-lab{margin:20px 0;padding:16px;border:1px solid #E0E7FF;border-radius:12px;background:linear-gradient(180deg,#EEF2FF 0%,#fff 72%)}
+.bias-lab [hidden]{display:none !important}
+.bias-lab .lab-title{font-weight:700;color:#312E81;font-size:15px;margin:0 0 4px}
+.bias-lab .lab-sub,.bias-lab .bias-hint{font-size:12.5px;color:#6B7280;line-height:1.75;margin:0 0 10px}
+.bias-game{margin:0 0 16px;padding:14px;border:1px solid #E0E7FF;border-radius:10px;background:#fff;font-size:13.5px;line-height:1.8;color:#2A2A45}
+.bias-game:last-child{margin-bottom:0}
+.bias-game-title{font-weight:700;color:#312E81;font-size:14px;margin:0 0 6px}
+.bias-q{font-weight:600;color:#2A2A45;margin:10px 0}
+.bias-opt{display:block;width:100%;text-align:left;padding:9px 12px;margin:6px 0;border:1px solid #E0E7FF;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;color:#2A2A45}
+.bias-opt:hover{border-color:#312E81;background:#EEF2FF}
+.bias-opt.picked{border-color:#D97706;background:#FFFBF0}
+.bias-fb{margin:10px 0;padding:10px 12px;border-left:3px solid #D97706;background:#FFFBF0;border-radius:6px;font-size:13px;line-height:1.75}
+.bias-btn{padding:8px 16px;border:0;border-radius:8px;background:#312E81;color:#fff;cursor:pointer;font-size:13px;margin:4px 6px 4px 0}
+.bias-btn:hover{background:#1E1B4B}
+.bias-btn:disabled{opacity:.45;cursor:default}
+.bias-btn.ghost{background:#fff;color:#312E81;border:1px solid #E0E7FF}
+.bias-progress{font-size:12px;color:#6B7280;margin-top:10px}
+.bias-mark{font-size:12px;color:#6B7280;margin:8px 0}
+.wheel-wrap{position:relative;width:148px;height:148px;margin:8px auto 10px}
+.bl-wheel{width:148px;height:148px;border-radius:50%;background:conic-gradient(#6B8AE8 0deg 180deg,#F0A93B 180deg 360deg);border:5px solid #fff;box-shadow:0 4px 18px rgba(30,27,75,.18)}
+.bl-pin{position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:14px solid #2A2A45}
+.bl-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;color:#312E81;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.anchor-stage{text-align:center}
+.bias-input{margin:10px 0}
+.bias-input input{width:92px;padding:6px 8px;border:1px solid #E0E7FF;border-radius:6px;font-size:14px}
+.bias-rate{margin:10px 0;font-size:13px}
+.bias-rate input[type=range]{width:170px;vertical-align:middle;margin:0 8px}
+.bias-rate .v{font-weight:700;color:#312E81}
+.bias-result{padding:12px;border-radius:8px;background:#EEF2FF;border:1px solid #E0E7FF;font-size:13px;line-height:1.85;color:#2A2A45}
+body.dark .bias-lab{background:#1E1E3A;border-color:#2A2A50}
+body.dark .bias-game,body.dark .bias-q,body.dark .bias-result,body.dark .bias-lab .lab-title{color:#E5E5F0}
+body.dark .bias-game{background:#25254A;border-color:#3A3A60}
+body.dark .bias-opt,body.dark .bias-input input,body.dark .bias-btn.ghost{background:#25254A;border-color:#3A3A60;color:#E5E5F0}
+body.dark .bias-fb,body.dark .bias-result{background:#2A2A44}
+body.dark .bias-result{border-color:#3A3A60}
 </style>
 </head>
 <body data-page-node-id="Ry3LsHDxBteo3uoB4SqSac">
@@ -1800,32 +1837,80 @@ body.dark .page-controls button:hover{background:#2A2A50}
     <div class="page" id="page-s34" data-page="s34">
       <h3 class="sec-title" id="s34" style="font-size:18px" data-page-node-id="NvWySldEjsy8DDoA6cPIlW">3.4 演化博弈与行为经济学</h3>
 
+      <div class="bias-lab" data-page-node-id="biaslab">
+        <div class="lab-title">动手试一试 · 三个小游戏</div>
+        <div class="lab-sub">凭第一反应从上到下玩一遍，做完再看结果。三个游戏都能重来。</div>
+
+        <div class="bias-game">
+          <div class="bias-game-title">① 估个数</div>
+          <p class="bias-hint">转一下转盘，记住看到的数字，再回答一道估算题。一共 10 题，做完看结果。</p>
+          <div class="anchor-stage">
+            <div class="wheel-wrap"><div class="bl-wheel" id="blWheel"></div><div class="bl-pin"></div><div class="bl-num" id="blNum">？</div></div>
+            <button type="button" class="bias-btn" id="blSpin">转转盘</button>
+          </div>
+          <div class="bias-q" id="blQ">点「转转盘」开始第 1 题。</div>
+          <div class="bias-input" id="blInput" hidden>
+            <label>你的估计（0–100）： <input type="number" id="blVal" min="0" max="100" step="1" placeholder="0–100"></label>
+            <button type="button" class="bias-btn" id="blNext">提交，下一题</button>
+          </div>
+          <div class="bias-result" id="blResult" hidden></div>
+          <div class="bias-progress" id="blProg">第 1 / 10 题</div>
+        </div>
+
+        <div class="bias-game">
+          <div class="bias-game-title">② 你会怎么选</div>
+          <p class="bias-hint">两道情境题，凭第一反应选就好，做完看结果。</p>
+          <div id="blAccStage"></div>
+        </div>
+
+        <div class="bias-game">
+          <div class="bias-game-title">③ 得与失</div>
+          <p class="bias-hint">几组选择，加一次感受打分，做完看结果。</p>
+          <div id="blLossStage"></div>
+        </div>
+      </div>
+
+
     <div class="concept example" data-page-node-id="EKPBWJGAryY3OjDwiGqscG">
       <div class="kind" data-page-node-id="oN9ATWfAj53jmyCZCKs390">观点 · Perspective</div>
       <h4 data-page-node-id="Kcdfiesa9ZAriNHC5WbgSV">不理性也有规律：行为经济学与演化解释</h4>
       <p data-page-node-id="B5UAiefuhmOSTTRr3b28kN">传统经济学假设一个<b>理性经济人 (Homo Economicus)</b>：偏好稳定，能算清每个选项的效用，只关心最后的总财富。实验结果却反复偏离这套预测，而且偏得有规律。<b>行为经济学 (Behavioral Economics)</b> 研究的就是这类系统性的「不理性」。它没有把理性模型丢掉，只是把心理学里真实的人放了回去。</p>
-      <p>下面三种是行为经济学里最常被引用的偏差。选它们，是因为每一种都能单独追到一条演化线索。三者的复现记录并不一致，尤其损失厌恶能否算作普遍规律，至今仍有争论。</p>
+
+      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">一 · 三种常见的偏差</p>
+      <p>下面三种是行为经济学里常被引用的偏差。这类偏差的清单还可以列得很长，这里只取三例，先看它们各自是什么。</p>
       <ul style="margin:10px 0">
-        <li><b>锚定效应 (Anchoring)</b>：估计一个未知数量时，人会不自觉被先看到的数字拽过去，哪怕明知这个数字是随机的。转盘停在 10 还是 65，都会明显改变受试者对「非洲国家在联合国占比」的猜测。</li>
-        <li><b>心理账户 (Mental Accounting)</b>：钱在心里并不完全可替代。丢了演唱会门票，很多人不愿再买一张；丢了等额的现金，却照常去买。年终奖比同样数额的工资花得痛快，是因为它被记进了另一个账户。</li>
-        <li><b>损失厌恶 (Loss Aversion)</b>：丢掉 1000 元的懊恼，明显强过捡到 1000 元的开心，实验里常见的比值在两倍上下，但会随情境变化。人对得失的判断还依赖参照点，同一笔结果换个说法，选择就会反过来。</li>
+        <li><b>锚定效应 (Anchoring)</b>：要估计一个数却不知从何下手时，先看到的那个数字会把答案往自己那边拉。经典实验先让受试者转一个做过手脚的转盘，它只会停在 10 或 65，接着问一个和转盘毫无关系的问题，非洲国家在联合国占多少。转到 10 的那组平均猜 25%，转到 65 的那组平均猜 45%。受试者明知数字是随机的、与问题无关，估计还是分成了两截。锚并不替人给出答案，它只是把起点挪了位置；人从起点往回调整时，通常又调得不够。商店先写「原价」再写「现价」，用的就是这一层。</li>
+        <li><b>心理账户 (Mental Accounting)</b>：标准模型里钱是可替代的，一百块来自工资还是奖金、准备吃饭还是看戏，都只让总财富多了或少了同一百块，决策本该只看这个总数。人并不这么记。丢了演唱会门票的人往往不肯再花等额的钱补一张，丢了同样数额现金的人却照常去买票，账面完全一样，差别只在前者被记进「看戏」、后者被记进「日常开销」。钱还会按来源分账，工资省着花，年终奖或意外之财花起来松得多，尽管能买到的东西没有区别。给钱贴标签、分格记账，就是所谓心理账户。</li>
+        <li><b>损失厌恶 (Loss Aversion)</b>：等额的亏与赚，给人的分量不一样。丢掉 1000 元的懊恼明显强过捡到 1000 元的开心；要让人肯参加一个输赢各半的赌局，赢的一头通常得开到输的两倍左右，他才觉得划算。这个倍数只是常见量级，会随情境变。更关键的是，赚和亏不按最终有多少钱算，而是相对一个<b>参照点</b>算，现状、预期或刚被告知的数字都可以充当它。于是同一笔结果换个说法，选择就翻面：说「确定拿到 900 元」与「九成机会拿 1000 元」，多数人选前者；说「确定亏 900 元」与「九成机会亏 1000 元」，多数人反而选后者去赌。锚很多时候正是在替我们设这个参照点。</li>
       </ul>
 
-      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">把尺度拉长：它们曾经合适</p>
-      <p><b>锚定效应</b>来自信息稀缺。远古没有统计表，也没有时间做绝对估计。要判断一群猎物有多少，一条河有多宽，对方部落有多少人，最省力的办法是抓住眼前一个已知数当参照，再往上或往下微调。信息越少，这种「先锚后调」越够用。现代市场里的原价、起拍价与标价同样是锚，只不过它们常常由别人刻意摆在那里，与真实价值无关。</p>
-      <p><b>心理账户</b>来自资源的不可替代。钱能买任何东西，这种通用性是很晚才有的。货币出现之前的漫长时期里，人管理的是彼此换不了的东西：粮食会腐坏，水源会被占，工具不能当饭吃，盟友关系也不能拿去换一顿饭。按来源、用途和保存期限分门别类，各自记账、各自决策，本来就是必要的。货币只有几千年历史，分类管理的习惯却还按旧办法运行，于是同一笔钱被贴上不同标签，就有了不同待遇。</p>
-      <p><b>损失厌恶</b>来自得失的不对称。多拿到一份食物，改善的只是今天；丢掉过冬的存粮，受了伤，失去庇护或同伴，可能直接等不到下一次机会。自然选择会给「别失去」比「多拿一点」高得多的权重。实验里那个两倍上下的倍数，放到生存语境里就不奇怪了：收益有上限，损失没有下限。</p>
-      <p>三条线索指向同一件事：这些机制在漫长的采集狩猎岁月里是合适的，环境却换得太快。基因来不及跟上货币、标价与抽象概率，这种时间差叫<b>进化失配 (Evolutionary Mismatch)</b>，下一栏会把它展开。</p>
+      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">二 · 把尺度拉长：它们曾经合适</p>
+      <p>知道了这三种偏差长什么样，接下来问它们为什么会存在。</p>
+      <p><b>锚定效应</b>：先想清楚「估计」这件事要付出什么。要知道一条河有多宽、一群猎物有多少，最可靠的办法是反复测量再取平均，可这既要有样本，也要有时间。远古两样都缺，手上只有零星线索：昨天走了多远，上次见到的一群有多大，同伴随口报的一个数。抓住眼前这个已知数当起点，再往上或往下调一点，是当时最省力的估计法，而且通常够用。问题出在调整往往不够，起点摆在哪里，答案就跟着往哪里偏。第一节里那个被有意摆好的「原价」，到这里就有了另一层意思：它借用的正是这套省力估计法。</p>
+      <p><b>心理账户</b>：钱能买任何东西，这种通用性是很晚才有的。货币出现之前，人手上的东西彼此换不了：粮食放几天会坏，工具能久存却不能充饥，水源被别人占了拿不回来，跟某个人的交情更无法折成一顿饭。各有各的保存期限和用途，混成一笔「总财富」来算反而会出大错，分开记、分开决定才是稳妥的。货币只有几千年历史，把所有东西折算成同一个数字也是这几千年才有的事，分类记账的习惯却还照旧运行。前面那两笔等额的钱被区别对待，原因就在这里：机制还在，能互相折算的货币却是新东西。</p>
+      <p><b>损失厌恶</b>：先看两个数字为什么不对称。多找到一份食物，改善的只是今天这一顿，吃饱之后再加一份几乎没有用处；可过冬的存粮少了一半，腿受了伤，失去庇护或同伴，可能直接等不到下一次机会。额外收益有上限，损失却没有下限，自然选择因此把「别失去」的权重调得远高于「多拿一点」。实验里那个两倍上下的倍数，放到这个语境里就不难理解。</p>
 
-      <p>把视野从判断偏差移到社会行为，同一套演化思路还能解释几件看上去更费解的事。</p>
+      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">三 · 一条阈值，两种表现</p>
+      <p>损失厌恶能不能算一条普遍规律，至今仍有争论。最直接的挑战是，在现实中人并不是总会躲避风险，反而有时偏好冒险。比如，当一笔钱已经几乎确定要亏掉时，很多人反而愿意赌一把，想翻本；赌性上头、过度自信的人还会高估自己的判断、低估危险，主动去选胜算并不高的路。同样是人，有时显得特别怕损失，又会在某些时候追着不确定的收益跑，实验文献常把这两面记成两种互相矛盾的偏差。</p>
+      <p>演化视角可以为这种矛盾提供一个统一的解释。这个解释首先会问一个更基本的问题：这个个体离活不下去还有多远。可以设想一条生存线，低于它，个体就熬不到下一次繁殖。当个体的现状在这条线以上时，冒险多得到一份资源不过是多一顿，边际价值很少；可一旦失败，跌回线下，损失却可能致命。在这种情况下，「别失去」的权重会被调高，表现为损失厌恶。当个体的现状在线以下，情况则相反：稳稳守住手上那点东西照样活不了，只有一次大收益才可能把人送回线以上；确定地亏等于必输，赌一把反倒还有活路，这种情况下，个体则表现为不怕损失、敢于冒险。</p>
+      <p>生存环境还养成了另一套本能：条件合适的时候主动追逐风险，而且这套本能不只属于人。斯金纳箱是个很简单的装置，一只老鼠，一个箱子，箱壁上装一根杠杆，按一下掉一颗食丸。老鼠起先四处乱撞，偶然压到杠杆吃到食物，几次之后就学会主动去按。研究者接着把老鼠分成两组：一组固定每按五次给一颗；另一组把次数打乱，有时按一下就有，有时连按十几下也落空，平均下来同样是五次一颗。结果随机那组按得反而更勤。最后把食丸彻底停掉，固定那组很快不再按，随机那组却还长时间按个不停，像是还在等下一颗。不少赌徒也从棋牌这类还有计算和推理成分的游戏，转向沉迷毫无技巧、纯靠概率的「老虎机」。人和老鼠上瘾的背后是同一套演化留下的算计，收益很大（一份食物）、成本很小（按一下按钮）时，就值得「搏一搏」。这套本能原本帮祖先在食物出现没有规律的环境里多试几次，如今却可以被反过来利用，成了赌场牟利的工具。</p>
+
+      <div class="scene-img"><img src="images/30-skinner-box.jpg" alt="左右对比：左边是斯金纳箱里按杠杆随机获得食丸的老鼠，右边是玩老虎机的赌徒；两者都是动作成本极小、回报不确定，也都停不下来。" loading="lazy"><div class="caption"><span class="cap-tag">图解</span><span class="cap-text">左边是随机给食丸的斯金纳箱，右边是纯靠概率的老虎机。两边都是动作成本极小、回报不确定，也都让人（或老鼠）停不下来。</span></div></div>
+      <p>把这种思路带回鹰鸽博弈，如果把个体的资源储备当作状态变量，个体就不再必然属于鹰或属于鸽，群体中的鹰鸽比例不再固定，而是受到其中个体的资源储备情况的影响。当个体的储备高于阈值时，倾向于出鸽，不值得为一点资源受伤；低于阈值时，则应该出鹰，因为不争就可能死，此时受伤代价 $C$ 相对变小，资源价值 $V$ 相对变大。群体整体的环境越差、食物越不可靠，出鹰的个体就越多，「亡命徒」就越多。这一模型解释了为什么当一个社会经济差、社会保障水平差的时候，社会治安就会变差。</p>
+
+      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">四 · 从判断偏差到社会行为</p>
+      <p>前面三节做的事，是把几条零散的偏差放回同一个支付结构里。行为实验一次只测一种处境，于是记下损失厌恶与过度自信这类彼此矛盾的偏差，还有锚定、心理账户这样给数字和钱贴标签的习惯；演化视角补上的是实验里被固定掉的那个变量，也就是离阈值多远。把它写进支付函数，看似矛盾的反应就成了同一适应度地形上的不同截面。演化博弈问的不只是「人有什么偏差」，还有「什么样的支付结构会同时产生这些偏差」。同一套思路再往外推一步，判断偏差之外的社会行为也能放进来：</p>
       <ul data-page-node-id="rcuWbUUJ8FZksOiFzoZ1AL">
         <li data-page-node-id="ZbWEGPHsqSAFUI4RDTZJt9"><b data-page-node-id="T1A5nd76Zj5rdu1FGVUdTM">过度自信 (Overconfidence)</b>：在远古环境中，过度自信的个体更敢于冒险争夺资源与配偶，从而获得更多繁殖机会。冒险有时会失败，但从基因传播的角度看，「自信地去争」比「理性地退缩」更可能留下后代，因此过度自信成为一种 ESS。</li>
         <li data-page-node-id="lbq0lMqOR4bF61gWi2DxBP"><b data-page-node-id="SqgpRPmJkuCTPm8K9dKRG3">最后通牒中的拒绝行为</b>：在 2.2 那个「理性预测失败」的实验里，人们常常拒绝不公平的分配，即使拒绝意味着自己也拿不到钱。从单次博弈的理性角度看，这并不划算；但在重复互动的远古部落中，「拒绝不公平」等于向群体发出信号，说明自己不是好欺负的，从而提高了未来谈判中的地位。这种「宁可吃亏也要维护公平」的倾向，因此成为一种 ESS。</li>
         <li data-page-node-id="sacrifice1"><b>为理念或为陌生人牺牲 (Self-sacrifice for ideals/strangers)</b>：环保主义、慈善捐赠与志愿行动等行为，从纯粹的基因自私角度难以解释。但在远古部落中，利他行为能提升整个群体的生存概率，间接惠及携带相似基因的同族成员。到了现代社会，这种倾向已超越血缘限制，演变为一种<b>文化层面的进化稳定策略 (Cultural ESS)</b>，靠社会规范、教育与文化传承维持。</li>
       </ul>
-      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">这一支研究的来历</p>
-      <p>这些快捷判断在认知上是什么样子？<b>双系统理论 (Dual-Process Theory)</b> 把思维分成两套：「系统 1」快速、直觉，自动化程度高；「系统 2」缓慢、理性，需要刻意努力。实验发现，合作意识越强的人越倾向于信任自己的直觉，这提示合作可能与本能有关。这套区分源自认知心理学，把它带进经济学的是<b>丹尼尔·卡尼曼 (Daniel Kahneman)</b>：他与<b>阿莫斯·特沃斯基 (Amos Tversky)</b> 用一系列实验说明，人的判断会系统性地偏离概率与理性，并据此提出前景理论。</p>
-      <p>2002 年，卡尼曼因「把心理学研究的洞见融入经济学，尤其是不确定条件下的判断与决策」<span class="q-en">（&quot;for having integrated insights from psychological research into economic science, especially concerning human judgment and decision-making under uncertainty&quot;）</span>获<b>诺贝尔经济学奖</b>，与实验经济学的 Vernon L. Smith 共享；特沃斯基已于 1996 年去世，不在获奖名单里。他把这条研究线索写给大众的书，就是行为经济学里流传最广的《思考，快与慢》(<i>Thinking, Fast and Slow</i>)，书名里的「快」与「慢」正是系统 1 与系统 2。所以这一节从偏差讲起，最后仍要回到行为经济学。演化解释了这些机制从哪来，卡尼曼这一支把它们变成了可测量、可写进模型的东西。</p>
+      <p>当然，这套解释有边界。这些反应有结构，会随处境切换，不等于它们在今天仍然合用。远古要判断的是离生存阈值还有多远，眼前是食物、天气与同伴，如今摆在面前的是标价、百分比和账面数字，而且常常由对手有意摆放，锚可以伪造，参照点可以被话术挪动。机制还在按旧输入计算，算出来的却不再是当初那个问题。这种时间差叫<b>进化失配 (Evolutionary Mismatch)</b>，下一栏会把它展开。这条读法仍有争论，它给的是一条整理现象的线索，不是对所有实验的定论。</p>
+
+      <p style="font-weight:600;color:var(--indigo-800);margin:16px 0 4px">五 · 这一支研究的来历</p>
+      <p>演化解释的是机制从哪来。把这些偏差一条条测出来、写成可检验模型的，是另一条研究线索。</p>
+      <p>这些快捷判断在认知上分成两套。<b>双系统理论 (Dual-Process Theory)</b> 把思维分为「系统 1」快速、直觉，自动化程度高，与「系统 2」缓慢、理性，需要刻意努力。实验发现，合作意识越强的人越倾向于信任自己的直觉，这提示合作可能与本能有关。这套区分源自认知心理学，把它带进经济学的是<b>丹尼尔·卡尼曼 (Daniel Kahneman)</b>：他与<b>阿莫斯·特沃斯基 (Amos Tversky)</b> 用一系列实验说明，人的判断会系统性地偏离概率与理性，并据此提出前景理论。</p>
+      <p>2002 年，卡尼曼因「把心理学研究的洞见融入经济学，尤其是不确定条件下的判断与决策」<span class="q-en">（&quot;for having integrated insights from psychological research into economic science, especially concerning human judgment and decision-making under uncertainty&quot;）</span>获<b>诺贝尔经济学奖</b>，与实验经济学的 Vernon L. Smith 共享；特沃斯基已于 1996 年去世，不在获奖名单里。他把这条研究线索写给大众的书，就是行为经济学里流传最广的《思考，快与慢》(<i>Thinking, Fast and Slow</i>)，书名里的「快」与「慢」正是系统 1 与系统 2。两条线索在这里合上：演化解释了机制为什么存在，实验与模型让它可以被测量、被写进支付函数。第一节里那些被逐一测出的偏差，第三节里那条随处境切换的规则，都是这么来的。</p>
     </div>
 
     <div class="concept caution" data-page-node-id="timescale">
@@ -3784,6 +3869,233 @@ if(window.katex){
 } else {
   window.addEventListener('load', initTutors);
 }
+</script>
+<script>
+/* ═══════════ 行为偏差小游戏 · Bias Lab（纯前端，离线可用） ═══════════ */
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+
+  /* 冷知识估算题：real 为近年公开统计的约数，只用于看偏差方向 */
+  /* 十题按参考值配成五对：每对两题的真实比例接近，组内比较才有意义 */
+  var ANCHOR_QS = [
+    { q:'全世界一年产生的塑料垃圾里，最终被回收的比例？', real:9 },
+    { q:'全球发电量里，风力发电占多少？', real:8 },
+    { q:'联合国 193 个会员国里，非洲国家占多少？', real:28 },
+    { q:'全球 PCT 国际专利申请里，来自中国的占多少？', real:25 },
+    { q:'全球咖啡豆产量里，巴西一国占多少？', real:37 },
+    { q:'全球可可豆产量里，科特迪瓦一国占多少？', real:40 },
+    { q:'全世界网站中，内容语言为英语的占多少？', real:59 },
+    { q:'全球稀土矿产量里，中国占多少？', real:60 },
+    { q:'诺贝尔奖设立以来，女性获奖者占全部获奖者的比例？', real:6 },
+    { q:'全世界成年人里，左撇子占多少？', real:10 }
+  ];
+  var ACCOUNT_QS = [
+    { q:'同样是损失 500 元，下面哪种情况下，你更可能照原计划买一张演唱会门票？',
+      a:'票弄丢了', b:'丢了 500 元现金', c:'没区别', maj:'b',
+      fb:'经典实验里，丢票的人多数不再买，丢现金的人多数照买。按标准模型，两件事的账面损失完全一样，答案本该是「没区别」。' },
+    { q:'同样是多出 5000 元，下面哪种钱你更可能拿去花掉？',
+      a:'年终一次性奖金', b:'每月固定涨薪', c:'没区别', maj:'a',
+      fb:'意外之财常被单独记一笔，花起来比稳定收入松得多。按标准模型，两者能买到的东西没有区别，答案本该是「没区别」。' }
+  ];
+  var LOSS_QS = [
+    { type:'choice', q:'下面两个，凭第一反应选一个：',
+      a:'确定拿到 900 元', b:'九成机会拿 1000 元，一成什么都没有', maj:'a',
+      fb:'两个选项的期望值都约 900 元。多数人在收益面前求稳。' },
+    { type:'choice', q:'换到亏损这一边，再选一个：',
+      a:'确定亏 900 元', b:'九成机会亏 1000 元，一成不亏', maj:'b',
+      fb:'多数人反而去赌。确定的损失最难接受，于是愿意用不确定性换一次翻本的机会。上一题求稳，这一题冒险，期望值却几乎相同。' },
+    { type:'rate', q:'给两种感受各打个分（1 分很轻，7 分很强烈）：',
+      l1:'捡到 100 元有多开心', l2:'丢掉 100 元有多懊恼' },
+    { type:'choice', q:'持有的两只股票，一只涨了 10%，一只跌了 10%。现在必须卖一只，你会卖？',
+      a:'卖掉涨的那只', b:'卖掉跌的那只', maj:'a',
+      fb:'这叫处置效应：急着把盈利落袋，却不愿让浮亏变成确定的损失。' }
+  ];
+
+  /* ① 锚定效应 · 转盘 + 10 题 */
+  var aIdx = 0, aAnchors = [], aVals = [], aSpinning = false;
+  function newAnchors(){
+    var a = [];
+    for(var p=0;p<5;p++){
+      if(Math.random() < 0.5) a.push(10,65); else a.push(65,10);
+    }
+    return a;
+  }
+  function resetAnchor(){
+    aIdx = 0; aVals = []; aAnchors = newAnchors(); aSpinning = false;
+    $('blQ').textContent = '点「转转盘」开始第 1 题。';
+    $('blNum').textContent = '?';
+    $('blInput').hidden = true; $('blResult').hidden = true;
+    $('blProg').textContent = '第 1 / 10 题';
+    $('blSpin').disabled = false;
+    $('blWheel').style.transition = 'none';
+    $('blWheel').style.transform = 'rotate(0deg)';
+  }
+  function spin(){
+    if(aSpinning || aIdx >= 10) return;
+    aSpinning = true; $('blSpin').disabled = true; $('blInput').hidden = true;
+    var target = aAnchors[aIdx];
+    var wheel = $('blWheel'), num = $('blNum');
+    wheel.style.transition = 'none'; wheel.style.transform = 'rotate(0deg)';
+    void wheel.offsetWidth;
+    wheel.style.transition = 'transform 1.1s cubic-bezier(.2,.7,.2,1)';
+    wheel.style.transform = 'rotate(' + (1080 + (target === 65 ? 180 : 0)) + 'deg)';
+    var iv = setInterval(function(){ num.textContent = Math.random() < 0.5 ? '10' : '65'; }, 70);
+    setTimeout(function(){
+      clearInterval(iv); num.textContent = String(target);
+      $('blQ').textContent = '第 ' + (aIdx+1) + ' 题：' + ANCHOR_QS[aIdx].q;
+      $('blInput').hidden = false; $('blVal').value = ''; $('blVal').focus();
+      aSpinning = false;
+    }, 1150);
+  }
+  function submitAnchor(){
+    var v = parseFloat($('blVal').value);
+    if(isNaN(v) || v < 0 || v > 100){ $('blVal').focus(); return; }
+    aVals.push(v); aIdx++; $('blInput').hidden = true;
+    if(aIdx >= 10){ showAnchorResult(); return; }
+    $('blProg').textContent = '第 ' + (aIdx+1) + ' / 10 题';
+    $('blQ').textContent = '点「转转盘」进入第 ' + (aIdx+1) + ' 题。';
+    $('blSpin').disabled = false;
+  }
+  function showAnchorResult(){
+    var s10=0,n10=0,s65=0,n65=0,e10=0,e65=0;
+    for(var i=0;i<10;i++){
+      var dev = aVals[i] - ANCHOR_QS[i].real;
+      if(aAnchors[i] === 10){ s10 += aVals[i]; n10++; e10 += dev; }
+      else { s65 += aVals[i]; n65++; e65 += dev; }
+    }
+    var m10 = n10 ? s10/n10 : 0, m65 = n65 ? s65/n65 : 0, d = m65 - m10;
+    var d10 = n10 ? e10/n10 : 0, d65 = n65 ? e65/n65 : 0;
+    var note;
+    if(d > 5){ note = '差距明显：起点被挪动之后，估计跟着走了。'; }
+    else if(d > -5){ note = '两组相差不大，这次影响不明显，也可能只是 10 题样本太少，可以多玩几次再比。'; }
+    else { note = '这次停在 65 的那组反而估得更低，随机波动盖过了影响。10 题样本很小，多玩几次再看趋势会更可靠。'; }
+    function devTxt(x){ return (x >= 0 ? '高估 ' : '低估 ') + Math.abs(x).toFixed(1) + ' 个百分点'; }
+    $('blResult').innerHTML = '<b>你的结果</b><br>转盘停在 10 时，你的平均估计是 <b>' + m10.toFixed(1) + '%</b>；'
+      + '停在 65 时是 <b>' + m65.toFixed(1) + '%</b>，相差 <b>' + d.toFixed(1) + '</b> 个百分点。<br>' + note
+      + '<br>换一个角度，和每题的参考值相比：停在 10 时你平均' + devTxt(d10) + '，停在 65 时平均' + devTxt(d65) + '。'
+      + '<br><span style="font-size:12px;color:#6B7280">十道题按参考值配成五对，每对各有一题配低锚、一题配高锚；参考值取近年公开统计的约数，只看偏差方向。</span>'
+      + '<br><b>揭晓：这测的是锚定效应。</b> 转盘上的数字与题目毫无关系，经典实验里两组分别约 25% 与 45%。'
+      + '<br><button type="button" class="bias-btn" id="blAgain">再玩一次</button>';
+    $('blResult').hidden = false;
+    $('blQ').textContent = '10 题完成。'; $('blProg').textContent = '已完成';
+    $('blAgain').addEventListener('click', resetAnchor);
+  }
+
+  /* 通用：只记录选择，不做过程反馈 */
+  function makeChoice(q, num, total, onPick){
+    var box = document.createElement('div');
+    var h = document.createElement('div'); h.className = 'bias-q';
+    h.textContent = '第 ' + num + ' / ' + total + ' 题　' + q.q; box.appendChild(h);
+    var keys = ['a','b']; if(q.c) keys.push('c');
+    var locked = false;
+    keys.forEach(function(k){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'bias-opt';
+      b.textContent = k.toUpperCase() + '. ' + q[k];
+      b.addEventListener('click', function(){
+        if(locked) return;
+        locked = true; b.classList.add('picked');
+        var mark = document.createElement('div'); mark.className = 'bias-mark';
+        mark.textContent = '已记录。答案留到最后一起看。';
+        box.appendChild(mark);
+        var n = document.createElement('button'); n.type = 'button'; n.className = 'bias-btn';
+        n.textContent = (num >= total ? '看结果' : '下一题');
+        n.addEventListener('click', function(){ onPick(k); });
+        box.appendChild(n);
+      });
+      box.appendChild(b);
+    });
+    return box;
+  }
+
+  /* ② 心理账户 · 两道三选一 */
+  var accState = { i:0, picks:[] };
+  function renderAccount(){
+    var host = $('blAccStage'); host.innerHTML = '';
+    if(accState.i >= ACCOUNT_QS.length){ showAccountResult(); return; }
+    var q = ACCOUNT_QS[accState.i];
+    host.appendChild(makeChoice(q, accState.i+1, ACCOUNT_QS.length, function(k){
+      accState.picks.push(k); accState.i++; renderAccount();
+    }));
+  }
+  function showAccountResult(){
+    var same = 0, detail = '';
+    for(var i=0;i<ACCOUNT_QS.length;i++){
+      if(accState.picks[i] === ACCOUNT_QS[i].maj) same++;
+      detail += '第 ' + (i+1) + ' 题：多数人选 ' + ACCOUNT_QS[i].maj.toUpperCase() + '，你选了 '
+        + (accState.picks[i] || '–').toUpperCase() + '。' + ACCOUNT_QS[i].fb + '<br>';
+    }
+    $('blAccStage').innerHTML = '<div class="bias-result"><b>两题做完，你和「多数人」一致 ' + same + ' 次。</b><br>'
+      + '<b>揭晓：这两题测的是心理账户。</b> 按标准模型，钱是可替代的，两题的理性答案都该是「没区别」；'
+      + '多数人的实际选择却不是这样。我们给钱贴了标签，才有了不同的待遇。<br><br>' + detail
+      + '<button type="button" class="bias-btn" id="blAccAgain">再玩一次</button></div>';
+    $('blAccAgain').addEventListener('click', function(){ accState = { i:0, picks:[] }; renderAccount(); });
+  }
+
+  /* ③ 损失厌恶 */
+  var lossState = { i:0, picks:[], gain:4, loss:4 };
+  function renderLoss(){
+    var host = $('blLossStage'); host.innerHTML = '';
+    if(lossState.i >= LOSS_QS.length){ showLossResult(); return; }
+    var q = LOSS_QS[lossState.i];
+    if(q.type === 'rate'){
+      var h = document.createElement('div'); h.className = 'bias-q';
+      h.textContent = '第 ' + (lossState.i+1) + ' / ' + LOSS_QS.length + ' 题　' + q.q; host.appendChild(h);
+      var els = {};
+      [['gain',q.l1],['loss',q.l2]].forEach(function(pair){
+        var row = document.createElement('div'); row.className = 'bias-rate';
+        var lab = document.createElement('span'); lab.textContent = pair[1] + '：'; row.appendChild(lab);
+        var r = document.createElement('input'); r.type = 'range'; r.min = '1'; r.max = '7'; r.value = '4';
+        var v = document.createElement('span'); v.className = 'v'; v.textContent = '4';
+        r.addEventListener('input', function(){ v.textContent = r.value; });
+        row.appendChild(r); row.appendChild(v); host.appendChild(row);
+        els[pair[0]] = r;
+      });
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'bias-btn';
+      btn.textContent = '提交，下一题';
+      btn.addEventListener('click', function(){
+        lossState.gain = parseInt(els.gain.value,10); lossState.loss = parseInt(els.loss.value,10);
+        lossState.picks.push('r'); lossState.i++; renderLoss();
+      });
+      host.appendChild(btn);
+      return;
+    }
+    /* 题干由 makeChoice 生成一次，避免重复两行 */
+    host.appendChild(makeChoice(q, lossState.i+1, LOSS_QS.length, function(k){
+      lossState.picks.push(k); lossState.i++; renderLoss();
+    }));
+  }
+  function showLossResult(){
+    var p = lossState.picks;
+    var flip = (p[0] === 'a' && p[1] === 'b');
+    var detail = '';
+    for(var i=0;i<LOSS_QS.length;i++){
+      var q = LOSS_QS[i];
+      if(q.type === 'rate') continue;
+      detail += '第 ' + (i+1) + ' 题：多数人选 ' + q.maj.toUpperCase() + '，你选了 ' + (p[i] || '–').toUpperCase() + '。' + q.fb + '<br>';
+    }
+    var html = '<div class="bias-result"><b>你的结果</b><br>'
+      + '收益那题你选了 ' + (p[0] ? p[0].toUpperCase() : '–') + '，亏损那题选了 ' + (p[1] ? p[1].toUpperCase() : '–') + '。'
+      + (flip ? '两题翻了面：面对收益求稳，面对损失反而去赌。' : '两题没有翻面。')
+      + '<br>感受打分：捡到 100 元 <b>' + lossState.gain + '</b> 分，丢掉 100 元 <b>' + lossState.loss + '</b> 分。'
+      + (lossState.loss > lossState.gain ? '后者更重。' : '两边接近或反过来。')
+      + '<br><b>揭晓：这测的是损失厌恶，以及同一笔结果换个说法就翻面的框架效应。</b> 等量的得与失，给人的分量并不一样；后面的小节会解释为什么会这样。<br><br>'
+      + detail
+      + '<button type="button" class="bias-btn" id="blLossAgain">再玩一次</button></div>';
+    $('blLossStage').innerHTML = html;
+    $('blLossAgain').addEventListener('click', function(){ lossState = { i:0, picks:[], gain:4, loss:4 }; renderLoss(); });
+  }
+
+  function init(){
+    if(!$('blWheel')) return;
+    $('blSpin').addEventListener('click', spin);
+    $('blNext').addEventListener('click', submitAnchor);
+    $('blVal').addEventListener('keydown', function(e){ if(e.key === 'Enter') submitAnchor(); });
+    resetAnchor(); renderAccount(); renderLoss();
+  }
+  if(document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
 </script>
 </body>
 </html>
